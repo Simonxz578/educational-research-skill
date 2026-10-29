@@ -1,4 +1,6 @@
-# Validation record — 2026-10-29
+# Initial v1 validation record — 2026-10-29
+
+For the current 0.2.0 upgrade see [V2_VALIDATION.md](V2_VALIDATION.md).
 
 Checks executed locally with Python 3.12.14 on macOS. These are observed results, not claims about future CI runs or exhaustive scientific validity.
 

@@ -48,6 +48,51 @@
       "title": "Author",
       "type": "object"
     },
+    "DocumentProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "local_path": {
+          "title": "Local Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "legal_basis": {
+          "title": "Legal Basis",
+          "type": "string"
+        },
+        "licence": {
+          "title": "Licence",
+          "type": "string"
+        },
+        "acquired_at": {
+          "title": "Acquired At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_url",
+        "local_path",
+        "sha256",
+        "version",
+        "legal_basis",
+        "licence",
+        "acquired_at"
+      ],
+      "title": "DocumentProvenance",
+      "type": "object"
+    },
     "Extraction": {
       "additionalProperties": false,
       "properties": {
@@ -79,6 +124,181 @@
         "basis"
       ],
       "title": "Extraction",
+      "type": "object"
+    },
+    "FullTextReading": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "access_status": {
+          "enum": [
+            "FULL_TEXT_READ_BY_AGENT",
+            "USER_SUPPLIED_FULL_TEXT",
+            "ABSTRACT_ONLY",
+            "METADATA_ONLY",
+            "UNVERIFIED"
+          ],
+          "title": "Access Status",
+          "type": "string"
+        },
+        "document": {
+          "$ref": "#/$defs/DocumentProvenance"
+        },
+        "read_at": {
+          "title": "Read At",
+          "type": "string"
+        },
+        "reader": {
+          "title": "Reader",
+          "type": "string"
+        },
+        "coverage": {
+          "enum": [
+            "whole_work",
+            "relevant_chapter",
+            "substantive_sections",
+            "fragment"
+          ],
+          "title": "Coverage",
+          "type": "string"
+        },
+        "scope_description": {
+          "title": "Scope Description",
+          "type": "string"
+        },
+        "scholarly_kind": {
+          "enum": [
+            "empirical",
+            "theoretical",
+            "review",
+            "policy"
+          ],
+          "title": "Scholarly Kind",
+          "type": "string"
+        },
+        "central_thesis": {
+          "title": "Central Thesis",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "population": {
+          "title": "Population",
+          "type": "string"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        },
+        "setting": {
+          "title": "Setting",
+          "type": "string"
+        },
+        "design": {
+          "title": "Design",
+          "type": "string"
+        },
+        "constructs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constructs",
+          "type": "array"
+        },
+        "analytic_approach": {
+          "title": "Analytic Approach",
+          "type": "string"
+        },
+        "findings": {
+          "title": "Findings",
+          "type": "string"
+        },
+        "limitations": {
+          "title": "Limitations",
+          "type": "string"
+        },
+        "relevance_to_rq": {
+          "title": "Relevance To Rq",
+          "type": "string"
+        },
+        "relevance_rationale": {
+          "title": "Relevance Rationale",
+          "type": "string"
+        },
+        "highly_relevant": {
+          "title": "Highly Relevant",
+          "type": "boolean"
+        },
+        "inference_limits": {
+          "title": "Inference Limits",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/ReadingEvidence"
+          },
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "not_applicable": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Not Applicable",
+          "type": "object"
+        },
+        "overlaps": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Overlaps",
+          "type": "array"
+        },
+        "opposing_source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Opposing Source Ids",
+          "type": "array"
+        },
+        "own_implication": {
+          "title": "Own Implication",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "access_status",
+        "document",
+        "read_at",
+        "reader",
+        "coverage",
+        "scope_description",
+        "scholarly_kind",
+        "central_thesis",
+        "question",
+        "population",
+        "stage",
+        "setting",
+        "design",
+        "constructs",
+        "analytic_approach",
+        "findings",
+        "limitations",
+        "relevance_to_rq",
+        "relevance_rationale",
+        "highly_relevant",
+        "inference_limits",
+        "evidence",
+        "own_implication"
+      ],
+      "title": "FullTextReading",
       "type": "object"
     },
     "Metric": {
@@ -196,6 +416,64 @@
       "title": "Quote",
       "type": "object"
     },
+    "ReadingEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "content_type": {
+          "enum": [
+            "claim",
+            "method",
+            "result",
+            "limitation",
+            "counterpoint"
+          ],
+          "title": "Content Type",
+          "type": "string"
+        },
+        "paraphrase": {
+          "title": "Paraphrase",
+          "type": "string"
+        },
+        "locator": {
+          "title": "Locator",
+          "type": "string"
+        },
+        "status": {
+          "default": "not_checked",
+          "enum": [
+            "checked_against_text",
+            "not_checked"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "finding_kind": {
+          "enum": [
+            "observed",
+            "tested",
+            "reported",
+            "interpretation",
+            "potential",
+            "not_applicable"
+          ],
+          "title": "Finding Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "content_type",
+        "paraphrase",
+        "locator",
+        "finding_kind"
+      ],
+      "title": "ReadingEvidence",
+      "type": "object"
+    },
     "Segment": {
       "additionalProperties": false,
       "properties": {
@@ -262,6 +540,38 @@
   },
   "additionalProperties": false,
   "properties": {
+    "schema_version": {
+      "default": "2.0",
+      "enum": [
+        "1.0",
+        "2.0"
+      ],
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "reading": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FullTextReading"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "work_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Work Id"
+    },
     "id": {
       "title": "Id",
       "type": "string"
@@ -490,7 +800,10 @@
         "ABSTRACT_ONLY",
         "METADATA_ONLY",
         "USER_SUPPLIED",
-        "UNAVAILABLE"
+        "UNAVAILABLE",
+        "FULL_TEXT_READ_BY_AGENT",
+        "USER_SUPPLIED_FULL_TEXT",
+        "UNVERIFIED"
       ],
       "title": "Access",
       "type": "string"
@@ -573,7 +886,7 @@
       "type": "array"
     },
     "quote_budget": {
-      "default": 25,
+      "default": 20,
       "maximum": 200,
       "minimum": 0,
       "title": "Quote Budget",

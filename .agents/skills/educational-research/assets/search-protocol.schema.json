@@ -1,0 +1,149 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "prepared_at": {
+      "title": "Prepared At",
+      "type": "string"
+    },
+    "problem": {
+      "title": "Problem",
+      "type": "string"
+    },
+    "candidate_rqs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "minItems": 1,
+      "title": "Candidate Rqs",
+      "type": "array"
+    },
+    "focal_rq": {
+      "title": "Focal Rq",
+      "type": "string"
+    },
+    "competing_explanations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Competing Explanations",
+      "type": "array"
+    },
+    "population": {
+      "default": "provisional",
+      "title": "Population",
+      "type": "string"
+    },
+    "stage": {
+      "default": "provisional",
+      "title": "Stage",
+      "type": "string"
+    },
+    "setting": {
+      "default": "provisional",
+      "title": "Setting",
+      "type": "string"
+    },
+    "geography": {
+      "default": "provisional",
+      "title": "Geography",
+      "type": "string"
+    },
+    "period": {
+      "default": "provisional",
+      "title": "Period",
+      "type": "string"
+    },
+    "constructs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Constructs",
+      "type": "array"
+    },
+    "outcomes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Outcomes",
+      "type": "array"
+    },
+    "intervention": {
+      "default": "not specified",
+      "title": "Intervention",
+      "type": "string"
+    },
+    "eligible_study_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Eligible Study Types",
+      "type": "array"
+    },
+    "language": {
+      "default": "en-GB",
+      "title": "Language",
+      "type": "string"
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "type": "string"
+    },
+    "exclusion": {
+      "title": "Exclusion",
+      "type": "string"
+    },
+    "scope_justification": {
+      "title": "Scope Justification",
+      "type": "string"
+    },
+    "keyword_clusters": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Keyword Clusters",
+      "type": "object"
+    },
+    "descriptors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Descriptors",
+      "type": "array"
+    },
+    "citation_chaining": {
+      "title": "Citation Chaining",
+      "type": "string"
+    },
+    "amendments": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Amendments",
+      "type": "array"
+    }
+  },
+  "required": [
+    "problem",
+    "candidate_rqs",
+    "focal_rq",
+    "competing_explanations",
+    "inclusion",
+    "exclusion",
+    "scope_justification",
+    "keyword_clusters",
+    "descriptors",
+    "citation_chaining"
+  ],
+  "title": "SearchProtocol",
+  "type": "object"
+}

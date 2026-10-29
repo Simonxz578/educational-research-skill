@@ -1,5 +1,7 @@
 # Architecture
 
+The v2 quality-gate/framework extension and migration are described in [QUALITY_ENGINE_V2.md](QUALITY_ENGINE_V2.md). The native retrieval/rendering flow below remains the foundation.
+
 The agent does scientific reasoning; deterministic Python retrieves, validates, scores, formats and renders. No hidden LLM service, API key or invented semantic synthesis.
 
 `cli/config` → prospective protocol → `search` (ERIC front door, Scholar plan/import, Crossref identity, OpenAlex/optional Semantic Scholar metrics) → `Source` validation → dedup/scope screening → relevance-first ranking/diversity selection → validated source extractions and synthesis graph → gap calibration → one flow-based PDF and traceable machine records → page inspection/audit.

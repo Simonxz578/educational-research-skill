@@ -1,0 +1,11 @@
+# Auditable full-text close reading
+
+Use the Source.reading first-class record (source schema v2). Legacy sources still load but old access labels never establish deep reading automatically. Record FULL_TEXT_READ_BY_AGENT / USER_SUPPLIED_FULL_TEXT / ABSTRACT_ONLY / METADATA_ONLY / UNVERIFIED separately from metadata identity.
+
+For lawful full text preserve source URL, actual local file, SHA256, version, licence/legal basis, acquisition/read times and reader. Read the whole article or a specified relevant theoretical chapter. Summarise question, population, educational stage, setting, design, constructs, analysis, reported findings, limitations, exact-RQ relevance, overlap/opposition and own implication. Do not call an unvisited article read because an abstract or DOI is available.
+
+Create 2–5 substantive checked evidence entries where appropriate, resolving to Source.segments. Each has source:segment evidence ID, locator, content type (claim/method/result/limitation/counterpoint), concise paraphrase and finding kind (observed/tested/reported/interpretation/potential). Empirical articles require method/result as well as argument/limitations. Do not stamp every segment with every evidence type or reuse one paragraph as a whole reading. Theoretical work needs relevant conceptual content, not fictional participants.
+
+Keep author thesis faithful and distinct from the target researcher's claim. Author-claimed effectiveness is not necessarily tested effectiveness. Surveys, intentions, aspirations and participant confidence do not establish observed behaviour or causal impact. Document inference limitations and plausible disconfirming evidence. Code can check passage IDs, section coverage and artifact integrity, but actual comprehension, external authenticity and accurate paraphrase are agent/expert responsibilities.
+
+Full_Text_Reading_Audit.csv/json shows qualified counts and precise exclusions. Protected source text stays in private inputs; delivered ledgers omit segment bodies, retain locators and concise paraphrases, and do not bundle source documents. v2 uses a conservative 20-word source-quotation default (CJK counted conservatively); larger permissions require explicit rights provenance. Legacy v1 25-word inputs remain readable but cannot earn v2 substantive acceptance without rights or revision.

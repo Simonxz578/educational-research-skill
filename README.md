@@ -72,3 +72,28 @@ python scripts/generate_examples.py --count 100 --output outputs/synthetic-100
 ```
 
 Live tests can skip on actual service/network unavailability; a skip is not a pass. Public examples use synthetic unrelated library-learning material and never constitute scholarly evidence. [Architecture](docs/ARCHITECTURE.md) explains the agent/Python boundary; [provenance and limitations](docs/PROVENANCE_AND_LIMITATIONS.md) covers publisher checks, copyright, metrics, citation-audit limits and font support. [Validation report](docs/VALIDATION.md) records actual release checks. Original code is MIT; third-party styles, quotations and fonts retain their licences.
+
+## Quality engine v2 (0.2.0)
+
+A rendered PDF is no longer a substantive research completion claim. Every native pack has five quality gates and a visible `PROVISIONAL - NOT FULLY VERIFIED` label while evidence is incomplete. The framework builder compares literature-led lenses, defines bounded constructs, distinguishes proposed/source-verified mechanisms and maps RQ → evidence → measures/coding → analysis. Conditional feasibility checks reject counterfeit mixed methods.
+
+```bash
+# Topic alone: actual discovery, provisional candidate pack
+python -m educational_research.cli --topic "library learning" --mode discover --output-dir outputs/discovery
+
+# Complete the agent's close reading/synthesis, then resume with original protocol/observations
+python -m educational_research.cli --topic "your scoped topic" --offline --sources private/sources.json --synthesis private/synthesis.json --protocol private/protocol.json --discovery-records private/observations.json --mode full --strict-quality-gates --output-dir outputs/reviewed
+
+# TEST ONLY full-text structural example; never a real research acceptance claim
+python scripts/generate_quality_example.py --output outputs/quality-v2
+python scripts/validate_research_pack.py outputs/quality-v2
+
+# Use this to demand real substantive acceptance (synthetic/provisional packs fail)
+python scripts/validate_research_pack.py outputs/reviewed --strict
+```
+
+`--mode framework` uses the same native synthesis schema and pack. `--empirical-proposal` requires a matched study-design record; mixed methods needs independent QUAN/QUAL purposes plus integration and feasible recruitment/access conditions. `--min-reviewed-fulltexts` defaults to 10; reducing it records reduced coverage and cannot earn strict acceptance. `--quality-level exploratory|substantive`, `--require-verifiable-scholar`, `--protocol` and `--discovery-records` expose honest workflow state. A legacy CSV/query-plan alone never satisfies auditable Scholar discovery; package genuine exports with `scripts/import_scholar_observation.py --help` and keep the actual observation timestamp/artifact.
+
+G1 discovery; G2 ten independent relevant deep full-text readings; G3 comparative arguments; G4 closest-study novelty challenge; G5 native complete deliverables/QA. Strict CLI saves diagnostics and exits 3 when substantive acceptance is incomplete. Library `audit.passed` remains only a deprecated layout-compatibility flag: use `research_passed` and `Research_Quality_Gates.json`. No automatic score is journal acceptance or a human endorsement. Existing v1 inputs/commands still work but their old access flags are never silently upgraded. See [v2 architecture and migration](docs/QUALITY_ENGINE_V2.md), [implementation map](docs/V2_IMPLEMENTATION_MAP.md) and [release checks](docs/V2_VALIDATION.md).
+
+中文：v2 新增五项硬门槛、逐篇全文审读记录、最接近研究的新颖性反证、理论/概念框架及构念漂移检查、方法可行性和可复核编辑评分。资料不全时仍保存完整的临时资料包并标明未核验；严格模式返回非零状态。至少十篇高度相关全文、真实检索记录及有来源的比较论证不能被漂亮 PDF 或少量摘要替代。图示有可编辑 JSON/Mermaid/SVG，区分来源证实关系与假设关系，不自动宣称因果识别。

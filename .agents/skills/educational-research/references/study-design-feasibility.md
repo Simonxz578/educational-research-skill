@@ -1,0 +1,9 @@
+# Question-led method fit and feasibility
+
+For empirical proposals supply StudyDesign. All plans are proposals, never fabricated completed research, data access, recruitment or findings. Keep consent/ethics, storage, access state/evidence, recruitment, go/no-go conditions and honest fallback explicit. Include non-users where the question needs them; do not equate non-attendance with exclusion.
+
+Mixed methods requires complementary identifiable QUAN, QUAL and integration RQs. QUAN records estimand/outcome, named construct measures, sampling frame/logic, actual or proposed data source, missingness/bias, analysis and a precision/events/power rationale. Do not invent arbitrary sample N or validated scales. QUAL records purposive sampling, framework-linked guide/codes, corpus, reflexivity, negative-case search and an audit trail. Integration specifies design, timing, connection/building/merging/embedding, joint display, discordance and qualified meta-inferences. Independence/weighting varies by design; equal sample sizes are not required.
+
+Compare [Creswell & Plano Clark, third edition](https://study.sagepub.com/creswell3e): publisher verifies September 2017, authors and edition; no claim here that the entire book was read. [Fetters, Curry & Creswell (2013)](https://doi.org/10.1111/1475-6773.12117) distinguishes integration at design, methods and interpretation/reporting levels; publisher DOI metadata verified, openly accessible repository copy identified. Access limitations during implementation are documented; do not imply a blocked page was read.
+
+A qualitative study plus descriptive numbers does not automatically become explanatory sequential mixed methods. If quantitative recruitment/data/outcome measurement is infeasible, state a qualitative-case fallback and narrow the claims. For qualitative, quantitative or conceptual designs, use matching standards instead of mechanically forcing two strands.

@@ -55,6 +55,71 @@
           "title": "Confidence",
           "type": "string"
         },
+        "comparison": {
+          "default": "",
+          "title": "Comparison",
+          "type": "string"
+        },
+        "author_positions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Author Positions",
+          "type": "object"
+        },
+        "opposing_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Opposing Evidence Ids",
+          "type": "array"
+        },
+        "own_inference": {
+          "default": "",
+          "title": "Own Inference",
+          "type": "string"
+        },
+        "scope": {
+          "default": "",
+          "title": "Scope",
+          "type": "string"
+        },
+        "theory_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Theory Ids",
+          "type": "array"
+        },
+        "rq_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Rq Ids",
+          "type": "array"
+        },
+        "section": {
+          "default": "",
+          "title": "Section",
+          "type": "string"
+        },
+        "paragraph_plan": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paragraph Plan",
+          "type": "array"
+        },
+        "transition_warrant": {
+          "default": "",
+          "title": "Transition Warrant",
+          "type": "string"
+        },
+        "relative_strength": {
+          "default": "",
+          "title": "Relative Strength",
+          "type": "string"
+        },
         "depends_on": {
           "items": {
             "type": "string"
@@ -68,6 +133,249 @@
         "text"
       ],
       "title": "Claim",
+      "type": "object"
+    },
+    "ClosestStudy": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "rq": {
+          "title": "Rq",
+          "type": "string"
+        },
+        "population": {
+          "title": "Population",
+          "type": "string"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        },
+        "geography": {
+          "title": "Geography",
+          "type": "string"
+        },
+        "design": {
+          "title": "Design",
+          "type": "string"
+        },
+        "sample": {
+          "title": "Sample",
+          "type": "string"
+        },
+        "constructs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constructs",
+          "type": "array"
+        },
+        "theoretical_lens": {
+          "title": "Theoretical Lens",
+          "type": "string"
+        },
+        "findings": {
+          "title": "Findings",
+          "type": "string"
+        },
+        "limitations": {
+          "title": "Limitations",
+          "type": "string"
+        },
+        "overlap": {
+          "title": "Overlap",
+          "type": "string"
+        },
+        "remaining_difference": {
+          "title": "Remaining Difference",
+          "type": "string"
+        },
+        "confidence": {
+          "title": "Confidence",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "already_answers": {
+          "default": false,
+          "title": "Already Answers",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "rq",
+        "population",
+        "stage",
+        "geography",
+        "design",
+        "sample",
+        "constructs",
+        "theoretical_lens",
+        "findings",
+        "limitations",
+        "overlap",
+        "remaining_difference",
+        "confidence",
+        "evidence_ids"
+      ],
+      "title": "ClosestStudy",
+      "type": "object"
+    },
+    "Construct": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "definition": {
+          "title": "Definition",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "boundaries": {
+          "title": "Boundaries",
+          "type": "string"
+        },
+        "distinct_from": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Distinct From",
+          "type": "array"
+        },
+        "rq_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Rq Ids",
+          "type": "array"
+        },
+        "claim_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Claim Ids",
+          "type": "array"
+        },
+        "operationalisation": {
+          "title": "Operationalisation",
+          "type": "string"
+        },
+        "analysis_use": {
+          "title": "Analysis Use",
+          "type": "string"
+        },
+        "expected_pattern": {
+          "title": "Expected Pattern",
+          "type": "string"
+        },
+        "disconfirming_pattern": {
+          "title": "Disconfirming Pattern",
+          "type": "string"
+        },
+        "lens_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Lens Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "definition",
+        "source_ids",
+        "evidence_ids",
+        "boundaries",
+        "rq_ids",
+        "claim_ids",
+        "operationalisation",
+        "analysis_use",
+        "expected_pattern",
+        "disconfirming_pattern",
+        "lens_ids"
+      ],
+      "title": "Construct",
+      "type": "object"
+    },
+    "ConstructUse": {
+      "additionalProperties": false,
+      "properties": {
+        "location": {
+          "title": "Location",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "title",
+            "purpose",
+            "rq",
+            "theory",
+            "measure",
+            "coding",
+            "analysis",
+            "claim",
+            "policy"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "construct_id": {
+          "title": "Construct Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "justified_bridge": {
+          "default": "",
+          "title": "Justified Bridge",
+          "type": "string"
+        },
+        "bridge_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Bridge Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "location",
+        "stage",
+        "construct_id",
+        "label"
+      ],
+      "title": "ConstructUse",
       "type": "object"
     },
     "Edge": {
@@ -86,7 +394,11 @@
             "supports",
             "contradicts",
             "qualifies",
-            "depends_on"
+            "depends_on",
+            "extends",
+            "different_context",
+            "method_incompatible",
+            "same_construct_different_measure"
           ],
           "title": "Kind",
           "type": "string"
@@ -94,6 +406,13 @@
         "rationale": {
           "title": "Rationale",
           "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
         }
       },
       "required": [
@@ -104,10 +423,743 @@
       ],
       "title": "Edge",
       "type": "object"
+    },
+    "EditorialReview": {
+      "additionalProperties": false,
+      "properties": {
+        "reviewer": {
+          "title": "Reviewer",
+          "type": "string"
+        },
+        "reviewer_kind": {
+          "enum": [
+            "human",
+            "agent"
+          ],
+          "title": "Reviewer Kind",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "title": "Reviewed At",
+          "type": "string"
+        },
+        "scores": {
+          "additionalProperties": {
+            "$ref": "#/$defs/EditorialScore"
+          },
+          "title": "Scores",
+          "type": "object"
+        }
+      },
+      "required": [
+        "reviewer",
+        "reviewer_kind",
+        "reviewed_at",
+        "scores"
+      ],
+      "title": "EditorialReview",
+      "type": "object"
+    },
+    "EditorialScore": {
+      "additionalProperties": false,
+      "properties": {
+        "score": {
+          "maximum": 4,
+          "minimum": 0,
+          "title": "Score",
+          "type": "integer"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "remaining_judgement": {
+          "title": "Remaining Judgement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "score",
+        "rationale",
+        "evidence_ids",
+        "remaining_judgement"
+      ],
+      "title": "EditorialScore",
+      "type": "object"
+    },
+    "Framework": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "phenomenon": {
+          "title": "Phenomenon",
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Outcomes",
+          "type": "array"
+        },
+        "rq_definitions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Rq Definitions",
+          "type": "object"
+        },
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/Lens"
+          },
+          "title": "Candidates",
+          "type": "array"
+        },
+        "constructs": {
+          "items": {
+            "$ref": "#/$defs/Construct"
+          },
+          "title": "Constructs",
+          "type": "array"
+        },
+        "relationships": {
+          "items": {
+            "$ref": "#/$defs/Relationship"
+          },
+          "title": "Relationships",
+          "type": "array"
+        },
+        "uses": {
+          "items": {
+            "$ref": "#/$defs/ConstructUse"
+          },
+          "title": "Uses",
+          "type": "array"
+        },
+        "combination_justification": {
+          "default": "",
+          "title": "Combination Justification",
+          "type": "string"
+        },
+        "no_single_theory_rationale": {
+          "default": "",
+          "title": "No Single Theory Rationale",
+          "type": "string"
+        },
+        "theory_failure": {
+          "title": "Theory Failure",
+          "type": "string"
+        },
+        "modest_contribution": {
+          "title": "Modest Contribution",
+          "type": "string"
+        },
+        "scope_limits": {
+          "title": "Scope Limits",
+          "type": "string"
+        },
+        "revision_triggers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Revision Triggers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "phenomenon",
+        "outcomes",
+        "rq_definitions",
+        "theory_failure",
+        "modest_contribution",
+        "scope_limits",
+        "revision_triggers"
+      ],
+      "title": "Framework",
+      "type": "object"
+    },
+    "Integration": {
+      "additionalProperties": false,
+      "properties": {
+        "rq": {
+          "default": "",
+          "title": "Rq",
+          "type": "string"
+        },
+        "design": {
+          "default": "",
+          "title": "Design",
+          "type": "string"
+        },
+        "timing": {
+          "default": "",
+          "title": "Timing",
+          "type": "string"
+        },
+        "connection": {
+          "default": "",
+          "title": "Connection",
+          "type": "string"
+        },
+        "joint_display": {
+          "default": "",
+          "title": "Joint Display",
+          "type": "string"
+        },
+        "discordance": {
+          "default": "",
+          "title": "Discordance",
+          "type": "string"
+        },
+        "meta_inference": {
+          "default": "",
+          "title": "Meta Inference",
+          "type": "string"
+        },
+        "weighting": {
+          "default": "",
+          "title": "Weighting",
+          "type": "string"
+        }
+      },
+      "title": "Integration",
+      "type": "object"
+    },
+    "Lens": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "explanatory_power": {
+          "title": "Explanatory Power",
+          "type": "string"
+        },
+        "epistemology": {
+          "title": "Epistemology",
+          "type": "string"
+        },
+        "scope_conditions": {
+          "title": "Scope Conditions",
+          "type": "string"
+        },
+        "method_fit": {
+          "title": "Method Fit",
+          "type": "string"
+        },
+        "operationalisation": {
+          "title": "Operationalisation",
+          "type": "string"
+        },
+        "selected": {
+          "default": false,
+          "title": "Selected",
+          "type": "boolean"
+        },
+        "selection_reason": {
+          "title": "Selection Reason",
+          "type": "string"
+        },
+        "used_in": {
+          "items": {
+            "enum": [
+              "sampling",
+              "measurement",
+              "analysis",
+              "interpretation"
+            ],
+            "type": "string"
+          },
+          "title": "Used In",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "source_ids",
+        "evidence_ids",
+        "explanatory_power",
+        "epistemology",
+        "scope_conditions",
+        "method_fit",
+        "operationalisation",
+        "selection_reason"
+      ],
+      "title": "Lens",
+      "type": "object"
+    },
+    "NoveltyChallenge": {
+      "additionalProperties": false,
+      "properties": {
+        "tentative_contribution": {
+          "title": "Tentative Contribution",
+          "type": "string"
+        },
+        "gap_kind": {
+          "enum": [
+            "author_claimed",
+            "researcher_inferred",
+            "empirically_checked"
+          ],
+          "title": "Gap Kind",
+          "type": "string"
+        },
+        "comparisons": {
+          "items": {
+            "$ref": "#/$defs/ClosestStudy"
+          },
+          "title": "Comparisons",
+          "type": "array"
+        },
+        "strongest_rival_id": {
+          "title": "Strongest Rival Id",
+          "type": "string"
+        },
+        "sceptical_case": {
+          "title": "Sceptical Case",
+          "type": "string"
+        },
+        "surviving_contribution": {
+          "title": "Surviving Contribution",
+          "type": "string"
+        },
+        "conceptual_consequence": {
+          "title": "Conceptual Consequence",
+          "type": "string"
+        },
+        "search_boundary": {
+          "title": "Search Boundary",
+          "type": "string"
+        },
+        "confidence_bounds": {
+          "title": "Confidence Bounds",
+          "type": "string"
+        },
+        "method_fit": {
+          "title": "Method Fit",
+          "type": "string"
+        },
+        "basis": {
+          "items": {
+            "enum": [
+              "mechanism",
+              "theoretical_integration",
+              "measurement",
+              "contradictory_evidence",
+              "geography_only",
+              "population_only",
+              "terminology_only",
+              "mixed_methods_only"
+            ],
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "proposed_verdict": {
+          "enum": [
+            "GAP_SUPPORTED",
+            "GAP_NARROW_BUT_DEFENSIBLE",
+            "GAP_NOT_SUPPORTED",
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "title": "Proposed Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tentative_contribution",
+        "gap_kind",
+        "strongest_rival_id",
+        "sceptical_case",
+        "surviving_contribution",
+        "conceptual_consequence",
+        "search_boundary",
+        "confidence_bounds",
+        "method_fit",
+        "basis",
+        "proposed_verdict"
+      ],
+      "title": "NoveltyChallenge",
+      "type": "object"
+    },
+    "Relationship": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "mechanism": {
+          "title": "Mechanism",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "source_verified",
+            "hypothesised",
+            "sensitising"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "relation_type": {
+          "enum": [
+            "association",
+            "proposed_mechanism",
+            "moderation",
+            "mediation",
+            "feedback",
+            "interpretative",
+            "causal"
+          ],
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "conditions": {
+          "title": "Conditions",
+          "type": "string"
+        },
+        "rival_mechanism": {
+          "title": "Rival Mechanism",
+          "type": "string"
+        },
+        "negative_case": {
+          "title": "Negative Case",
+          "type": "string"
+        },
+        "causal_identification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Causal Identification"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "target",
+        "mechanism",
+        "status",
+        "relation_type",
+        "conditions",
+        "rival_mechanism",
+        "negative_case"
+      ],
+      "title": "Relationship",
+      "type": "object"
+    },
+    "Strand": {
+      "additionalProperties": false,
+      "properties": {
+        "rq": {
+          "default": "",
+          "title": "Rq",
+          "type": "string"
+        },
+        "purpose": {
+          "default": "",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "outcome": {
+          "default": "",
+          "title": "Outcome",
+          "type": "string"
+        },
+        "estimand": {
+          "default": "",
+          "title": "Estimand",
+          "type": "string"
+        },
+        "measures": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Measures",
+          "type": "object"
+        },
+        "sampling_frame": {
+          "default": "",
+          "title": "Sampling Frame",
+          "type": "string"
+        },
+        "sampling_logic": {
+          "default": "",
+          "title": "Sampling Logic",
+          "type": "string"
+        },
+        "data_sources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Data Sources",
+          "type": "array"
+        },
+        "analysis": {
+          "default": "",
+          "title": "Analysis",
+          "type": "string"
+        },
+        "sample_rationale": {
+          "default": "",
+          "title": "Sample Rationale",
+          "type": "string"
+        },
+        "missingness_bias": {
+          "default": "",
+          "title": "Missingness Bias",
+          "type": "string"
+        },
+        "reflexivity": {
+          "default": "",
+          "title": "Reflexivity",
+          "type": "string"
+        },
+        "negative_cases": {
+          "default": "",
+          "title": "Negative Cases",
+          "type": "string"
+        },
+        "audit_trail": {
+          "default": "",
+          "title": "Audit Trail",
+          "type": "string"
+        }
+      },
+      "title": "Strand",
+      "type": "object"
+    },
+    "StudyDesign": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "mixed_methods",
+            "qualitative",
+            "quantitative",
+            "conceptual"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "quan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Strand"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "qual": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Strand"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "integration": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Integration"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "construct_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Construct Ids",
+          "type": "array"
+        },
+        "ethics_consent": {
+          "default": "",
+          "title": "Ethics Consent",
+          "type": "string"
+        },
+        "access_status": {
+          "default": "not_confirmed",
+          "enum": [
+            "not_confirmed",
+            "requested",
+            "confirmed",
+            "not_applicable"
+          ],
+          "title": "Access Status",
+          "type": "string"
+        },
+        "access_evidence": {
+          "default": "",
+          "title": "Access Evidence",
+          "type": "string"
+        },
+        "storage": {
+          "default": "",
+          "title": "Storage",
+          "type": "string"
+        },
+        "recruitment": {
+          "default": "",
+          "title": "Recruitment",
+          "type": "string"
+        },
+        "non_user_comparison": {
+          "default": "",
+          "title": "Non User Comparison",
+          "type": "string"
+        },
+        "requires_non_users": {
+          "default": false,
+          "title": "Requires Non Users",
+          "type": "boolean"
+        },
+        "go_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Go Conditions",
+          "type": "array"
+        },
+        "no_go_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "No Go Conditions",
+          "type": "array"
+        },
+        "fallback": {
+          "default": "",
+          "title": "Fallback",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "purpose"
+      ],
+      "title": "StudyDesign",
+      "type": "object"
     }
   },
   "additionalProperties": false,
   "properties": {
+    "schema_version": {
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "framework": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Framework"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "study_design": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StudyDesign"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "novelty": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NoveltyChallenge"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "editorial_review": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EditorialReview"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
     "thesis": {
       "default": "Not yet warranted: complete critical extraction and closest-work comparison",
       "title": "Thesis",

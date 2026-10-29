@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "GateResult": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "FAIL",
+            "BLOCKED",
+            "NOT_APPLICABLE"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "counts": {
+          "additionalProperties": true,
+          "title": "Counts",
+          "type": "object"
+        },
+        "required_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Evidence Ids",
+          "type": "array"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        },
+        "commands_executed": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Commands Executed",
+          "type": "array"
+        },
+        "applicable": {
+          "title": "Applicable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "reason",
+        "checked_at",
+        "applicable"
+      ],
+      "title": "GateResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "overall_status": {
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "FAIL",
+        "BLOCKED"
+      ],
+      "title": "Overall Status",
+      "type": "string"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    },
+    "gates": {
+      "additionalProperties": {
+        "$ref": "#/$defs/GateResult"
+      },
+      "title": "Gates",
+      "type": "object"
+    },
+    "framework_audit": {
+      "additionalProperties": true,
+      "title": "Framework Audit",
+      "type": "object"
+    },
+    "design_audit": {
+      "additionalProperties": true,
+      "title": "Design Audit",
+      "type": "object"
+    },
+    "novelty_audit": {
+      "additionalProperties": true,
+      "title": "Novelty Audit",
+      "type": "object"
+    },
+    "reading_audit": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Reading Audit",
+      "type": "array"
+    },
+    "synthetic": {
+      "title": "Synthetic",
+      "type": "boolean"
+    },
+    "structural_all_pass": {
+      "title": "Structural All Pass",
+      "type": "boolean"
+    },
+    "scientific_notice": {
+      "title": "Scientific Notice",
+      "type": "string"
+    }
+  },
+  "required": [
+    "overall_status",
+    "label",
+    "gates",
+    "framework_audit",
+    "design_audit",
+    "novelty_audit",
+    "reading_audit",
+    "synthetic",
+    "structural_all_pass",
+    "scientific_notice"
+  ],
+  "title": "QualityGates",
+  "type": "object"
+}

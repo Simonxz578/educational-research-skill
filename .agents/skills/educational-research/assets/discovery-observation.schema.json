@@ -1,0 +1,79 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "provider": {
+      "enum": [
+        "ERIC",
+        "Google Scholar"
+      ],
+      "title": "Provider",
+      "type": "string"
+    },
+    "query": {
+      "title": "Query",
+      "type": "string"
+    },
+    "executed_at": {
+      "title": "Executed At",
+      "type": "string"
+    },
+    "filters": {
+      "additionalProperties": true,
+      "title": "Filters",
+      "type": "object"
+    },
+    "results": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Results",
+      "type": "array"
+    },
+    "returned_count": {
+      "minimum": 0,
+      "title": "Returned Count",
+      "type": "integer"
+    },
+    "artifact_path": {
+      "title": "Artifact Path",
+      "type": "string"
+    },
+    "artifact_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Artifact Sha256",
+      "type": "string"
+    },
+    "observation_kind": {
+      "enum": [
+        "api_response",
+        "browser_observation",
+        "user_export"
+      ],
+      "title": "Observation Kind",
+      "type": "string"
+    },
+    "observer": {
+      "title": "Observer",
+      "type": "string"
+    },
+    "synthetic": {
+      "default": false,
+      "title": "Synthetic",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "provider",
+    "query",
+    "executed_at",
+    "results",
+    "returned_count",
+    "artifact_path",
+    "artifact_sha256",
+    "observation_kind",
+    "observer"
+  ],
+  "title": "DiscoveryObservation",
+  "type": "object"
+}
