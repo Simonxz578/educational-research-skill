@@ -15,8 +15,9 @@ from .core.graph import Synthesis, construct, validate_graph
 from .core.gaps import evaluate
 from .citations.format import csl
 from .citations.audit import audit as citation_audit
-from .render.essentials_pdf import render
-from .render.inspect import inspect
+from .core.discovery import DiscoveryObservation, load_observations
+from .core.protocol import SearchProtocol, provisional
+from .core.pack import finalise
 
 
 def dump(path, data):
@@ -53,19 +54,62 @@ def run(
     providers=("eric", "google-scholar", "crossref", "openalex"),
     include_draft=False,
     client=None,
+    protocol_path=None,
+    discovery_records=None,
+    execution_context=None,
 ):
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
+    previous_review = output / "Visual_Review.json"
+    if previous_review.exists():
+        from .core.reading import sha256_file
+
+        previous_review.rename(
+            output / ("Visual_Review.previous." + sha256_file(previous_review)[:12] + ".json")
+        )
     # Avoid stale essay files from a previous explicit drafting run contaminating a default run.
     if not include_draft and config.mode != "draft" and (output / "Draft_Manuscript.md").exists():
         raise ValueError("Output directory contains an earlier draft; choose a fresh output directory")
     logs, sources = [], load(sources_path) if sources_path else []
-    protocol = {
-        "config": config.model_dump(),
-        "candidate_target": config.candidate_target,
-        "note": "Prospective protocol; manual changes must be logged before selection",
-    }
-    dump(output / "search_protocol.json", protocol)
+    protocol = (
+        SearchProtocol.model_validate_json(Path(protocol_path).read_text())
+        if protocol_path
+        else provisional(config)
+    )
+    dump(output / "search_protocol.json", protocol.model_dump())
+    logs.append(
+        {"provider": "protocol", "status": "PROSPECTIVE_PROTOCOL", "prepared_at": protocol.prepared_at}
+    )
+    observations = load_observations(discovery_records) if discovery_records else []
+    for observation in observations:
+        if not observation.issues():
+            logs.append(
+                {
+                    "provider": observation.provider,
+                    "status": "ERIC_SEARCHED"
+                    if observation.provider == "ERIC"
+                    else "SCHOLAR_OBSERVATION_IMPORTED",
+                    "query": observation.query,
+                    "date": observation.executed_at,
+                    "filters": observation.filters,
+                    "ids": [r.get("id") for r in observation.results],
+                    "observed": len(observation.results),
+                    "artifact_sha256": observation.artifact_sha256,
+                    "provenance": "imported archived observation; not a new live request",
+                }
+            )
+        else:
+            logs.append(
+                {
+                    "provider": observation.provider,
+                    "status": "INVALID_OBSERVATION",
+                    "issues": observation.issues(),
+                }
+            )
+    if scholar_csv:
+        imported, entries = scholar.import_csv(scholar_csv)
+        sources.extend(imported)
+        logs.extend(entries)
     own_client = client is None
     client = client or Client(output / ".cache", offline=config.offline)
     if config.offline:
@@ -115,6 +159,11 @@ def run(
                     )
                     sources.extend(records)
                     logs.extend(entries)
+                    observations.extend(
+                        DiscoveryObservation.model_validate(e["observation"])
+                        for e in entries
+                        if e.get("observation")
+                    )
                 except FetchError as exc:
                     logs.append(
                         {
@@ -126,10 +175,6 @@ def run(
                             "observed": 0,
                         }
                     )
-        if scholar_csv:
-            records, entries = scholar.import_csv(scholar_csv)
-            sources.extend(records)
-            logs.extend(entries)
         if "crossref" in providers:
             for s in sources:
                 try:
@@ -173,7 +218,7 @@ def run(
     logs.append(
         {"provider": "Google Scholar", "status": "SCHOLAR_MANUAL_PLAN_ONLY", "date": config.search_date}
     )
-    if not scholar_csv or config.offline:
+    if not any(o.provider == "Google Scholar" and not o.issues() for o in observations):
         logs.append(
             {
                 "provider": "Google Scholar",
@@ -206,11 +251,15 @@ def run(
         synthesis = Synthesis.model_validate_json(Path(synthesis_path).read_text(encoding="utf-8"))
     else:
         synthesis = construct(included)
-    validate_graph(synthesis, included)
+    graph_errors = []
+    try:
+        validate_graph(synthesis, included)
+    except ValueError as exc:
+        graph_errors.append(str(exc))
     included_ids = {s.id for s in included}
     for source in included:
         if not set(source.comparison_ids) <= included_ids:
-            raise ValueError(
+            graph_errors.append(
                 f"{source.id}: comparative sources absent from selected pack; increase reference target or review selection"
             )
     gaps = evaluate(synthesis.gaps, included, logs)
@@ -316,21 +365,17 @@ def run(
             ),
             encoding="utf-8",
         )
-    pdf = output / "Educational_Research_Essentials.pdf"
-    render(pdf, config, included, synthesis, gaps, logs, audit)
-    audit["pdf"] = inspect(pdf, output / "previews")
-    audit["passed"] = not audit["pdf"]["errors"]
-    dump(output / "audit.json", audit)
-    (output / "QA_Report.md").write_text(
-        "# Research Pack QA\n\n"
-        + "\n".join(
-            f"- {k}: {v}"
-            for k, v in audit.items()
-            if k not in {"claims_requiring_review", "claim_coverage"}
-        )
-        + "\n\nShortfalls include unverified identities. Synthetic packs are TEST ONLY. "
-        "Review rendered preview images before accepting layout. Metadata-only runs do not establish research gaps.\n",
-        encoding="utf-8",
+    audit = finalise(
+        output,
+        config,
+        included,
+        synthesis,
+        logs,
+        observations,
+        audit,
+        graph_errors,
+        draft_text,
+        execution_context or {},
     )
     if own_client:
         client.close()

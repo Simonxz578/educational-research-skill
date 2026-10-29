@@ -2,8 +2,10 @@
 
 import re
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 from .config import today
+from .models_base import Record
+from .core.reading import FullTextReading
 
 
 def quotation_units(text):
@@ -11,10 +13,6 @@ def quotation_units(text):
     cjk = re.findall(r"[\u2e80-\u9fff]", text)
     other = re.sub(r"[\u2e80-\u9fff]", " ", text)
     return len(cjk) + len(re.findall(r"\S+", other))
-
-
-class Record(BaseModel):
-    model_config = ConfigDict(extra="forbid")
 
 
 class Author(Record):
@@ -78,6 +76,9 @@ class Assessment(Record):
 
 
 class Source(Record):
+    schema_version: Literal["1.0", "2.0"] = "2.0"
+    reading: FullTextReading | None = None
+    work_id: str | None = None
     id: str
     title: str
     authors: list[Author] = Field(default_factory=list)
@@ -114,7 +115,14 @@ class Source(Record):
     comparison_ids: list[str] = Field(default_factory=list)
     relationship: str = "not assessed"
     access: Literal[
-        "FULL_TEXT_VERIFIED", "ABSTRACT_ONLY", "METADATA_ONLY", "USER_SUPPLIED", "UNAVAILABLE"
+        "FULL_TEXT_VERIFIED",
+        "ABSTRACT_ONLY",
+        "METADATA_ONLY",
+        "USER_SUPPLIED",
+        "UNAVAILABLE",
+        "FULL_TEXT_READ_BY_AGENT",
+        "USER_SUPPLIED_FULL_TEXT",
+        "UNVERIFIED",
     ] = "METADATA_ONLY"
     identity: Literal["VERIFIED", "UNVERIFIED", "CONFLICT", "SYNTHETIC"] = "UNVERIFIED"
     publication_status: str = "not checked"
@@ -127,9 +135,16 @@ class Source(Record):
     assessments: dict[str, Assessment] = Field(default_factory=dict)
     provenance: list[dict] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
-    quote_budget: int = Field(default=25, ge=0, le=200)
+    quote_budget: int = Field(default=20, ge=0, le=200)
     permissive_licence_url: str | None = None
     synthetic: bool = False
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_v1(cls, value):
+        if isinstance(value, dict) and "schema_version" not in value:
+            value = {**value, "schema_version": "1.0"}
+        return value
 
     @field_validator("doi")
     @classmethod
@@ -147,14 +162,22 @@ class Source(Record):
             raise ValueError("Synthetic records must have SYNTHETIC identity")
         if self.identity == "SYNTHETIC" and not self.synthetic:
             raise ValueError("SYNTHETIC identity requires synthetic flag")
-        if self.quote_budget > 25 and not self.permissive_licence_url:
+        if (
+            self.quote_budget > (25 if self.schema_version == "1.0" else 20)
+            and not self.permissive_licence_url
+        ):
             raise ValueError("Extended quotation budget requires licence provenance")
         segments = {s.id: s for s in self.segments}
         if self.access == "FULL_TEXT_VERIFIED" and not self.segments:
             raise ValueError("Full-text verification requires actual evidence segments")
         if len(segments) != len(self.segments):
             raise ValueError("Duplicate segment IDs")
-        if self.quotes and self.access not in {"FULL_TEXT_VERIFIED", "USER_SUPPLIED"}:
+        if self.quotes and self.access not in {
+            "FULL_TEXT_VERIFIED",
+            "USER_SUPPLIED",
+            "FULL_TEXT_READ_BY_AGENT",
+            "USER_SUPPLIED_FULL_TEXT",
+        }:
             raise ValueError("No verified excerpts from abstract/metadata-only records")
         for q in self.quotes:
             seg = segments.get(q.segment_id)

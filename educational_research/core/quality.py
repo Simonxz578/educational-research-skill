@@ -7,7 +7,12 @@ CAPS = {"summary": 55, "source_argument": 40, "target_argument": 40, "relevance_
 
 def warnings(source):
     result = list(source.warnings)
-    if source.access not in {"FULL_TEXT_VERIFIED", "USER_SUPPLIED"}:
+    if source.access not in {
+        "FULL_TEXT_VERIFIED",
+        "USER_SUPPLIED",
+        "FULL_TEXT_READ_BY_AGENT",
+        "USER_SUPPLIED_FULL_TEXT",
+    }:
         result.append("ABSTRACT/METADATA EVIDENCE ONLY: full-text claims not verified")
     if source.identity not in {"VERIFIED", "SYNTHETIC"}:
         result.append("Unresolved citation identity: retained as candidate, not verified bibliography")

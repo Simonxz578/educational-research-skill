@@ -1,6 +1,10 @@
 """API contract inspected at https://eric.ed.gov/api/eric-api.yaml."""
 
 import logging
+import json
+import hashlib
+from ..core.discovery import utc_now
+from ..core.reading import sha256_file
 import re
 from ..models import Author, Source, Segment
 from ..config import today
@@ -99,6 +103,35 @@ def search(client, search_query, limit=30, sort=None):
                 "ids": [d["id"] for d in docs],
             }
         )
+        if not client.log or not client.log[-1].get("cache"):
+            artifact = client.cache / (
+                "eric-execution-"
+                + hashlib.sha256(json.dumps(params, sort_keys=True).encode()).hexdigest()
+                + ".json"
+            )
+            artifact.write_text(json.dumps(data), encoding="utf-8")
+            log[-1]["observation"] = {
+                "provider": "ERIC",
+                "query": search_query,
+                "executed_at": utc_now(),
+                "filters": params,
+                "returned_count": response.get("numFound", 0),
+                "results": [
+                    {
+                        "id": d["id"],
+                        "title": d.get("title", ""),
+                        "url": f"https://eric.ed.gov/?id={d['id']}",
+                    }
+                    for d in docs
+                ],
+                "artifact_path": str(artifact.resolve()),
+                "artifact_sha256": sha256_file(artifact),
+                "observation_kind": "api_response",
+                "observer": "native ERIC adapter",
+                "synthetic": False,
+            }
+        else:
+            log[-1]["status"] = "ERIC_CACHED"
         records.extend(normalise(d) for d in docs)
         logging.info("ERIC batch start=%s observed=%s", start, len(docs))
         if not docs or start + len(docs) >= response.get("numFound", 0):

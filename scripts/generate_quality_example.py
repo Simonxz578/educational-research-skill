@@ -1,0 +1,49 @@
+"""Run the real CLI on TEST ONLY full-text structural fixtures; never a real research pass."""
+
+import argparse
+import json
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tests.v2_factory import bundle
+from educational_research.cli import main
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser()
+    p.add_argument("--output", default="outputs/quality-v2")
+    a = p.parse_args()
+    root = Path(a.output)
+    root.mkdir(parents=True, exist_ok=True)
+    from educational_research.core.protocol import provisional
+    from educational_research.config import Config
+
+    protocol = provisional(Config(topic="library learning"))
+    protocol_path = root / "synthetic-protocol.json"
+    protocol_path.write_text(protocol.model_dump_json(indent=2))
+    sources, synthesis, observations, _ = bundle(root / "synthetic-inputs")
+    paths = {
+        "sources": root / "synthetic-sources.json",
+        "synthesis": root / "synthetic-synthesis.json",
+        "discovery-records": root / "synthetic-observations.json",
+    }
+    for key, records in [
+        ("sources", [s.model_dump() for s in sources]),
+        ("synthesis", synthesis.model_dump()),
+        ("discovery-records", [o.model_dump() for o in observations]),
+    ]:
+        paths[key].write_text(json.dumps(records, ensure_ascii=False, indent=2))
+    args = [
+        "--topic",
+        "library learning",
+        "--rq",
+        "How should reported routines and observed outcomes be distinguished?",
+        "--offline",
+        "--protocol",
+        str(protocol_path),
+        "--output-dir",
+        str(root),
+    ]
+    for flag, path in paths.items():
+        args += ["--" + flag, str(path)]
+    raise SystemExit(main(args))

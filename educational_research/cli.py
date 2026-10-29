@@ -3,6 +3,9 @@
 import argparse
 import json
 import logging
+import sys
+import shlex
+from .core.discovery import utc_now
 from .config import Config
 from .pipeline import run
 
@@ -26,8 +29,19 @@ def parser():
             "revise",
             "full",
             "draft",
+            "framework",
         ],
         default="full",
+    )
+    p.add_argument("--quality-level", choices=["exploratory", "substantive"])
+    p.add_argument("--min-reviewed-fulltexts", type=int, default=10)
+    p.add_argument("--require-verifiable-scholar", action="store_true")
+    p.add_argument("--strict-quality-gates", action="store_true")
+    p.add_argument("--empirical-proposal", action="store_true")
+    p.add_argument("--protocol", help="Prospective scoped protocol JSON, prepared before searching")
+    p.add_argument(
+        "--discovery-records",
+        help="Archived API receipts or lawful Scholar observations with artifact digests",
     )
     p.add_argument("--language", default="en-GB")
     p.add_argument("--offline", action="store_true")
@@ -89,6 +103,17 @@ def main(argv=None):
             args.scholar_csv,
             providers,
             args.include_draft,
+            protocol_path=args.protocol,
+            discovery_records=args.discovery_records,
+            execution_context={
+                "entrypoint": "educational_research.cli",
+                "argv": list(argv) if argv is not None else sys.argv[1:],
+                "command": shlex.join(
+                    ["python", "-m", "educational_research.cli"]
+                    + (list(argv) if argv is not None else sys.argv[1:])
+                ),
+                "started_at": utc_now(),
+            },
         )
     except (ValueError, OSError, RuntimeError) as exc:
         parser().exit(2, f"Research pack failed: {exc}\n")
@@ -96,13 +121,17 @@ def main(argv=None):
         json.dumps(
             {
                 "output_dir": args.output_dir,
-                "passed": result["passed"],
+                "layout_passed": result["layout_passed"],
+                "research_status": result["research_quality"]["overall_status"],
+                "label": result["research_quality"]["label"],
                 "included": result["included"],
                 "reference_shortfall": result["reference_shortfall"],
             }
         )
     )
-    return 0 if result["passed"] else 1
+    if args.strict_quality_gates and not result["research_passed"]:
+        return 3
+    return 0 if result["layout_passed"] else 1
 
 
 if __name__ == "__main__":

@@ -2,7 +2,11 @@
 
 from typing import Literal
 from pydantic import Field, model_validator
-from ..models import Record
+from ..models_base import Record
+from .framework import Framework
+from .design import StudyDesign
+from .novelty import NoveltyChallenge
+from .editorial import EditorialReview
 
 
 class Claim(Record):
@@ -16,17 +20,43 @@ class Claim(Record):
     objection_id: str = ""
     qualification: str = "Provisional; evaluate evidence access and inference limits"
     confidence: str = "provisional"
+    comparison: str = ""
+    author_positions: dict[str, str] = Field(default_factory=dict)
+    opposing_evidence_ids: list[str] = Field(default_factory=list)
+    own_inference: str = ""
+    scope: str = ""
+    theory_ids: list[str] = Field(default_factory=list)
+    rq_ids: list[str] = Field(default_factory=list)
+    section: str = ""
+    paragraph_plan: list[str] = Field(default_factory=list)
+    transition_warrant: str = ""
+    relative_strength: str = ""
     depends_on: list[str] = Field(default_factory=list)
 
 
 class Edge(Record):
     source: str
     target: str
-    kind: Literal["supports", "contradicts", "qualifies", "depends_on"]
+    kind: Literal[
+        "supports",
+        "contradicts",
+        "qualifies",
+        "depends_on",
+        "extends",
+        "different_context",
+        "method_incompatible",
+        "same_construct_different_measure",
+    ]
     rationale: str
+    evidence_ids: list[str] = Field(default_factory=list)
 
 
 class Synthesis(Record):
+    schema_version: str = "2.0"
+    framework: Framework | None = None
+    study_design: StudyDesign | None = None
+    novelty: NoveltyChallenge | None = None
+    editorial_review: EditorialReview | None = None
     thesis: str = "Not yet warranted: complete critical extraction and closest-work comparison"
     claims: list[Claim] = Field(default_factory=list)
     edges: list[Edge] = Field(default_factory=list)

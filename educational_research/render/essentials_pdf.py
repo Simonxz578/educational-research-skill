@@ -29,9 +29,9 @@ SECTIONS = [
     "A. Research Focus",
     "B. Research Gap Evidence",
     "C. Key Debates & Author Argument Chains",
-    "D. Ranked Evidence & Argument Matrix",
-    "E. APA 7 References",
-    "F. Search & Verification Notes",
+    "F. Ranked Evidence & Argument Matrix",
+    "G. APA 7 References",
+    "H. Search & Verification Notes",
 ]
 
 
@@ -185,7 +185,11 @@ def render(path, config, sources, synthesis, gaps, logs, audit):
         story.extend([table, Spacer(1, 8)])
 
     synthetic = any(s.synthetic for s in sources)
+    research_quality = audit.get("research_quality", {})
+    provisional = research_quality.get("overall_status") != "PASS"
     story += [p("Educational Research Essentials", title)]
+    if provisional:
+        story.append(p("PROVISIONAL - NOT FULLY VERIFIED"))
     if synthetic:
         story.append(p("TEST ONLY - SYNTHETIC SOURCES; NOT SCHOLARLY EVIDENCE"))
     story += [p(SECTIONS[0], heading)]
@@ -216,6 +220,28 @@ def render(path, config, sources, synthesis, gaps, logs, audit):
         ]
     )
     story.append(p(SECTIONS[1], heading))
+    novelty = research_quality.get("novelty_audit", {})
+    rows_table(
+        [
+            ("Novelty verdict", novelty.get("verdict", "INSUFFICIENT_EVIDENCE")),
+            (
+                "Strongest rival",
+                novelty.get("strongest_rival_id", "not established")
+                + "\n"
+                + novelty.get("sceptical_case", "Closest-work challenge incomplete"),
+            ),
+            (
+                "Surviving contribution",
+                novelty.get("surviving_contribution", "No novelty claim warranted"),
+            ),
+            ("Boundary", novelty.get("boundary", "Bounded comparison not established")),
+        ]
+    )
+    for comparison in novelty.get("comparisons", []):
+        rows_table(
+            [(k, ", ".join(v) if isinstance(v, list) else str(v)) for k, v in comparison.items()],
+            "Closest study: " + comparison["source_id"],
+        )
     for gap in gaps:
         rows_table(
             [
@@ -255,6 +281,16 @@ def render(path, config, sources, synthesis, gaps, logs, audit):
             ],
             c.id,
         )
+        if c.comparison or c.own_inference or c.paragraph_plan:
+            rows_table(
+                [
+                    ("Source positions", "; ".join(k + ": " + v for k, v in c.author_positions.items())),
+                    ("Critical comparison", c.comparison),
+                    ("Own inference / scope", c.own_inference + "\n" + c.scope),
+                    ("Paragraph plan", "\n".join(c.paragraph_plan)),
+                    ("Transition warrant", c.transition_warrant),
+                ]
+            )
     for edge in synthesis.edges:
         rows_table([("Relationship", f"{edge.source} {edge.kind} {edge.target}: {edge.rationale}")])
     if synthesis.alignment:
@@ -262,6 +298,155 @@ def render(path, config, sources, synthesis, gaps, logs, audit):
             [(k, ", ".join(v)) for k, v in synthesis.alignment.items()],
             "Outline and manuscript alignment",
         )
+    story.append(p("D. Theoretical / Conceptual Framework", heading))
+    framework = synthesis.framework
+    from .framework import drawing
+
+    if framework:
+        rows_table(
+            [
+                ("Phenomenon / outcomes", framework.phenomenon + "; " + "; ".join(framework.outcomes)),
+                (
+                    "Selection / contribution",
+                    framework.combination_justification
+                    or framework.no_single_theory_rationale
+                    or "One primary lens; compare alternatives below",
+                ),
+                (
+                    "Theory limit / contribution",
+                    framework.theory_failure + "\n" + framework.modest_contribution,
+                ),
+                (
+                    "Scope / revision triggers",
+                    framework.scope_limits + "\n" + "; ".join(framework.revision_triggers),
+                ),
+            ]
+        )
+        for lens in framework.candidates:
+            rows_table(
+                [
+                    (
+                        "Evidence / position",
+                        lens.name
+                        + "; "
+                        + ("PRIMARY" if lens.selected else "ALTERNATIVE")
+                        + "\n"
+                        + ", ".join(lens.source_ids + lens.evidence_ids),
+                    ),
+                    ("Explanatory fit", lens.explanatory_power + "\nEpistemology: " + lens.epistemology),
+                    ("Scope / decision", lens.scope_conditions + "\n" + lens.selection_reason),
+                    (
+                        "Method use",
+                        lens.method_fit
+                        + "; "
+                        + lens.operationalisation
+                        + "; used in: "
+                        + ", ".join(lens.used_in),
+                    ),
+                ],
+                lens.id,
+            )
+        story.append(drawing(framework, width))
+        story.append(
+            p(
+                "Solid links: source-verified. Dashed links: proposed hypotheses or sensitising concepts. Direction does not establish causality.",
+                dense,
+            )
+        )
+        for construct in framework.constructs:
+            rows_table(
+                [
+                    (
+                        "Definition / boundary",
+                        construct.name + ": " + construct.definition + "\n" + construct.boundaries,
+                    ),
+                    (
+                        "Theory / RQ / evidence",
+                        ", ".join(
+                            construct.lens_ids
+                            + construct.rq_ids
+                            + construct.claim_ids
+                            + construct.evidence_ids
+                        ),
+                    ),
+                    ("Measure / analysis", construct.operationalisation + "\n" + construct.analysis_use),
+                    (
+                        "Expected / disconfirming",
+                        construct.expected_pattern + "\n" + construct.disconfirming_pattern,
+                    ),
+                ],
+                construct.id,
+            )
+        for relation in framework.relationships:
+            rows_table(
+                [
+                    (
+                        "Relationship",
+                        f"{relation.source} -> {relation.target}; {relation.status}; {relation.relation_type}",
+                    ),
+                    (
+                        "Mechanism / evidence",
+                        relation.mechanism + "\n" + ", ".join(relation.evidence_ids),
+                    ),
+                    (
+                        "Conditions / rival",
+                        relation.conditions
+                        + "\n"
+                        + relation.rival_mechanism
+                        + "\nNegative case: "
+                        + relation.negative_case,
+                    ),
+                ],
+                relation.id,
+            )
+    else:
+        story.append(
+            p(
+                "Framework not established: compare literature-led explanatory lenses, define constructs and link them to the RQ, evidence and method before substantive acceptance."
+            )
+        )
+    framework_audit = research_quality.get("framework_audit", {})
+    for drift in framework_audit.get("drift", []):
+        rows_table([("Construct drift", str(drift))])
+    if synthesis.study_design or config.empirical_proposal:
+        story.append(p("E. Study Design / Feasibility", heading))
+        design = synthesis.study_design
+        if design:
+            rows_table(
+                [
+                    ("Proposed design", design.kind + ": " + design.purpose),
+                    (
+                        "Access / ethics",
+                        design.access_status
+                        + "; "
+                        + design.access_evidence
+                        + "\n"
+                        + design.ethics_consent,
+                    ),
+                    ("Recruitment / storage", design.recruitment + "\n" + design.storage),
+                    (
+                        "Go / no-go / fallback",
+                        "; ".join(design.go_conditions)
+                        + "\n"
+                        + "; ".join(design.no_go_conditions)
+                        + "\n"
+                        + design.fallback,
+                    ),
+                ]
+            )
+            for label, strand in [
+                ("QUAN", design.quan),
+                ("QUAL", design.qual),
+                ("INTEGRATION", design.integration),
+            ]:
+                if strand:
+                    rows_table([(k, str(v)) for k, v in strand.model_dump().items() if v], label)
+        else:
+            story.append(
+                p(
+                    "Empirical design and feasibility not established. No data, access or recruitment is assumed."
+                )
+            )
     story += [PageBreak(), p(SECTIONS[3], heading)]
     citations = dict(bibliography([s for s in sources if s.identity in {"VERIFIED", "SYNTHETIC"}]))
     for index, s in enumerate(sources, 1):
@@ -407,14 +592,33 @@ def render(path, config, sources, synthesis, gaps, logs, audit):
         ]
     )
 
+    # Keep each short note table together; gate explanations may legitimately span pages.
     story[notes_start:] = [KeepTogether(story[notes_start:])]
+    story.append(p("Research Quality Gates", heading))
+    for key, gate in research_quality.get("gates", {}).items():
+        # Reasons are separate diagnostic fragments, not a generated continuous essay.
+        reasons = gate["reason"].split("; ")
+        rows_table(
+            [("Status / counts", gate["status"] + "; " + str(gate.get("counts", {})))]
+            + [("Finding", r) for r in reasons],
+            key,
+        )
+    story.append(
+        p("Structural checks do not certify comprehension, originality or journal acceptance.", dense)
+    )
 
     def frame(canvas, doc):
         canvas.saveState()
         canvas.setFont("ResearchSerif", 9)
         canvas.drawString(STYLE["left"], A4[1] - 33, "Educational Research")
         canvas.drawRightString(
-            A4[0] - STYLE["right"], A4[1] - 33, "TEST ONLY" if synthetic else "Evidence Essentials"
+            A4[0] - STYLE["right"],
+            A4[1] - 33,
+            "TEST ONLY | PROVISIONAL"
+            if synthetic
+            else "PROVISIONAL"
+            if provisional
+            else "Evidence Essentials",
         )
         canvas.setLineWidth(0.45)
         canvas.line(STYLE["left"], A4[1] - 42.5, A4[0] - STYLE["right"], A4[1] - 42.5)

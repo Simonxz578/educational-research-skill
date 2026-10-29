@@ -2,13 +2,15 @@
 
 from pathlib import Path
 import fitz
+from urllib.parse import urlparse
 from .essentials_pdf import SECTIONS
 
 
-def inspect(path, preview_dir=None):
+def inspect(path, preview_dir=None, expected_sources=None, expected_framework=None):
     errors, texts, fonts, minimum = [], [], set(), 100
     with fitz.open(path) as doc:
         dense_pages = []
+        framework_pages = []
         for i, page in enumerate(doc):
             text = page.get_text()
             texts.append(text)
@@ -23,6 +25,8 @@ def inspect(path, preview_dir=None):
                 for line in b["lines"]
                 for span in line["spans"]
             ]
+            if "Solid links:" in text:
+                framework_pages.append(i)
             if "Original excerpts" in text:
                 dense_pages.append(i)
             for span in spans:
@@ -31,6 +35,10 @@ def inspect(path, preview_dir=None):
                 x0, y0, x1, y1 = span["bbox"]
                 if x0 < 55 or x1 > 540 or y0 < 15 or y1 > page.rect.height - 15:
                     errors.append(f"Text outside page content bounds: {i + 1}, {span['text'][:35]}")
+                if 50 < y0 < 790 and span["size"] < 9.3:
+                    errors.append(
+                        f"Text too small for analytical content: page {i + 1}, {span['size']:.1f} pt"
+                    )
                 if "\ufffd" in span["text"] or "\x00" in span["text"]:
                     errors.append(f"Unsupported glyph page {i + 1}")
             footer = [s for s in spans if s["bbox"][1] > 800 and s["text"] == str(i + 1)]
@@ -43,11 +51,34 @@ def inspect(path, preview_dir=None):
         for section in SECTIONS:
             if section not in all_text:
                 errors.append(f"Missing section {section}")
+        links = [link for page in doc for link in page.get_links()]
+        for link in links:
+            if link.get("uri"):
+                parsed = urlparse(link["uri"])
+                if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+                    errors.append("Malformed or unsupported external hyperlink")
+            elif link.get("kind") == fitz.LINK_GOTO and not 0 <= link.get("page", -1) < len(doc):
+                errors.append("Broken internal page link")
+        if "D. Theoretical / Conceptual Framework" not in all_text:
+            errors.append("Missing native framework section")
+        if expected_sources:
+            for source_id in expected_sources:
+                if source_id not in all_text:
+                    errors.append(f"Missing source in PDF: {source_id}")
+        if expected_framework:
+            normalised = " ".join(all_text.split())
+            for construct in expected_framework.constructs:
+                if " ".join(construct.name.split()) not in normalised:
+                    errors.append(f"Unreadable/absent framework construct: {construct.id}")
+            if "Solid links:" not in all_text:
+                errors.append("Framework diagram legend missing")
         paths = []
         if preview_dir:
             folder = Path(preview_dir)
             folder.mkdir(parents=True, exist_ok=True)
-            indices = sorted(set([0, len(doc) // 2, len(doc) - 1] + dense_pages[:1]))
+            indices = sorted(
+                set([0, len(doc) // 2, len(doc) - 1] + dense_pages[:1] + framework_pages[:1])
+            )
             for i in indices:
                 file = folder / f"page-{i + 1:03}.png"
                 doc[i].get_pixmap(matrix=fitz.Matrix(1.35, 1.35)).save(file)
@@ -59,5 +90,10 @@ def inspect(path, preview_dir=None):
             "minimum_font_size": round(minimum, 2),
             "previews": paths,
             "visual_review": "PENDING_HUMAN_OR_AGENT_IMAGE_REVIEW",
+            "link_validation": {
+                "status": "SYNTAX_AND_INTERNAL_DESTINATIONS_CHECKED",
+                "external_resolution": "NOT_CHECKED_OFFLINE",
+                "total": len(links),
+            },
             "doi_links": sum(len(p.get_links()) for p in doc),
         }

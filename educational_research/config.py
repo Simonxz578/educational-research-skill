@@ -6,7 +6,9 @@ from typing import Literal
 from zoneinfo import ZoneInfo
 from pydantic import BaseModel, Field
 
-Mode = Literal["discover", "search", "synthesise", "gap", "outline", "audit", "revise", "full", "draft"]
+Mode = Literal[
+    "discover", "search", "synthesise", "gap", "outline", "audit", "revise", "full", "draft", "framework"
+]
 
 
 def today():
@@ -14,6 +16,11 @@ def today():
 
 
 class Config(BaseModel):
+    quality_level: Literal["exploratory", "substantive"] | None = None
+    min_reviewed_fulltexts: int = Field(default=10, ge=1)
+    require_verifiable_scholar: bool = False
+    strict_quality_gates: bool = False
+    empirical_proposal: bool = False
     topic: str = "Manuscript evidence audit"
     target_words: int = Field(default=1000, gt=0)
     target_references: int | None = Field(default=None, gt=0)
@@ -37,6 +44,11 @@ class Config(BaseModel):
     )
     exclusion: str = "Duplicate works; unresolved identity; out-of-scope content; retracted findings"
     search_date: str = Field(default_factory=today)
+
+    @property
+    def substantive(self):
+        # Explicit exploratory settings never relax strict substantive mode acceptance.
+        return self.mode not in {"discover", "search"} or self.quality_level == "substantive"
 
     @property
     def quota(self):
