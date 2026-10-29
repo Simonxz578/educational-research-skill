@@ -1,0 +1,606 @@
+{
+  "$defs": {
+    "Assessment": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Value",
+          "type": "number"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "rationale",
+        "checked_at"
+      ],
+      "title": "Assessment",
+      "type": "object"
+    },
+    "Author": {
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "default": "",
+          "title": "Family",
+          "type": "string"
+        },
+        "given": {
+          "default": "",
+          "title": "Given",
+          "type": "string"
+        },
+        "literal": {
+          "default": "",
+          "title": "Literal",
+          "type": "string"
+        }
+      },
+      "title": "Author",
+      "type": "object"
+    },
+    "Extraction": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "segment_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Segment Ids",
+          "type": "array"
+        },
+        "basis": {
+          "enum": [
+            "source-author claim",
+            "source evidence",
+            "researcher interpretation"
+          ],
+          "title": "Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "segment_ids",
+        "basis"
+      ],
+      "title": "Extraction",
+      "type": "object"
+    },
+    "Metric": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "enum": [
+            "JIF",
+            "SJR",
+            "CiteScore",
+            "h5-index",
+            "article_citations",
+            "FWCI"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "minimum": 0,
+          "title": "Value",
+          "type": "number"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        },
+        "year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Year"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category"
+        },
+        "quartile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quartile"
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "source",
+        "checked_at"
+      ],
+      "title": "Metric",
+      "type": "object"
+    },
+    "Quote": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "segment_id": {
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "translation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Translation"
+        },
+        "translation_kind": {
+          "default": "not translated",
+          "enum": [
+            "user",
+            "published",
+            "not translated"
+          ],
+          "title": "Translation Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "segment_id"
+      ],
+      "title": "Quote",
+      "type": "object"
+    },
+    "Segment": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "locator": {
+          "default": "location unknown",
+          "title": "Locator",
+          "type": "string"
+        },
+        "pdf_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdf Page"
+        },
+        "printed_page": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Printed Page"
+        },
+        "licence": {
+          "default": "not verified",
+          "title": "Licence",
+          "type": "string"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "url"
+      ],
+      "title": "Segment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "authors": {
+      "items": {
+        "$ref": "#/$defs/Author"
+      },
+      "title": "Authors",
+      "type": "array"
+    },
+    "year": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Year"
+    },
+    "online_year": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Online Year"
+    },
+    "issue_year": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Issue Year"
+    },
+    "type": {
+      "default": "article-journal",
+      "title": "Type",
+      "type": "string"
+    },
+    "journal": {
+      "default": "",
+      "title": "Journal",
+      "type": "string"
+    },
+    "publisher": {
+      "default": "",
+      "title": "Publisher",
+      "type": "string"
+    },
+    "volume": {
+      "default": "",
+      "title": "Volume",
+      "type": "string"
+    },
+    "issue": {
+      "default": "",
+      "title": "Issue",
+      "type": "string"
+    },
+    "pages": {
+      "default": "",
+      "title": "Pages",
+      "type": "string"
+    },
+    "doi": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Doi"
+    },
+    "url": {
+      "default": "",
+      "title": "Url",
+      "type": "string"
+    },
+    "eric_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Eric Id"
+    },
+    "peer_reviewed": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Peer Reviewed"
+    },
+    "descriptors": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Descriptors",
+      "type": "array"
+    },
+    "education_level": {
+      "default": "not reported",
+      "title": "Education Level",
+      "type": "string"
+    },
+    "country": {
+      "default": "not reported",
+      "title": "Country",
+      "type": "string"
+    },
+    "participants": {
+      "default": "not reported",
+      "title": "Participants",
+      "type": "string"
+    },
+    "design": {
+      "default": "not reported",
+      "title": "Design",
+      "type": "string"
+    },
+    "evidence_kind": {
+      "default": "not verified",
+      "title": "Evidence Kind",
+      "type": "string"
+    },
+    "objective": {
+      "default": "not verified",
+      "title": "Objective",
+      "type": "string"
+    },
+    "theory": {
+      "default": "not verified",
+      "title": "Theory",
+      "type": "string"
+    },
+    "abstract": {
+      "default": "",
+      "title": "Abstract",
+      "type": "string"
+    },
+    "summary": {
+      "default": "not verified",
+      "title": "Summary",
+      "type": "string"
+    },
+    "source_argument": {
+      "default": "not verified",
+      "title": "Source Argument",
+      "type": "string"
+    },
+    "target_argument": {
+      "default": "not constructed",
+      "title": "Target Argument",
+      "type": "string"
+    },
+    "relevance_explanation": {
+      "default": "not assessed",
+      "title": "Relevance Explanation",
+      "type": "string"
+    },
+    "limitations": {
+      "default": "not verified",
+      "title": "Limitations",
+      "type": "string"
+    },
+    "evidence_strength": {
+      "default": "not assessed",
+      "title": "Evidence Strength",
+      "type": "string"
+    },
+    "cluster": {
+      "default": "Unclassified",
+      "title": "Cluster",
+      "type": "string"
+    },
+    "role": {
+      "default": "candidate",
+      "title": "Role",
+      "type": "string"
+    },
+    "comparison_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Comparison Ids",
+      "type": "array"
+    },
+    "relationship": {
+      "default": "not assessed",
+      "title": "Relationship",
+      "type": "string"
+    },
+    "access": {
+      "default": "METADATA_ONLY",
+      "enum": [
+        "FULL_TEXT_VERIFIED",
+        "ABSTRACT_ONLY",
+        "METADATA_ONLY",
+        "USER_SUPPLIED",
+        "UNAVAILABLE"
+      ],
+      "title": "Access",
+      "type": "string"
+    },
+    "identity": {
+      "default": "UNVERIFIED",
+      "enum": [
+        "VERIFIED",
+        "UNVERIFIED",
+        "CONFLICT",
+        "SYNTHETIC"
+      ],
+      "title": "Identity",
+      "type": "string"
+    },
+    "publication_status": {
+      "default": "not checked",
+      "title": "Publication Status",
+      "type": "string"
+    },
+    "checked_at": {
+      "title": "Checked At",
+      "type": "string"
+    },
+    "providers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Providers",
+      "type": "array"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/Segment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "quotes": {
+      "items": {
+        "$ref": "#/$defs/Quote"
+      },
+      "title": "Quotes",
+      "type": "array"
+    },
+    "extractions": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Extraction"
+      },
+      "title": "Extractions",
+      "type": "object"
+    },
+    "metrics": {
+      "items": {
+        "$ref": "#/$defs/Metric"
+      },
+      "title": "Metrics",
+      "type": "array"
+    },
+    "assessments": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Assessment"
+      },
+      "title": "Assessments",
+      "type": "object"
+    },
+    "provenance": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Provenance",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "quote_budget": {
+      "default": 25,
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Quote Budget",
+      "type": "integer"
+    },
+    "permissive_licence_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Permissive Licence Url"
+    },
+    "synthetic": {
+      "default": false,
+      "title": "Synthetic",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "title"
+  ],
+  "title": "Source",
+  "type": "object"
+}

@@ -1,0 +1,7 @@
+# APA 7 and identity
+
+Verify DOI identity, all authors/order, title, issue vs online-first years, venue, volume/issue, pages/article number and publication type against Crossref and the current publisher/VoR. Preserve both values and provenance on conflict. Do not invent DOI, pages or issue. DOI-less books/reports can be verified through publisher/catalog. Flag updates/corrections/retractions; absence of an update in Crossref is not a complete retraction audit. Resolve publisher notices before unqualified use.
+
+The package uses citeproc-py with the installed CSL `apa` style (CSL project external licence). APA 7 lists up to 20 authors; for 21+ use first 19, ellipsis, final author. Preserve diacritics and organisation names. Journal title/volume italic, issue regular; article title sentence case, book titles italic, DOI https://doi.org/...; hanging indents and alphabetical bibliography. Metadata capitalisation requires human checking for proper nouns; do not blindly lowercase titles.
+
+Use https://apastyle.apa.org/style-grammar-guidelines/references/examples for source-type examples. Audit in-text ↔ references ↔ matrix/argument source IDs. Uncertain identity is under unresolved references, excluded from verified CSL bibliography. The built-in author-year checker covers parenthetical citations; narrative citations, same-author/year disambiguation and indirect citations need agent review. Validate CSL output for complex types; never silently fall back to homemade APA string assembly.

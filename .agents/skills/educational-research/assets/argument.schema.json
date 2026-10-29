@@ -1,0 +1,158 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "warrant": {
+          "default": "not specified",
+          "title": "Warrant",
+          "type": "string"
+        },
+        "warrant_id": {
+          "default": "",
+          "title": "Warrant Id",
+          "type": "string"
+        },
+        "objection": {
+          "default": "Rival interpretation requires review",
+          "title": "Objection",
+          "type": "string"
+        },
+        "objection_id": {
+          "default": "",
+          "title": "Objection Id",
+          "type": "string"
+        },
+        "qualification": {
+          "default": "Provisional; evaluate evidence access and inference limits",
+          "title": "Qualification",
+          "type": "string"
+        },
+        "confidence": {
+          "default": "provisional",
+          "title": "Confidence",
+          "type": "string"
+        },
+        "depends_on": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Edge": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "supports",
+            "contradicts",
+            "qualifies",
+            "depends_on"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target",
+        "kind",
+        "rationale"
+      ],
+      "title": "Edge",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "thesis": {
+      "default": "Not yet warranted: complete critical extraction and closest-work comparison",
+      "title": "Thesis",
+      "type": "string"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/Claim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/Edge"
+      },
+      "title": "Edges",
+      "type": "array"
+    },
+    "gaps": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "definitions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Definitions",
+      "type": "object"
+    },
+    "alignment": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Alignment",
+      "type": "object"
+    }
+  },
+  "title": "Synthesis",
+  "type": "object"
+}

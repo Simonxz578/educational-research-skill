@@ -1,0 +1,4 @@
+interface:
+  display_name: "Educational Research / 教育研究"
+  short_description: "Traceable literature, gaps and author arguments"
+  default_prompt: "Use $educational-research to build a concise, evidence-grounded research pack."
