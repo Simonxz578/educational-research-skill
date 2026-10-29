@@ -272,6 +272,8 @@ def render(path, config, sources, synthesis, gaps, logs, audit):
         )
         if not any(m.name in {"JIF", "SJR", "CiteScore", "h5-index"} for m in s.metrics):
             metric_text = "JIF: NOT VERIFIED; quartile: not verified; " + metric_text
+        if not any(m.name in {"article_citations", "FWCI"} for m in s.metrics):
+            metric_text += " Article citations/FWCI: not verified"
         quotes = []
         for q in s.quotes:
             seg = next(seg for seg in s.segments if seg.id == q.segment_id)
