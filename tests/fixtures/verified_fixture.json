@@ -1,0 +1,1202 @@
+[
+  {
+    "id": "S001",
+    "title": "TEST ONLY: library learning evidence record 001",
+    "authors": [
+      {
+        "family": "Fictional001",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "1-2",
+    "doi": null,
+    "url": "https://example.test/library/1",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 1 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/1",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 1 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S002",
+    "title": "TEST ONLY: library learning evidence record 002",
+    "authors": [
+      {
+        "family": "Fictional002",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "2-3",
+    "doi": null,
+    "url": "https://example.test/library/2",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 2 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/2",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 2 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S003",
+    "title": "TEST ONLY: library learning evidence record 003",
+    "authors": [
+      {
+        "family": "Fictional003",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "3-4",
+    "doi": null,
+    "url": "https://example.test/library/3",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 3 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "counterargument",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/3",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 3 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S004",
+    "title": "TEST ONLY: library learning evidence record 004",
+    "authors": [
+      {
+        "family": "Fictional004",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "4-5",
+    "doi": null,
+    "url": "https://example.test/library/4",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 4 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/4",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 4 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S005",
+    "title": "TEST ONLY: library learning evidence record 005",
+    "authors": [
+      {
+        "family": "Fictional005",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "5-6",
+    "doi": null,
+    "url": "https://example.test/library/5",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 5 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/5",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 5 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S006",
+    "title": "TEST ONLY: library learning evidence record 006",
+    "authors": [
+      {
+        "family": "Fictional006",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "6-7",
+    "doi": null,
+    "url": "https://example.test/library/6",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 6 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "counterargument",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/6",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 6 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S007",
+    "title": "TEST ONLY: library learning evidence record 007",
+    "authors": [
+      {
+        "family": "Fictional007",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "7-8",
+    "doi": null,
+    "url": "https://example.test/library/7",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 7 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/7",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 7 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S008",
+    "title": "TEST ONLY: library learning evidence record 008",
+    "authors": [
+      {
+        "family": "Fictional008",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "8-9",
+    "doi": null,
+    "url": "https://example.test/library/8",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 8 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/8",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 8 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S009",
+    "title": "TEST ONLY: library learning evidence record 009",
+    "authors": [
+      {
+        "family": "Fictional009",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "9-10",
+    "doi": null,
+    "url": "https://example.test/library/9",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 9 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "counterargument",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/9",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 9 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  },
+  {
+    "id": "S010",
+    "title": "TEST ONLY: library learning evidence record 010",
+    "authors": [
+      {
+        "family": "Fictional010",
+        "given": "Avery",
+        "literal": ""
+      }
+    ],
+    "year": 2024,
+    "online_year": null,
+    "issue_year": null,
+    "type": "article-journal",
+    "journal": "TEST ONLY Synthetic Methods Journal",
+    "publisher": "",
+    "volume": "1",
+    "issue": "2",
+    "pages": "10-11",
+    "doi": null,
+    "url": "https://example.test/library/10",
+    "eric_id": null,
+    "peer_reviewed": null,
+    "descriptors": [],
+    "education_level": "TEST ONLY adult learners",
+    "country": "fictional context",
+    "participants": "fictional; no real participants",
+    "design": "synthetic survey illustration",
+    "evidence_kind": "self-report",
+    "objective": "TEST ONLY: compare perceived routines and outcome evidence",
+    "theory": "TEST ONLY: retrieval practice as a proposed lens",
+    "abstract": "",
+    "summary": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+    "source_argument": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+    "target_argument": "TEST ONLY: proposed claim 10 distinguishes perceived study routines from demonstrated learning outcomes.",
+    "relevance_explanation": "TEST ONLY: relevant concepts; fictional evidence must never inform real claims",
+    "limitations": "Synthetic; cannot support scholarly findings",
+    "evidence_strength": "TEST ONLY; not real evidence",
+    "cluster": "Routines and outcome evidence",
+    "role": "empirical support",
+    "comparison_ids": [],
+    "relationship": "Illustrative tension between perceptions and outcomes",
+    "access": "USER_SUPPLIED",
+    "identity": "SYNTHETIC",
+    "publication_status": "not checked",
+    "checked_at": "2026-10-29",
+    "providers": [],
+    "segments": [
+      {
+        "id": "body",
+        "text": "TEST ONLY. Learners reported more regular study routines. No observed attainment effect was established. TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "url": "https://example.test/library/10",
+        "locator": "Synthetic section 1",
+        "pdf_page": null,
+        "printed_page": null,
+        "licence": "CC0 synthetic fixture",
+        "checked_at": "2026-10-29"
+      }
+    ],
+    "quotes": [
+      {
+        "text": "Learners reported more regular study routines.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      },
+      {
+        "text": "No observed attainment effect was established.",
+        "segment_id": "body",
+        "translation": null,
+        "translation_kind": "not translated"
+      }
+    ],
+    "extractions": {
+      "summary": {
+        "text": "TEST ONLY: a fictional library-learning survey illustrates how to distinguish self-reported routines from measured attainment. No empirical findings are asserted.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source evidence"
+      },
+      "source_argument": {
+        "text": "TEST ONLY: synthetic authors associate library retrieval prompts with reported study routines.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "source-author claim"
+      },
+      "target_argument": {
+        "text": "TEST ONLY: proposed claim 10 distinguishes perceived study routines from demonstrated learning outcomes.",
+        "segment_ids": [
+          "body"
+        ],
+        "basis": "researcher interpretation"
+      }
+    },
+    "metrics": [],
+    "assessments": {
+      "relevance": {
+        "value": 95.0,
+        "rationale": "TEST ONLY: direct fictional conceptual overlap",
+        "checked_at": "2026-10-29"
+      },
+      "study_quality": {
+        "value": 60.0,
+        "rationale": "TEST ONLY: synthetic survey, perception-only warrant",
+        "checked_at": "2026-10-29"
+      },
+      "argument_value": {
+        "value": 80.0,
+        "rationale": "TEST ONLY: exposes outcome inference boundary",
+        "checked_at": "2026-10-29"
+      }
+    },
+    "provenance": [],
+    "warnings": [],
+    "quote_budget": 25,
+    "permissive_licence_url": null,
+    "synthetic": true
+  }
+]

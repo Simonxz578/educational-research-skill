@@ -1,0 +1,115 @@
+{
+  "thesis": "TEST ONLY: distinguish perceived study routines from demonstrated outcomes and evaluate rival mechanisms before making effectiveness claims.",
+  "claims": [
+    {
+      "id": "C001",
+      "text": "TEST ONLY: perceived routines cannot by themselves establish observed learning gains.",
+      "source_ids": [
+        "S001",
+        "S002",
+        "S003"
+      ],
+      "evidence_ids": [
+        "S001:body",
+        "S002:body",
+        "S003:body"
+      ],
+      "warrant": "TEST ONLY: perception measures and attainment measures warrant different conclusions",
+      "warrant_id": "W001",
+      "objection": "TEST ONLY: selection and recall could explain reported differences",
+      "objection_id": "O001",
+      "qualification": "Synthetic demonstration only; no actual scholarly inference",
+      "confidence": "provisional",
+      "depends_on": []
+    },
+    {
+      "id": "C002",
+      "text": "TEST ONLY: evaluate contextual mechanisms against rival explanations.",
+      "source_ids": [
+        "S001",
+        "S002",
+        "S003"
+      ],
+      "evidence_ids": [
+        "S001:body",
+        "S002:body",
+        "S003:body"
+      ],
+      "warrant": "TEST ONLY: perception measures and attainment measures warrant different conclusions",
+      "warrant_id": "W002",
+      "objection": "TEST ONLY: selection and recall could explain reported differences",
+      "objection_id": "O002",
+      "qualification": "Synthetic demonstration only; no actual scholarly inference",
+      "confidence": "provisional",
+      "depends_on": []
+    },
+    {
+      "id": "C003",
+      "text": "TEST ONLY: a proposed design should separately measure reported experience and observed outcomes.",
+      "source_ids": [
+        "S001",
+        "S002",
+        "S003"
+      ],
+      "evidence_ids": [
+        "S001:body",
+        "S002:body",
+        "S003:body"
+      ],
+      "warrant": "TEST ONLY: perception measures and attainment measures warrant different conclusions",
+      "warrant_id": "W003",
+      "objection": "TEST ONLY: selection and recall could explain reported differences",
+      "objection_id": "O003",
+      "qualification": "Synthetic demonstration only; no actual scholarly inference",
+      "confidence": "provisional",
+      "depends_on": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "S003",
+      "target": "C001",
+      "kind": "qualifies",
+      "rationale": "TEST ONLY: perception-only illustration bounds the proposed claim"
+    },
+    {
+      "source": "S003",
+      "target": "S001",
+      "kind": "contradicts",
+      "rationale": "TEST ONLY: explicitly preserved hypothetical disagreement, not consensus"
+    }
+  ],
+  "gaps": [
+    {
+      "search_boundary": "TEST ONLY synthetic corpus; no live literature search",
+      "closest_source_ids": [
+        "S001",
+        "S002",
+        "S003"
+      ],
+      "missing_dimension": "TEST ONLY illustrative mechanism comparison",
+      "evidence": "TEST ONLY: fictional source records demonstrate comparison format, not an actual research gap",
+      "method_fit": "TEST ONLY proposed mixed measures; no study performed",
+      "novelty_boundary": "No novelty or originality claim can arise from synthetic sources"
+    }
+  ],
+  "definitions": {
+    "reported routine": "TEST ONLY: participant account, distinct from observed attainment"
+  },
+  "alignment": {
+    "Introduction": [
+      "C001"
+    ],
+    "Literature Review": [
+      "C001",
+      "C002"
+    ],
+    "Methods-fit": [
+      "C003"
+    ],
+    "Discussion": [
+      "C002",
+      "C003"
+    ]
+  }
+}
