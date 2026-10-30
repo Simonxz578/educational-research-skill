@@ -106,6 +106,7 @@ def write_csv(path, rows, fields=None):
 
 
 def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
+    csv.field_size_limit(64_000_000)
     folder = audit_dir(folder)
     kind = presentation(folder)
     errors = []
@@ -146,6 +147,8 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
             from .reading import FullTextReading
             from .evidence_depth import primary_depth_audit
             from ..models import Quote
+            from ..models import restore_public_source
+            from .verification import verbatim_audit
 
             view = ReaderView.model_validate_json((folder / "Reader_View.json").read_text())
             selection = json.loads((folder / "Source_Selection.json").read_text())
@@ -187,15 +190,68 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
             by_source = {r["id"]: r for r in rows}
             for paper in view.papers:
                 row = by_source[paper.source_id]
+                restored = restore_public_source(row)
+                if paper.evidence_status == "ABSTRACT_ONLY":
+                    from ..fulltext.abstracts import abstract_issues, abstract_explanation
+
+                    errors += [f"{paper.source_id}: " + issue for issue in abstract_issues(restored)]
+                    a = restored.abstract_evidence
+                    if (
+                        a is None
+                        or paper.source_author_position.text != abstract_explanation(a)
+                        or paper.our_inference.text != a.interpretation
+                        or paper.verified_original_words != 0
+                        or paper.inspection_gate != "NOT_APPLICABLE_TO_ABSTRACT / NOT_FULL_TEXT_VERIFIED"
+                    ):
+                        errors.append(
+                            f"{paper.source_id}: abstract-only scope, wording or counters were promoted/changed"
+                        )
+                    allowed = [a.quotation] if a and a.quotation else []
+                    if [q.text for q in paper.original_microquotes] != allowed:
+                        errors.append(
+                            f"{paper.source_id}: abstract quote does not match permitted original"
+                        )
+                    if paper.source_reasoning_and_results:
+                        errors.append(
+                            f"{paper.source_id}: unverified full-text findings were added to an abstract"
+                        )
+                    continue
                 depth = primary_depth_audit(
                     FullTextReading.model_validate(row["reading"]),
                     [Quote.model_validate(q) for q in row["quotes"]],
                 )
+                inspected = verbatim_audit(restored)
+                if paper.verified_original_words != inspected["verified_original_words"]:
+                    errors.append(
+                        f"{paper.source_id}: author-word count differs from actual original-span verification"
+                    )
+                originals = [
+                    layer.text for layer in paper.layers if layer.kind == "VERBATIM_PRIMARY_TEXT"
+                ]
+                if originals != [span["exact_text"] for span in inspected["spans"]]:
+                    errors.append(
+                        f"{paper.source_id}: verbatim layer contains non-source text or omits checked spans"
+                    )
+                explanations = [
+                    layer.text for layer in paper.layers if layer.kind == "SOURCE_ANCHORED_EXPLANATION"
+                ]
+                if explanations != [
+                    paper.source_author_position.text,
+                    *[st.text for st in paper.source_reasoning_and_results],
+                    paper.source_limitations.text,
+                ]:
+                    errors.append(
+                        f"{paper.source_id}: explanation was conflated with another evidence layer"
+                    )
                 if (
                     paper.primary_evidence_words,
                     paper.primary_evidence_shortfall,
                     paper.primary_evidence_issues,
-                ) != (depth["primary_evidence_words"], depth["shortfall"], depth["issues"]):
+                ) != (
+                    inspected["verified_original_words"],
+                    inspected["original_word_shortfall"],
+                    inspected["issues"] + depth["issues"],
+                ):
                     errors.append(
                         f"{paper.source_id}: primary-evidence depth counters differ from the rendered source paraphrases"
                     )
@@ -263,6 +319,11 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
                         *paper.source_reasoning_and_results,
                         paper.source_limitations,
                     ]:
+                        if (
+                            paper.evidence_status == "ABSTRACT_ONLY"
+                            and statement is paper.source_limitations
+                        ):
+                            continue
                         if re.sub(r"\s+", " ", statement.text) not in compact_text:
                             errors.append(
                                 f"{paper.source_id}: primary-evidence wording missing from actual PDF"

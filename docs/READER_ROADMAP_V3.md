@@ -1,4 +1,4 @@
-Historical v0.3 contract. The current five-section reader and 100-word/acquisition requirements are described in [v0.4.2](FULL_TEXT_ACCESS_V042.md).
+Historical v0.3 contract. Current original-word inspection, abstract fallback and five-section reader requirements are described in [v0.4.3](VERBATIM_ABSTRACT_V043.md), alongside the continuing [native acquisition architecture](FULL_TEXT_ACCESS_V042.md).
 
 # Reader roadmap v3: design, source quotas and migration
 

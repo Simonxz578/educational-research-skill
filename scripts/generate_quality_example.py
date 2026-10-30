@@ -12,8 +12,9 @@ from educational_research.cli import main
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--count", type=int, default=10)
+    p.add_argument("--abstract-count", type=int, default=0)
     p.add_argument("--presentation", choices=["roadmap", "evidence-pack"], default="roadmap")
-    p.add_argument("--output", default="outputs/quality-v042-synthetic")
+    p.add_argument("--output", default="outputs/quality-v043-synthetic")
     a = p.parse_args()
     root = Path(a.output)
     root.mkdir(parents=True, exist_ok=True)
@@ -27,6 +28,13 @@ if __name__ == "__main__":
     protocol_path = inputs / "synthetic-protocol.json"
     protocol_path.write_text(protocol.model_dump_json(indent=2))
     sources, synthesis, observations, _ = bundle(inputs / "synthetic-corpus", a.count)
+    if a.abstract_count:
+        if not 0 <= a.abstract_count <= a.count:
+            p.error("abstract-count must be between zero and count")
+        from tests.test_v043_evidence import abstract_work
+
+        for source in sources[-a.abstract_count :]:
+            abstract_work(source, inputs / "synthetic-abstracts", 95)
     paths = {
         "sources": inputs / "synthetic-sources.json",
         "synthesis": inputs / "synthetic-synthesis.json",

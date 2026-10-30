@@ -1,5 +1,121 @@
 {
   "$defs": {
+    "AbstractEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "publication_id": {
+          "title": "Publication Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "publisher",
+            "Crossref",
+            "ERIC",
+            "user_attested"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "version": {
+          "const": "publishedAbstract",
+          "default": "publishedAbstract",
+          "title": "Version",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "artifact_path": {
+          "title": "Artifact Path",
+          "type": "string"
+        },
+        "artifact_sha256": {
+          "title": "Artifact Sha256",
+          "type": "string"
+        },
+        "extraction_sha256": {
+          "title": "Extraction Sha256",
+          "type": "string"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        },
+        "identity_verified": {
+          "title": "Identity Verified",
+          "type": "boolean"
+        },
+        "rights": {
+          "$ref": "#/$defs/EvidenceRights"
+        },
+        "explanation": {
+          "default": "",
+          "title": "Explanation",
+          "type": "string"
+        },
+        "explanation_checked": {
+          "default": false,
+          "title": "Explanation Checked",
+          "type": "boolean"
+        },
+        "interpretation": {
+          "default": "Full-text evidence, detailed methods and inferential limits have not been checked.",
+          "title": "Interpretation",
+          "type": "string"
+        },
+        "quotation": {
+          "default": "",
+          "title": "Quotation",
+          "type": "string"
+        },
+        "quotation_locator": {
+          "default": "Published abstract",
+          "title": "Quotation Locator",
+          "type": "string"
+        },
+        "reader": {
+          "default": "native published-abstract verifier; not a full-text reader",
+          "title": "Reader",
+          "type": "string"
+        },
+        "scope": {
+          "const": "ABSTRACT_ONLY",
+          "default": "ABSTRACT_ONLY",
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "publication_id",
+        "title",
+        "source_url",
+        "provider",
+        "text",
+        "artifact_path",
+        "artifact_sha256",
+        "extraction_sha256",
+        "checked_at",
+        "identity_verified",
+        "rights"
+      ],
+      "title": "AbstractEvidence",
+      "type": "object"
+    },
     "AccessAttempt": {
       "additionalProperties": false,
       "properties": {
@@ -119,6 +235,17 @@
     "DocumentProvenance": {
       "additionalProperties": false,
       "properties": {
+        "rights": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceRights"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "processing_permission": {
           "default": "not_checked",
           "enum": [
@@ -175,6 +302,91 @@
         "acquired_at"
       ],
       "title": "DocumentProvenance",
+      "type": "object"
+    },
+    "EvidenceRights": {
+      "additionalProperties": false,
+      "properties": {
+        "public_word_allowance": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Public Word Allowance"
+        },
+        "access": {
+          "default": "not_checked",
+          "enum": [
+            "allowed",
+            "denied",
+            "not_checked"
+          ],
+          "title": "Access",
+          "type": "string"
+        },
+        "processing": {
+          "default": "not_checked",
+          "enum": [
+            "allowed",
+            "denied",
+            "not_checked"
+          ],
+          "title": "Processing",
+          "type": "string"
+        },
+        "private_retention": {
+          "default": "not_checked",
+          "enum": [
+            "allowed",
+            "denied",
+            "not_checked"
+          ],
+          "title": "Private Retention",
+          "type": "string"
+        },
+        "public_quotation": {
+          "default": "not_checked",
+          "enum": [
+            "allowed",
+            "denied",
+            "not_checked"
+          ],
+          "title": "Public Quotation",
+          "type": "string"
+        },
+        "access_basis": {
+          "default": "",
+          "title": "Access Basis",
+          "type": "string"
+        },
+        "processing_basis": {
+          "default": "",
+          "title": "Processing Basis",
+          "type": "string"
+        },
+        "retention_basis": {
+          "default": "",
+          "title": "Retention Basis",
+          "type": "string"
+        },
+        "quotation_basis": {
+          "default": "",
+          "title": "Quotation Basis",
+          "type": "string"
+        },
+        "licence_url": {
+          "default": "",
+          "title": "Licence Url",
+          "type": "string"
+        }
+      },
+      "title": "EvidenceRights",
       "type": "object"
     },
     "Extraction": {
@@ -773,6 +985,32 @@
     "ReadingEvidence": {
       "additionalProperties": false,
       "properties": {
+        "start_offset": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Offset"
+        },
+        "end_offset": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Offset"
+        },
         "evidence_id": {
           "title": "Evidence Id",
           "type": "string"
@@ -924,15 +1162,27 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "default": "4.2",
+      "default": "4.3",
       "enum": [
         "1.0",
         "2.0",
         "3.0",
-        "4.2"
+        "4.2",
+        "4.3"
       ],
       "title": "Schema Version",
       "type": "string"
+    },
+    "abstract_evidence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AbstractEvidence"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "reading": {
       "anyOf": [

@@ -1,0 +1,46 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "enum": [
+        "VERBATIM_PRIMARY_TEXT",
+        "SOURCE_ANCHORED_EXPLANATION",
+        "OUR_INTERPRETATION"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "word_count": {
+      "minimum": 0,
+      "title": "Word Count",
+      "type": "integer"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "scope": {
+      "default": "FULL_TEXT",
+      "enum": [
+        "FULL_TEXT",
+        "ABSTRACT_ONLY"
+      ],
+      "title": "Scope",
+      "type": "string"
+    }
+  },
+  "required": [
+    "kind",
+    "text",
+    "word_count"
+  ],
+  "title": "TextLayer",
+  "type": "object"
+}

@@ -127,7 +127,7 @@ def test_t03_twenty_target_ten_readings_has_exact_shortfall(tmp_path):
     assert len(candidates) == 10
     with fitz.open(tmp_path / "pack/Research_Roadmap.pdf") as pdf:
         assert "SOURCE SHORTFALL" in pdf[0].get_text()
-        assert "10 selected of 20 target" in " ".join(p.get_text() for p in pdf)
+        assert "10 included of 20 target" in " ".join(p.get_text() for p in pdf)
     assert validate(tmp_path / "pack") == []
 
 

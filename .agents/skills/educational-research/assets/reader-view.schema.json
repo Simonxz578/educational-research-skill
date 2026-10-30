@@ -62,6 +62,38 @@
     "ReaderWork": {
       "additionalProperties": false,
       "properties": {
+        "evidence_status": {
+          "default": "FULL_TEXT",
+          "title": "Evidence Status",
+          "type": "string"
+        },
+        "verified_original_words": {
+          "default": 0,
+          "title": "Verified Original Words",
+          "type": "integer"
+        },
+        "explanation_words": {
+          "default": 0,
+          "title": "Explanation Words",
+          "type": "integer"
+        },
+        "interpretation_words": {
+          "default": 0,
+          "title": "Interpretation Words",
+          "type": "integer"
+        },
+        "inspection_gate": {
+          "default": "FULL_TEXT_INSPECTION",
+          "title": "Inspection Gate",
+          "type": "string"
+        },
+        "layers": {
+          "items": {
+            "$ref": "#/$defs/TextLayer"
+          },
+          "title": "Layers",
+          "type": "array"
+        },
         "primary_evidence_words": {
           "title": "Primary Evidence Words",
           "type": "integer"
@@ -178,12 +210,58 @@
       ],
       "title": "ReaderWork",
       "type": "object"
+    },
+    "TextLayer": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "VERBATIM_PRIMARY_TEXT",
+            "SOURCE_ANCHORED_EXPLANATION",
+            "OUR_INTERPRETATION"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "word_count": {
+          "minimum": 0,
+          "title": "Word Count",
+          "type": "integer"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "scope": {
+          "default": "FULL_TEXT",
+          "enum": [
+            "FULL_TEXT",
+            "ABSTRACT_ONLY"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "word_count"
+      ],
+      "title": "TextLayer",
+      "type": "object"
     }
   },
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "default": "4.2",
+      "default": "4.3",
       "title": "Schema Version",
       "type": "string"
     },

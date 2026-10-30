@@ -114,6 +114,15 @@ def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None
             else "A substantive argument spine requires 3–7 warranted major claims"
         )
     for c in synthesis.claims:
+        from .reading import reader_scope
+
+        if (
+            any(reader_scope(s) == "ABSTRACT_ONLY" for s in sources if s.id in c.source_ids)
+            and c.evidence_scope != "PRELIMINARY_ABSTRACT"
+        ):
+            argument_issues.append(
+                f"{c.id}: abstract sources cannot support an unqualified full-text claim"
+            )
         if re.search(r"\b(proves?|causes?|causal impact)\b", c.text + " " + c.own_inference, re.I):
             kinds = [
                 e.finding_kind

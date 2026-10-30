@@ -89,6 +89,10 @@ def render(path, config, sources, synthesis, view, qa):
     )
     if sel["shortfall"] or sel["selected_shortfall"]:
         status += " | SOURCE SHORTFALL"
+    if sel.get("abstract_only_A"):
+        status = (
+            f"PROVISIONAL - {sel['full_text_verified_K']} FULL TEXTS, {sel['abstract_only_A']} ABSTRACTS"
+        )
     story.extend([p(view.title.upper(), title), p(status, small)])
     if view.coverage["synthetic"]:
         story.append(p("TEST ONLY - SYNTHETIC SOURCES; NOT SCHOLARLY EVIDENCE", small))
@@ -115,7 +119,7 @@ def render(path, config, sources, synthesis, view, qa):
     section(1)
     story.append(
         p(
-            f"{len(view.papers)} selected of {sel['selection_target_N']} target; {sel['qualified_deep_read_K']} deeply reviewed works; {sel['quotation_count']} checked micro-excerpts.",
+            f"{len(view.papers)} included of {sel['selection_target_N']} target; {sel['full_text_verified_K']} full-text verified; {sel['abstract_only_A']} abstract only; {sel['quotation_count']} checked micro-excerpts.",
             small,
         )
     )
@@ -135,9 +139,30 @@ def render(path, config, sources, synthesis, view, qa):
         for work in works:
             number += 1
             elems = [
-                p(f"{number:02}  {work.in_text.strip('()')}  [{work.source_id}]", identification),
+                p(
+                    f"{number:02}  {work.in_text.strip('()')}  [{work.source_id}] - {work.evidence_status.replace('_', ' ')}",
+                    identification,
+                ),
                 p(work.title, small),
             ]
+            if work.evidence_status == "ABSTRACT_ONLY":
+                for quote in work.original_microquotes:
+                    elems.append(
+                        p(
+                            "“" + quote.text + "” (" + quote.locator + ")",
+                            label="Author's original words.",
+                        )
+                    )
+                elems.append(p(work.source_author_position.text, label="Published abstract."))
+                elems.append(p(work.our_inference.text, label="Our use / limitation."))
+                url = "https://doi.org/" + work.doi if work.doi else work.url
+                if url.startswith(("http://", "https://")):
+                    elems.append(
+                        Paragraph('<link href="' + safe(url) + '">' + safe(url) + "</link>", small)
+                    )
+                elems.extend([Spacer(1, 3), rule(), Spacer(1, 8)])
+                story.append(KeepTogether(elems))
+                continue
             first = [work.source_author_position, work.source_reasoning_and_results[0]]
             second = [work.source_reasoning_and_results[1], work.source_limitations]
             # Exactly four checked paraphrases appear, once each, as two connected analytical units.
@@ -147,17 +172,28 @@ def render(path, config, sources, synthesis, view, qa):
                     chunks.append(
                         safe(statement.text) + " <i>(" + safe("; ".join(statement.locators)) + ")</i>"
                     )
+                first_quote = True
                 for quote in work.original_microquotes:
                     belongs = any(quote.evidence_id in st.evidence_ids for st in statements)
                     if belongs:
-                        chunks.append("<i>“" + safe(quote.text) + "”</i> (" + safe(quote.locator) + ").")
-                label = "Original position and reasoning." if n == 0 else "Evidence and its boundary."
+                        chunks.append(
+                            ("<b>Author’s original words:</b> " if first_quote else "")
+                            + "<i>“"
+                            + safe(quote.text)
+                            + "”</i> ("
+                            + safe(quote.locator)
+                            + ")."
+                        )
+                        first_quote = False
+                label = (
+                    "Source-informed explanation." if n == 0 else "Evidence and boundary (paraphrase)."
+                )
                 elems.append(Paragraph("<b>" + label + "</b> " + " ".join(chunks), body))
             elems.append(p(work.our_inference.text, label="Our use of this source."))
             if work.primary_evidence_issues:
                 elems.append(
                     p(
-                        "PROVISIONAL - the primary-evidence explanation needs further verified detail or review.",
+                        "PROVISIONAL - original-text inspection or source interpretation remains incomplete.",
                         small,
                     )
                 )
@@ -172,6 +208,13 @@ def render(path, config, sources, synthesis, view, qa):
             story.append(KeepTogether(elems))
     section(2)
     for n, c in enumerate(view.chains, 1):
+        if c.get("evidence_scope") == "PRELIMINARY_ABSTRACT":
+            story.append(
+                p(
+                    "Preliminary abstract-level comparison; not a full-text or originality conclusion.",
+                    small,
+                )
+            )
         story.append(
             p(
                 c["comparison"] + " (" + citations(c["source_ids"]) + "). " + c["warrant"],
@@ -312,7 +355,7 @@ def render(path, config, sources, synthesis, view, qa):
         block = [p(source_id, small), Paragraph(apa_markup(entry), reference)]
         entries.append((block, sum(e.wrap(width, 730)[1] for e in block)))
     disclosure = p(
-        f"Selected {len(sources)} of {sel['selection_target_N']} target; deep-reviewed {sel['qualified_deep_read_K']} of {sel['deep_review_requirement_N']} required; micro-excerpts {sel['quotation_count']}; Scholar {view.coverage['scholar']}.",
+        f"Included {len(sources)} of {sel['selection_target_N']} target; full-text verified {sel['full_text_verified_K']}; abstract only {sel['abstract_only_A']}; deep-reviewed {sel['qualified_deep_read_K']} of {sel['deep_review_requirement_N']} required; micro-excerpts {sel['quotation_count']}; Scholar {view.coverage['scholar']}.",
         small,
     )
     total = sum(height for _, height in entries) + 75

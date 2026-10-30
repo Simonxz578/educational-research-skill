@@ -1,0 +1,85 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "public_word_allowance": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Public Word Allowance"
+    },
+    "access": {
+      "default": "not_checked",
+      "enum": [
+        "allowed",
+        "denied",
+        "not_checked"
+      ],
+      "title": "Access",
+      "type": "string"
+    },
+    "processing": {
+      "default": "not_checked",
+      "enum": [
+        "allowed",
+        "denied",
+        "not_checked"
+      ],
+      "title": "Processing",
+      "type": "string"
+    },
+    "private_retention": {
+      "default": "not_checked",
+      "enum": [
+        "allowed",
+        "denied",
+        "not_checked"
+      ],
+      "title": "Private Retention",
+      "type": "string"
+    },
+    "public_quotation": {
+      "default": "not_checked",
+      "enum": [
+        "allowed",
+        "denied",
+        "not_checked"
+      ],
+      "title": "Public Quotation",
+      "type": "string"
+    },
+    "access_basis": {
+      "default": "",
+      "title": "Access Basis",
+      "type": "string"
+    },
+    "processing_basis": {
+      "default": "",
+      "title": "Processing Basis",
+      "type": "string"
+    },
+    "retention_basis": {
+      "default": "",
+      "title": "Retention Basis",
+      "type": "string"
+    },
+    "quotation_basis": {
+      "default": "",
+      "title": "Quotation Basis",
+      "type": "string"
+    },
+    "licence_url": {
+      "default": "",
+      "title": "Licence Url",
+      "type": "string"
+    }
+  },
+  "title": "EvidenceRights",
+  "type": "object"
+}

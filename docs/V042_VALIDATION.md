@@ -1,3 +1,5 @@
+Historical v0.4.2 report/contract. The explanation-writing floor is superseded by [v0.4.3 original-word inspection and abstract fallback](VERBATIM_ABSTRACT_V043.md).
+
 # v0.4.2 observed validation — 30 October 2026
 
 This is an engineering and evidence-status report, not a claim of publishability or journal endorsement. Baseline v0.3 was clean at commit `51981eb`: 62 tests passed and one opt-in live test skipped. The updated offline suite records **106 passed, one skipped**, with five upstream PyMuPDF/SWIG deprecation warnings. The separate network-enabled ERIC/Crossref check records **one passed, 106 deselected**. Synthetic test results are kept distinct from the actual single-work OA acquisition and reading below.

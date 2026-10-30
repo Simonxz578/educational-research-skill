@@ -1,3 +1,5 @@
+Current fallback policy: [verbatim and abstract policy](verbatim-and-abstract-policy.md). If bounded full-text access fails, obtain a genuine identity-matched abstract automatically; do not discard it solely for paywall status. Abstract rights are assessed separately.
+
 # Lawful full-text access and operator handoff
 
 The native `educational_research.fulltext` layer separates pointer discovery, HTTP retrieval, document/identity/completeness validation, permitted processing, version and critical reading. Success at one stage does not imply success at the next. `Full_Text_Access.json`, retained local artifacts and `Full_Text_Access_Handoff.md` live privately under evidence/; no downloaded paper or real observation log belongs in public examples or Git.
@@ -35,6 +37,6 @@ Keep both original artifact and extracted text hashed. A replacement artifact, c
 | FULL_TEXT_UNAVAILABLE | No usable lawful document was established |
 | RIGHTS_OR_VERSION_UNCLEAR | Processing rights or actual version cannot yet be established |
 
-`close_reading_completed` must never be inferred from retrieval. A separate actual reading record needs version/hash, reader/date, complete scope and checked source-specific anchors. G2 additionally requires the source's own 100-word explanation and the user's dynamic quota.
+`close_reading_completed` must never be inferred from retrieval. A separate actual reading record needs version/hash, reader/date, complete scope and checked source-specific anchors. G2 separately requires >=100 privately inspected original author-word positions across four roles and the user's dynamic full-text quota; it has no explanation-writing quota.
 
 Blocked handoff: article + DOI; exact attempted legal routes and observations; needed version; unresolved processing/licence issue; and whether authorised user supply, library help, a lawful OA alternative or another genuinely relevant work could resolve it. Keep the handoff concise and private. The reader receives factual coverage/PROVISIONAL status, never URL error logs or candidate lists.

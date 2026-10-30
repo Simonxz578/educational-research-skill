@@ -26,3 +26,6 @@ private/
 !examples/roadmap-v042-20.pdf
 full_text/
 *.download
+
+!examples/roadmap-v043-10.pdf
+!examples/roadmap-v043-20.pdf

@@ -7,6 +7,7 @@ from .config import today
 from .models_base import Record
 from .core.reading import FullTextReading
 from .core.access import FullTextAcquisition, FullTextLocation
+from .core.evidence_types import AbstractEvidence
 
 
 def quotation_units(text):
@@ -77,7 +78,8 @@ class Assessment(Record):
 
 
 class Source(Record):
-    schema_version: Literal["1.0", "2.0", "3.0", "4.2"] = "4.2"
+    schema_version: Literal["1.0", "2.0", "3.0", "4.2", "4.3"] = "4.3"
+    abstract_evidence: AbstractEvidence | None = None
     reading: FullTextReading | None = None
     acquisition: FullTextAcquisition | None = None
     full_text_locations: list[FullTextLocation] = Field(default_factory=list)
@@ -161,6 +163,8 @@ class Source(Record):
 
     @model_validator(mode="after")
     def traceability(self):
+        from .core.verification import canonical
+
         if self.synthetic and self.identity != "SYNTHETIC":
             raise ValueError("Synthetic records must have SYNTHETIC identity")
         if self.identity == "SYNTHETIC" and not self.synthetic:
@@ -184,7 +188,7 @@ class Source(Record):
             raise ValueError("No verified excerpts from abstract/metadata-only records")
         for q in self.quotes:
             seg = segments.get(q.segment_id)
-            if not seg or q.text not in seg.text or not q.text.strip():
+            if not seg or canonical(q.text) not in canonical(seg.text) or not q.text.strip():
                 raise ValueError("Quote is not an exact source span")
             if seg.locator == "location unknown" or not seg.url:
                 raise ValueError("Quote requires a locator and access URL")
@@ -211,4 +215,41 @@ class Source(Record):
         record = self.model_dump()
         # Run outputs do not reproduce full protected texts or local upload paths.
         record["segments"] = [s.model_dump(exclude={"text"}) for s in self.segments]
+        if (
+            self.reading
+            and self.reading.document.rights
+            and self.reading.document.rights.private_retention != "allowed"
+        ):
+            record["reading"] = None
+            record["quotes"] = []
+            if record.get("acquisition"):
+                record["acquisition"]["paragraphs"] = []
         return record
+
+
+def restore_public_source(row):
+    """Rehydrate redacted private matrix records without pretending absent text was checked."""
+    data = {k: v for k, v in row.items() if k in Source.model_fields}
+    data["authors"] = [Author.model_validate(a) for a in row["authors"]]
+    data["segments"] = [
+        Segment.model_validate({**s, "text": s.get("text", "")}) for s in row["segments"]
+    ]
+    data["quotes"] = [Quote.model_validate(q) for q in row["quotes"]]
+    data["assessments"] = {k: Assessment.model_validate(v) for k, v in row["assessments"].items()}
+    data["extractions"] = {
+        k: Extraction.model_validate(v) for k, v in row.get("extractions", {}).items()
+    }
+    data["metrics"] = [Metric.model_validate(v) for v in row.get("metrics", [])]
+    data["full_text_locations"] = [
+        FullTextLocation.model_validate(v) for v in row.get("full_text_locations", [])
+    ]
+    data["reading"] = FullTextReading.model_validate(row["reading"]) if row.get("reading") else None
+    data["acquisition"] = (
+        FullTextAcquisition.model_validate(row["acquisition"]) if row.get("acquisition") else None
+    )
+    data["abstract_evidence"] = (
+        AbstractEvidence.model_validate(row["abstract_evidence"])
+        if row.get("abstract_evidence")
+        else None
+    )
+    return Source.model_construct(**data)

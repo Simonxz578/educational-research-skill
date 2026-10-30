@@ -24,7 +24,21 @@ def year(record, field):
 
 
 def verify(source, message):
-    original = source.model_dump(exclude={"segments"})
+    original = source.model_dump(
+        include={
+            "id",
+            "title",
+            "authors",
+            "year",
+            "doi",
+            "url",
+            "journal",
+            "publisher",
+            "volume",
+            "issue",
+            "pages",
+        }
+    )
     conflicts = {}
     title = (message.get("title") or [""])[0]
     received_doi = doi(message.get("DOI"))

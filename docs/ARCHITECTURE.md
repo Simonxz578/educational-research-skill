@@ -1,4 +1,4 @@
-Current v0.4.2 acquisition, reader and migration architecture: [full-text access](FULL_TEXT_ACCESS_V042.md). Historical v2/v3 architecture follows.
+Current v0.4.3 evidence and abstract architecture: [original-word inspection and abstract fallback](VERBATIM_ABSTRACT_V043.md), with the continuing [native acquisition architecture](FULL_TEXT_ACCESS_V042.md). Historical v2/v3 architecture follows.
 
 # Architecture
 

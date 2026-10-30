@@ -31,10 +31,12 @@ def primary_depth_audit(reading, quotes=()):
     issues, seen, count = [], set(), 0
     if reading is None:
         return {
+            "kind": "SOURCE_ANCHORED_EXPLANATION",
+            "explanation_words": 0,
             "primary_evidence_words": 0,
-            "shortfall": 100,
-            "issues": ["No primary-text reading"],
-            "threshold": 100,
+            "shortfall": 0,
+            "issues": ["No full-text explanation record"],
+            "threshold": None,
         }
     for entry in evidence_anchors(reading):
         if entry is None:
@@ -73,14 +75,14 @@ def primary_depth_audit(reading, quotes=()):
             and not re.search(r"\b(no|not|cannot|doesn.t|without)\b", entry.paraphrase, re.I)
         ):
             issues.append(f"{entry.evidence_id}: participant reports cannot establish causal effects")
-    if count < 100:
-        issues.append(f"Primary-evidence explanation shortfall: {count}/100 English words; no padding")
     return {
+        "kind": "SOURCE_ANCHORED_EXPLANATION",
+        "explanation_words": count,
         "primary_evidence_words": count,
-        "shortfall": max(0, 100 - count),
-        "threshold": 100,
+        "shortfall": 0,
+        "threshold": None,
         "issues": sorted(set(issues)),
-        "notice": "Only the four rendered source paraphrases count; title, locators, metadata, quotes and our inference are excluded. Lexical checks do not certify semantic accuracy.",
+        "notice": "Explanation words are not author words and have no minimum quota. The separate verbatim inspection gate verifies original source spans.",
     }
 
 

@@ -1,3 +1,5 @@
+Historical v0.4.2 report/contract. The explanation-writing floor is superseded by [v0.4.3 original-word inspection and abstract fallback](VERBATIM_ABSTRACT_V043.md).
+
 # v0.4.2 full-text access, evidence depth and reader architecture
 
 The product keeps the approved v3 A4 white/black Times/Liberation Serif visual language. The functional changes are lawful native acquisition, stronger original-text evidence and a smaller five-section reader. Retrieval and critical reading remain separate operations. A machine status or matching digest cannot establish comprehension, truthful external ownership, correct interpretation, a novel question or journal acceptance.

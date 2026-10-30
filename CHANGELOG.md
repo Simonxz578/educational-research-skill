@@ -1,5 +1,15 @@
 # Changes
 
+## 0.4.3 — 2026-10-30
+
+- Replace the 100-word explanation quota with >=100 privately verified original source-word positions across four distinct meaningful spans, with canonical offsets, digests, scope and separate rights.
+- Keep verbatim source text, source-anchored explanation and our interpretation in separate typed layers; explanation has no minimum writing quota and is never labelled author wording.
+- Automatically retain identity-verified publisher/indexed abstracts as ABSTRACT ONLY after bounded lawful full-text attempts; metadata without a genuine abstract remains private.
+- Preserve requested/included counts separately from full-text and abstract coverage, complete references and unchanged strict full-text G2; explicitly preliminary abstract comparisons cannot prove novelty.
+- Preserve the five-section monochrome native reader, protect essential paywalled works, and fix recursive metadata-provenance growth found by the topic-only regression.
+- Add adversarial source/abstract regressions, updated canonical skill/schemas, inspected synthetic previews and separately reported genuine OA/abstract checks.
+
+
 ## 0.4.2 — 2026-10-30
 
 - Retain the approved monochrome Times geometry while simplifying the reader to five sections and three-part source blocks.

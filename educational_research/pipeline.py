@@ -315,6 +315,7 @@ def run(
     eligible, rejected = screen(unique, config.topic)
     ranked = rank(eligible, config.topic)
     from .fulltext.acquire import Acquirer, write_access_outputs
+    from .fulltext.abstracts import acquire_abstract
 
     acquisition_limit = config.full_text_limit or config.candidate_budget
     if config.full_text_mode != "off" and not config.offline:
@@ -327,6 +328,7 @@ def run(
                 if attempted >= acquisition_limit:
                     break
                 acquirer.acquire(source, max_routes=config.full_text_max_routes)
+                acquire_abstract(source, output / "abstracts", metadata_client=client, acquirer=acquirer)
                 attempted += 1
         finally:
             acquirer.close()
@@ -339,6 +341,8 @@ def run(
                     local_reader.acquire(source, local_locations, max_routes=config.full_text_max_routes)
         finally:
             local_reader.close()
+    for source in ranked:
+        acquire_abstract(source, output / "abstracts")
     write_access_outputs(output, ranked, [s.id for s in ranked[acquisition_limit:]])
     included, candidates, selection = select_sources(ranked, config)
     dump(output / "Candidates.json", candidates)
@@ -366,6 +370,12 @@ def run(
         {independent_key(source) for source in included if source.id in qualified_ids}
     )
     selection.shortfall = max(0, config.deep_review_requirement - selection.qualified_deep_read_K)
+    selection.full_text_verified_K = selection.qualified_deep_read_K
+    selection.full_text_provisional_P = (
+        len(included) - selection.full_text_verified_K - selection.abstract_only_A
+        if config.presentation == "roadmap"
+        else 0
+    )
     dump(output / "Source_Selection.json", selection.model_dump())
     graph_errors = []
     try:
@@ -389,9 +399,9 @@ def run(
         "screened": len(unique),
         "excluded": len(excluded),
         "included": len(included),
-        "full_text_verified": sum(s.access == "FULL_TEXT_VERIFIED" for s in included),
+        "full_text_verified": selection.full_text_verified_K,
         "user_supplied": sum(s.access == "USER_SUPPLIED" for s in included),
-        "abstract_only": sum(s.access == "ABSTRACT_ONLY" for s in included),
+        "abstract_only": selection.abstract_only_A,
         "verified_quotes": sum(len(s.quotes) for s in included),
         "unresolved_references": [s.id for s in included if s.identity not in {"VERIFIED", "SYNTHETIC"}],
         "reference_target": config.quota,
@@ -501,7 +511,7 @@ def run(
         (root_output / "README.md").write_text(
             "# Research roadmap\n\n"
             + f"Selected {len(included)} of {config.quota} target; deep-reviewed {selection.qualified_deep_read_K} of {config.deep_review_requirement} required; "
-            + f"{selection.quotation_count} verified micro-excerpts. "
+            + f"{selection.full_text_verified_K} full-text verified; {selection.abstract_only_A} abstract only; {selection.quotation_count} verified micro-excerpts. "
             + audit["research_quality"]["label"]
             + ". Open Research_Roadmap.pdf. Complete editable evidence, candidates, provenance and QA are in evidence/.\n",
             encoding="utf-8",

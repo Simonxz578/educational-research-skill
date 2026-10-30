@@ -1,6 +1,26 @@
 {
   "additionalProperties": false,
   "properties": {
+    "included_N": {
+      "default": 0,
+      "title": "Included N",
+      "type": "integer"
+    },
+    "full_text_verified_K": {
+      "default": 0,
+      "title": "Full Text Verified K",
+      "type": "integer"
+    },
+    "abstract_only_A": {
+      "default": 0,
+      "title": "Abstract Only A",
+      "type": "integer"
+    },
+    "full_text_provisional_P": {
+      "default": 0,
+      "title": "Full Text Provisional P",
+      "type": "integer"
+    },
     "primary_evidence_shortfalls": {
       "additionalProperties": {
         "type": "integer"

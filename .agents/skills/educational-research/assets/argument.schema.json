@@ -3,6 +3,15 @@
     "Claim": {
       "additionalProperties": false,
       "properties": {
+        "evidence_scope": {
+          "default": "FULL_TEXT",
+          "enum": [
+            "FULL_TEXT",
+            "PRELIMINARY_ABSTRACT"
+          ],
+          "title": "Evidence Scope",
+          "type": "string"
+        },
         "id": {
           "title": "Id",
           "type": "string"

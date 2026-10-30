@@ -86,7 +86,7 @@ def finalise(
         dump(output / "Reader_View.json", view.model_dump())
         dump(output / "Argument_Alignment.json", alignment_map(config, protocol, synthesis))
     receipt = {
-        "schema_version": "4.2",
+        "schema_version": "4.3",
         "presentation": config.presentation,
         "source_selection": selection.model_dump(),
         "include_audit_pdf": config.include_audit_pdf,
@@ -132,9 +132,9 @@ def finalise(
             + "\n".join(
                 f"- {key}: {gate['status']} — {gate['reason']}" for key, gate in qa["gates"].items()
             )
-            + f"\n\nSource coverage: selected {len(sources)}/{selection.selection_target_N}; deeply reviewed {selection.qualified_deep_read_K}/{selection.deep_review_requirement_N}; micro-excerpts {selection.quotation_count}; shortfall {selection.shortfall}."
+            + f"\n\nSource coverage: selected {len(sources)}/{selection.selection_target_N}; deeply reviewed {selection.qualified_deep_read_K}/{selection.deep_review_requirement_N}; micro-excerpts {selection.quotation_count}; shortfall {selection.shortfall}. Included {selection.included_N}; FULL_TEXT_VERIFIED {selection.full_text_verified_K}; ABSTRACT_ONLY {selection.abstract_only_A}; unfilled item shortfall {selection.selected_shortfall}."
             + (
-                "\n\nPrimary evidence per source (English words, excluding quotes/inference/metadata): "
+                "\n\nSOURCE_ANCHORED_EXPLANATION word counts (not author words; no quota): "
                 + json.dumps(
                     {
                         row["source_id"]: row["primary_evidence_depth"]
@@ -144,6 +144,14 @@ def finalise(
                 )
                 if config.presentation == "roadmap"
                 else ""
+            )
+            + "\n\nVERBATIM_PRIMARY_TEXT inspection (only exact checked spans): "
+            + json.dumps(
+                {
+                    row["source_id"]: row["verbatim_primary_text"]
+                    for row in qa["reading_audit"]
+                    if row.get("verbatim_primary_text")
+                }
             )
             + "\n\nFramework: "
             + qa["framework_audit"]["status"]
@@ -183,7 +191,9 @@ def finalise(
             pdf,
             output / "previews",
             [s.id for s in sources],
-            synthesis.framework,
+            synthesis.framework
+            if config.presentation != "roadmap" or (view and view.framework)
+            else None,
             presentation=config.presentation,
         )
         receipt["commands_executed"].append(

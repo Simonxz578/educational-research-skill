@@ -44,20 +44,22 @@ class ArticleHTML(HTMLParser):
             "th",
             "figcaption",
         }:
-            self.capture.append([tag, []])
+            if self.capture:
+                self.capture[-1][2] = True
+            self.capture.append([tag, [], False])
 
     def handle_endtag(self, tag):
         if tag in {"script", "style", "nav", "footer", "form", "noscript", "aside"}:
             self.hidden = max(0, self.hidden - 1)
         if not self.hidden and self.capture and self.capture[-1][0] == tag:
-            kind, content = self.capture.pop()
+            kind, content, nested = self.capture.pop()
             value = normal("".join(content))
-            if value:
+            if value and not nested:
                 self.blocks.append((kind, value))
 
     def handle_data(self, data):
         if not self.hidden:
-            for _, content in self.capture:
+            for _, content, _ in self.capture:
                 content.append(data)
 
 

@@ -37,7 +37,7 @@ def exact_explanation_length(source, count):
     assert primary_depth_audit(source.reading, source.quotes)["primary_evidence_words"] == count
 
 
-@pytest.mark.parametrize("count,expected_qualified", [(99, 9), (100, 10)])
+@pytest.mark.parametrize("count,expected_qualified", [(99, 10), (100, 10)])
 def test_source_floor_is_individual_and_short_prose_is_retained(tmp_path, count, expected_qualified):
     sources, synthesis, observations, logs = bundle(tmp_path)
     exact_explanation_length(sources[0], count)
@@ -46,11 +46,11 @@ def test_source_floor_is_individual_and_short_prose_is_retained(tmp_path, count,
     assert len(selected) == 10 and not candidates
     assert selection.qualified_deep_read_K == expected_qualified
     assert selection.shortfall == 10 - expected_qualified
-    assert selection.primary_evidence_shortfalls == ({sources[0].id: 1} if count == 99 else {})
+    assert selection.primary_evidence_shortfalls == {}
     qa = evaluate_gates(
         config, selected, synthesis, logs, observations, {"errors": [], "native_cli": True}
     )
-    assert qa["gates"]["G2"]["status"] == ("FAIL" if count == 99 else "PASS")
+    assert qa["gates"]["G2"]["status"] == "PASS"
     # The other nine much longer explanations must not make up the one-source deficit.
     assert qa["gates"]["G2"]["counts"]["qualified"] == expected_qualified
 
@@ -68,7 +68,7 @@ def test_title_inference_locators_and_verbatim_fragments_do_not_fill_primary_flo
     evidence_anchors(s.reading)[0].paraphrase += " " + s.quotes[0].text
     after = primary_depth_audit(s.reading, s.quotes)
     assert after["primary_evidence_words"] == initial["primary_evidence_words"] == 99
-    assert after["shortfall"] == 1
+    assert after["shortfall"] == 0  # v0.4.3 has no AI-explanation quota
 
 
 def test_repeated_sentences_and_generic_filler_cannot_satisfy_depth(tmp_path):
@@ -229,7 +229,8 @@ def test_native_pdf_contains_each_counted_explanation_and_only_five_sections(tmp
     assert main(args) == 0
     view = json.loads((output / "evidence/Reader_View.json").read_text())
     assert view["sections"] == SECTIONS and len(view["sections"]) == 5
-    assert view["papers"][0]["primary_evidence_words"] == 100
+    assert view["papers"][0]["verified_original_words"] >= 100
+    assert view["papers"][0]["explanation_words"] == 100
     with fitz.open(output / "Research_Roadmap.pdf") as pdf:
         text = re.sub(r"\s+", " ", " ".join(p.get_text() for p in pdf))
         for entry in evidence_anchors(sources[0].reading):

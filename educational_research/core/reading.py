@@ -8,9 +8,11 @@ from pathlib import Path
 from typing import Literal
 from pydantic import Field
 from ..models_base import Record
+from .evidence_types import EvidenceRights
 
 
 class DocumentProvenance(Record):
+    rights: EvidenceRights | None = None
     processing_permission: Literal["allowed", "local_only", "not_checked", "forbidden"] = "not_checked"
     permission_evidence: str = ""
     source_url: str
@@ -23,6 +25,8 @@ class DocumentProvenance(Record):
 
 
 class ReadingEvidence(Record):
+    start_offset: int | None = Field(default=None, ge=0)
+    end_offset: int | None = Field(default=None, ge=1)
     evidence_id: str
     content_type: Literal[
         "claim",
@@ -105,14 +109,36 @@ def document_text(path, digest):
 
 
 def evidence_registry(sources):
-    return {
+    registry = {
         f"{s.id}:{seg.id}": {"source_id": s.id, "locator": seg.locator, "url": seg.url}
         for s in sources
         for seg in s.segments
+        if not (s.abstract_evidence and s.reading is None)
     }
+    for s in sources:
+        if s.abstract_evidence:
+            registry[f"{s.id}:published_abstract"] = {
+                "source_id": s.id,
+                "locator": "Published abstract",
+                "url": s.abstract_evidence.source_url,
+                "scope": "ABSTRACT_ONLY",
+            }
+    return registry
+
+
+def reader_scope(source):
+    if not reading_issues(source, reader_ready=True, require_depth=False):
+        return "FULL_TEXT"
+    from ..fulltext.abstracts import abstract_issues
+
+    if not abstract_issues(source):
+        return "ABSTRACT_ONLY"
+    return "METADATA_ONLY"
 
 
 def reading_issues(source, check_files=True, reader_ready=False, require_depth=True):
+    from .verification import canonical
+
     r = source.reading
     issues = []
     if not r:
@@ -194,14 +220,58 @@ def reading_issues(source, check_files=True, reader_ready=False, require_depth=T
     ):
         issues.append("Low assessed relevance contradicts a highly relevant selected-work claim")
     if reader_ready:
+        if r.document.rights is None:
+            reusable = bool(re.search(r"CC[ -]?(?:BY|0)|creativecommons", r.document.licence, re.I))
+            r.document.rights = EvidenceRights(
+                access="allowed" if r.document.legal_basis else "not_checked",
+                access_basis=r.document.legal_basis,
+                processing="allowed" if r.document.processing_permission == "allowed" else "not_checked",
+                processing_basis=r.document.permission_evidence,
+                private_retention="allowed" if reusable else "not_checked",
+                retention_basis=r.document.licence if reusable else "",
+                public_quotation="allowed"
+                if r.quote_policy == "short_excerpts_permitted"
+                else "denied"
+                if r.quote_policy == "no_reproduction"
+                else "not_checked",
+                quotation_basis="Recorded source quotation review: " + r.quote_policy,
+                licence_url=source.permissive_licence_url or "",
+            )
+        if any(
+            getattr(r.document.rights, k) != "allowed"
+            for k in ["access", "processing", "private_retention"]
+        ):
+            issues.append(
+                "Separate source access, processing and private-retention rights must be resolved"
+            )
+            return sorted(set(issues))
+        if source.quotes and r.document.rights.public_quotation != "allowed":
+            issues.append("Public quotation rights are separate from private inspection")
+        if source.quote_budget > 20:
+            rights = r.document.rights
+            licence_matches = (
+                bool(re.search(r"CC[ -]?(?:BY|0)|creativecommons", r.document.licence, re.I))
+                and bool(source.permissive_licence_url)
+                and rights.public_quotation == "allowed"
+                and bool(rights.quotation_basis)
+            )
+            explicit = (
+                rights.public_word_allowance is not None
+                and rights.public_word_allowance >= source.quote_budget
+                and bool(rights.quotation_basis)
+            )
+            if not (licence_matches or explicit):
+                issues.append("Extended public reproduction lacks verified licence/permission scope")
         if not source.synthetic and source.acquisition is None:
             issues.append(
                 "Non-synthetic roadmap work requires validated acquisition or an explicitly permitted local document validation"
             )
         if require_depth:
             from .evidence_depth import primary_depth_audit
+            from .verification import verbatim_audit
 
             issues += primary_depth_audit(r, source.quotes)["issues"]
+            issues += verbatim_audit(source)["issues"]
         from ..fulltext.acquire import acquisition_issues
 
         issues += acquisition_issues(source.acquisition, r)
@@ -233,7 +303,7 @@ def reading_issues(source, check_files=True, reader_ready=False, require_depth=T
                 issues.append(
                     f"{entry.evidence_id}: missing private exact span/context/warrant/distinct inference"
                 )
-            elif seg and seg.text and entry.exact_span not in seg.text:
+            elif seg and seg.text and canonical(entry.exact_span) not in canonical(seg.text):
                 issues.append(f"{entry.evidence_id}: anchor is not an exact source span")
             if (
                 entry.exact_span.strip()
@@ -272,25 +342,21 @@ def reading_issues(source, check_files=True, reader_ready=False, require_depth=T
             issues.append("Full-text artifact missing or digest mismatch")
         else:
             try:
-                actual = re.sub(r"\s+", " ", document_text(str(path.resolve()), r.document.sha256))
+                actual = canonical(document_text(str(path.resolve()), r.document.sha256))
                 segments = {f"{source.id}:{s.id}": s for s in source.segments}
                 for entry in r.evidence:
                     seg = segments.get(entry.evidence_id)
-                    if (
-                        reader_ready
-                        and entry.exact_span
-                        and re.sub(r"\s+", " ", entry.exact_span).strip() not in actual
-                    ):
+                    if reader_ready and entry.exact_span and canonical(entry.exact_span) not in actual:
                         issues.append(
                             f"{entry.evidence_id}: exact anchor absent from attached full text"
                         )
                     # Public ledgers intentionally omit protected text; only the original
                     # native input can support this exact-span content check.
-                    if seg and seg.text and re.sub(r"\s+", " ", seg.text).strip() not in actual:
+                    if seg and seg.text and canonical(seg.text) not in actual:
                         issues.append(f"{entry.evidence_id}: passage absent from attached full text")
                 for quote in source.quotes:
                     wording = quote.text if hasattr(quote, "text") else quote["text"]
-                    if re.sub(r"\s+", " ", wording).strip() not in actual:
+                    if canonical(wording) not in actual:
                         issues.append("Quote absent from attached full text")
             except (OSError, UnicodeError, RuntimeError, ValueError):
                 issues.append(
@@ -300,6 +366,7 @@ def reading_issues(source, check_files=True, reader_ready=False, require_depth=T
 
 
 def reading_audit(sources, reader_ready=False, synthesis=None):
+    from .verification import verbatim_audit
     from .evidence_depth import (
         primary_depth_audit,
         cross_source_boilerplate,
@@ -308,6 +375,22 @@ def reading_audit(sources, reader_ready=False, synthesis=None):
     )
 
     duplicates = cross_source_boilerplate(sources) if reader_ready else {}
+
+    def inspection(source):
+        if reader_scope(source) == "ABSTRACT_ONLY":
+            from .evidence_depth import english_words
+
+            return {
+                "kind": "VERBATIM_PRIMARY_TEXT",
+                "scope": "ABSTRACT_ONLY",
+                "verified_original_words": 0,
+                "abstract_original_words": len(english_words(source.abstract_evidence.text)),
+                "original_word_shortfall": None,
+                "gate_status": "NOT_APPLICABLE_TO_ABSTRACT / NOT_FULL_TEXT_VERIFIED",
+                "issues": [],
+            }
+        return verbatim_audit(source)
+
     rows = [
         {
             "source_id": s.id,
@@ -319,7 +402,8 @@ def reading_audit(sources, reader_ready=False, synthesis=None):
                 else []
             ),
             "primary_evidence_depth": primary_depth_audit(s.reading, s.quotes) if reader_ready else None,
-            "reading": s.reading.model_dump() if s.reading else None,
+            "verbatim_primary_text": inspection(s) if reader_ready else None,
+            "reading": s.public_record().get("reading"),
             "interpretive_validity": "REQUIRES_AGENT_OR_EXPERT_REVIEW",
         }
         for s in sources

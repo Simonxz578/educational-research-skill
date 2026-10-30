@@ -10,6 +10,7 @@ from .editorial import EditorialReview
 
 
 class Claim(Record):
+    evidence_scope: Literal["FULL_TEXT", "PRELIMINARY_ABSTRACT"] = "FULL_TEXT"
     id: str
     text: str
     source_ids: list[str] = Field(default_factory=list)
@@ -73,7 +74,9 @@ class Synthesis(Record):
 
 def validate_graph(synthesis, sources):
     source_ids = {s.id for s in sources}
-    evidence_ids = {f"{s.id}:{seg.id}" for s in sources for seg in s.segments}
+    from .reading import evidence_registry
+
+    evidence_ids = set(evidence_registry(sources))
     claims = {c.id: c for c in synthesis.claims}
     for claim in synthesis.claims:
         if not set(claim.source_ids) <= source_ids or not set(claim.evidence_ids) <= evidence_ids:
