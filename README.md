@@ -1,12 +1,12 @@
 # Educational Research Skill
 
-Version **0.4.3** builds one readable, source-traceable `Research_Roadmap.pdf`. It preserves the approved A4 monochrome Times/Liberation Serif design and five sections: research logic; what authors establish; argument integration/closest-study challenge; framework/roadmap; APA references. Technical records stay privately in `evidence/`.
+Version **0.4.4** makes original author evidence the main body of the five-section `Research_Roadmap.pdf`. Each included work displays **at least 100 verified English author words wherever reproduction is justified**. Private inspection and AI explanation do not satisfy that display requirement.
 
-The agent reads and critically compares actual sources. Python discovers lawful routes, verifies documents and source spans, retains honest abstract fallbacks, enforces gates and renders. A successful download or fluent explanation is never proof of a completed reading or publication quality.
+Original passages appear first, with actual version and source-specific locators, followed by **OUR CRITICAL USE** in one or two sentences and a source link. The A4 monochrome Times/Liberation Serif layout, concise comparative arguments, closest-study challenge, conceptual framework and APA references remain. Technical evidence and the three typed original/explanation/inference layers stay private in `evidence/`.
 
-## Install and begin
+## Begin
 
-Use Python 3.11+ and installed Times New Roman or Liberation Serif (`fonts-liberation` on Debian/Ubuntu). No font files are redistributed.
+Python 3.11+ and Times New Roman or Liberation Serif are required (`fonts-liberation` on Ubuntu).
 
 ```bash
 git clone https://github.com/Simonxz578/educational-research-skill.git
@@ -14,38 +14,22 @@ cd educational-research-skill
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e '.[dev]'
-
-# Topic alone: at least ten relevant works, with honest evidence tiers
-python -m educational_research.cli --topic 'Retrieval practice in education' --output-dir outputs/topic
-
-# Exactly twenty relevant works; no abstract-to-full-text promotion
-python -m educational_research.cli --topic 'Retrieval practice in education' --target-references 20 --source-semantics exact --output-dir outputs/twenty
+python -m educational_research.cli --topic "Your topic" --output-dir outputs/topic
+python -m educational_research.cli --topic "Your topic" --target-references 20 --source-semantics exact --output-dir outputs/twenty
 ```
 
-Open this repository in Codex to use [the canonical skill](.agents/skills/educational-research/SKILL.md). “Use educational-research on [topic], 20 papers” gives the agent the scope and quantity; a prior chat or extra prompt template is unnecessary. The CLI itself does not understand chat or critically read twenty papers. The agent continues acquisition/reading and supplies audited private `--sources`/`--synthesis`, preserving original `--protocol` and `--discovery-records`, rather than asking the user to repair every paper manually.
+Open the repository in Codex and say “Use educational-research on [topic], 20 papers”. The [canonical skill](.agents/skills/educational-research/SKILL.md) works without this chat. The agent reads, assesses reproduction rights and prepares audited sources/synthesis; Python retrieves, checks and renders. A topic-only CLI run does not autonomously understand twenty papers. Resume real readings using private `--sources`, `--synthesis`, original `--protocol` and actual `--discovery-records`.
 
-## Original author words are different from explanation
+## Exact wording and lawful amounts
 
-Each full-text-qualified source needs at least **100 actual English author-word positions**, privately verified across four independently meaningful spans: thesis/definition, method/mechanism, finding/reasoning and limitation/counterpoint. Native verification matches the retained version, hashes, URL/identity, precise locator and canonical start/end offsets. Title, metadata, references, repeated/overlapping spans, other papers, explanations and our inference cannot inflate that count.
+The finished-PDF validator independently matches printed quotations to source artifacts, identity/version, locators and distinct non-overlapping English word positions. An overall average, repeated quote, translation, title, reference, paraphrase or inference cannot make up a deficient source. Private full-text inspection remains a separate gate.
 
-`VERBATIM_PRIMARY_TEXT`, `SOURCE_ANCHORED_EXPLANATION` and `OUR_INTERPRETATION` have separate typed fields/counts. There is **no second 100-word AI-writing quota**. The reader shows concise explanation explicitly labelled as paraphrase, only authentic permitted short excerpts as original words, and a distinct use/boundary. Private inspection never authorises reproduction of those hundred words.
+Access, processing, retention and public quotation require separate review. Record the actual licence or specific quotation basis, critical purpose, necessity/proportionality and acknowledgement. Reviewed open licences and explicit scoped permission can support larger excerpts; the old microquote ceiling is not imposed blindly. Without sufficient reproduction justification, show only permitted text and **Original words shown: X/100 - insufficient due to [reason]**. An honest shortfall is structurally valid but fails visible-word acceptance; strict CLI returns 3 after saving provisional outputs and strict validation rejects incomplete acceptance.
 
-## Genuine abstracts remain useful
+Lawful full-text acquisition precedes genuine publisher/indexed abstract fallback. Abstracts remain **ABSTRACT ONLY**: an allowed 85-word abstract displays 85/100; an allowed 120-word abstract can satisfy the display target while earning zero full-text deep-review credit. Unresolved reproduction rights yield no copied abstract wording. Metadata without a genuine abstract stays private. Twenty included works may be thirteen full texts plus seven abstracts; strict G2 still requires twenty independent full-text readings. No paywall bypass, inherited subscriptions, invented passages or publishability promises.
 
-Bounded lawful publisher/ERIC/repository/OA routes are tried first. When full text or permitted processing is unavailable, the native pipeline retrieves and identity-checks the actual publisher or authentic indexed abstract. It retains a relevant paper as **ABSTRACT ONLY**, with provenance and a link; metadata without a real verified abstract stays private. It never invents unseen methods, findings, limitations, pages or four deep-reading anchors.
+## Validation and previews
 
-The agent can supply a checked faithful abstract explanation. Without one, the native projection conservatively reports only literal topical mentions/link, never manufactured outcomes. Public quotation is separately reviewed; an unreviewed copyright scope means no quote. The abstract's actual length is recorded, while its full-text inspection gate is **NOT APPLICABLE / NOT FULL-TEXT VERIFIED**.
+[Observed v0.4.4 checks](docs/V044_VALIDATION.md) distinguish engineering fixtures from genuine source checks. [Ten-source preview](examples/roadmap-v044-10.pdf) and [twenty-source mixed preview](examples/roadmap-v044-20.pdf) are prominently TEST ONLY synthetic sources. Private originals, student material, credentials and real audit artifacts are excluded from GitHub.
 
-Count included N, qualified full texts K, abstracts A and unfilled requested items separately. A request for twenty can produce **13 full texts + 7 abstracts, 20 items and references**; strict G2 still fails with seven missing deep reviews. Default N is at least ten; explicit N overrides word-count sizing, and `--source-semantics at_least` permits more. Essential/landmark works are not discarded solely to improve the full-text score. Abstracts may support explicitly preliminary comparisons, never unqualified full-text or originality claims.
-
-## Rights, validation and compatibility
-
-Access, processing, private retention and public quotation are separately recorded. The conservative public budget normally remains <=20 source words per work in aggregate, including repeated fragments. Verified licence/explicit permission can support a larger documented allowance. There is no universal hundred-word copying entitlement. No institutional login is inherited; denied/CAPTCHA/uncertain-rights routes stop. Optional provider credentials remain in environment variables, and no Scholar scraper is provided. [Access architecture](docs/FULL_TEXT_ACCESS_V042.md) remains applicable with the [v0.4.3 policy changes](docs/VERBATIM_ABSTRACT_V043.md).
-
-G1–G5, all fifteen evidence dimensions, native receipts, full-text inspection, complete references, argument/novelty/framework checks and every-page PDF QA remain operational. Strict CLI saves honest provisional outputs then exits **3**; `python scripts/validate_research_pack.py outputs/twenty --strict` rejects incomplete acceptance. `--presentation evidence-pack` preserves explicit legacy output; `--include-audit-pdf` adds the detailed PDF only when requested. Missing access or abstract evidence remains a shortfall, never padding.
-
-Synthetic previews: [ten full-text fixtures](examples/roadmap-v043-10.pdf) and [twenty works: thirteen full-text plus seven abstract fixtures](examples/roadmap-v043-20.pdf). All are prominently TEST ONLY, not real scholarship. See [observed validation](docs/V043_VALIDATION.md) and [changelog](CHANGELOG.md).
-
-## 中文
-
-只给主题和数量即可开始。默认至少十篇；“20篇”就纳入二十篇相关作品，并分别报告全文、真实摘要和数量缺口。合法全文不可得时自动保留可核对的摘要，不让用户逐篇补材料；摘要绝不冒充全文审读。全文门槛是私下核对四类真实原文锚点、至少100个不重复位置的作者英文词，不是要求AI写100词，更不是准许公开复制100词。原文、来源知情的解释与自己的推论分开标记，摘要只能支持受限初步判断。主 PDF 保持五部分和黑白衬线排版，完整审计与权限记录留在 evidence/。程序测试不等于学术有效性、期刊背书或保证发表。
+中文：每篇主 PDF 直接展示至少100个真实作者英文原文词，前提是引用许可或具体依据充分；不足时只展示合法数量，明示 X/100 和原因。原文在前，自己的批判性使用仅一两句。摘要标为 ABSTRACT ONLY，不能计入全文审读。私下核对或AI解释不满足可见原文字数要求。默认至少十篇，明确二十篇就按二十篇执行并如实报告覆盖缺口。

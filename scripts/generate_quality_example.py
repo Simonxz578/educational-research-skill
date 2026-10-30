@@ -35,6 +35,20 @@ if __name__ == "__main__":
 
         for source in sources[-a.abstract_count :]:
             abstract_work(source, inputs / "synthetic-abstracts", 95)
+    from educational_research.core.reading import reader_scope
+
+    for source in sources:
+        reader_scope(source)
+        rights = (
+            source.abstract_evidence.rights
+            if source.abstract_evidence
+            else source.reading.document.rights
+        )
+        rights.public_quotation = "allowed"
+        rights.public_word_allowance = 150
+        rights.quotation_basis = (
+            "Generated CC0 TEST ONLY source; permission for attributed original passages"
+        )
     paths = {
         "sources": inputs / "synthetic-sources.json",
         "synthesis": inputs / "synthetic-synthesis.json",

@@ -1,3 +1,7 @@
+# Current v0.4.4 contract
+
+Follow [visible original author text](visible-original-v044.md). It supersedes private-only display and microquote-reader requirements below. Full-text acquisition, identity checks and strict academic requirements continue.
+
 # Native gates and lower-evidence usefulness
 
 G1 retains actual ERIC receipts and lawful Scholar observations, never query-plan fiction. G2 requires max(10,N,higher required reading minimum) independent genuine full-text reviews; each must inspect >=100 exact non-overlapping original English word positions across four meaningful roles. Explanations have no length quota. G3 retains independent full-text comparisons/warrants/counterarguments; explicitly preliminary abstract comparisons may be useful in the reader without earning full-text acceptance. G4 still challenges the strongest closest work and cannot establish novelty from abstracts alone. G5 validates both native evidence and the actual reader, including all included references and FULL TEXT/ABSTRACT ONLY counts.

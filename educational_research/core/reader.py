@@ -9,7 +9,7 @@ from .evidence_types import TextLayer
 
 SECTIONS = [
     "RESEARCH LOGIC",
-    "WHAT THE AUTHORS ACTUALLY ESTABLISH",
+    "ORIGINAL AUTHOR EVIDENCE",
     "ARGUMENT INTEGRATION + CLOSEST-STUDY CHALLENGE",
     "THEORETICAL / CONCEPTUAL FRAMEWORK + ROADMAP",
     "APA 7 REFERENCES",
@@ -23,6 +23,7 @@ class ReaderStatement(Record):
 
 
 class ReaderQuote(Record):
+    omitted_after: bool = False
     text: str
     evidence_id: str
     locator: str
@@ -30,6 +31,10 @@ class ReaderQuote(Record):
 
 
 class ReaderWork(Record):
+    display_excerpts: list[ReaderQuote] = Field(default_factory=list)
+    original_words_shown: int = 0
+    display_status: str = "PROVISIONAL"
+    display_reason: str = "Not checked"
     evidence_status: str = "FULL_TEXT"
     verified_original_words: int = 0
     explanation_words: int = 0
@@ -58,7 +63,7 @@ class ReaderWork(Record):
 
 
 class ReaderView(Record):
-    schema_version: str = "4.3"
+    schema_version: str = "4.4"
     sections: list[str] = Field(default_factory=lambda: list(SECTIONS), min_length=5, max_length=5)
     title: str
     problem: str
@@ -261,6 +266,9 @@ def build_reader(config, protocol, sources, synthesis, selection, qa):
                 evidence_kind=source.evidence_kind,
             )
         )
+    from .visible import project
+    for source, paper in zip(sources, papers):
+        project(source, paper)
     from .reading import evidence_registry
 
     registry = set(evidence_registry(sources))

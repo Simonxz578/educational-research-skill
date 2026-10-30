@@ -32,6 +32,7 @@ def inspect(path, preview_dir=None, expected_sources=None, expected_framework=No
                 framework_pages.append(i)
             if (
                 "Original excerpts" in text
+                or "ORIGINAL AUTHOR TEXT" in text
                 or "Source-informed explanation." in text
                 or "Original position and reasoning." in text
                 or "Author's argument." in text

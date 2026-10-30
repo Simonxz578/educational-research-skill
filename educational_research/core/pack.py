@@ -86,7 +86,7 @@ def finalise(
         dump(output / "Reader_View.json", view.model_dump())
         dump(output / "Argument_Alignment.json", alignment_map(config, protocol, synthesis))
     receipt = {
-        "schema_version": "4.3",
+        "schema_version": "4.4",
         "presentation": config.presentation,
         "source_selection": selection.model_dump(),
         "include_audit_pdf": config.include_audit_pdf,

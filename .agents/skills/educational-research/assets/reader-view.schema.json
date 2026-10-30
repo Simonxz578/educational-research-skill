@@ -3,6 +3,11 @@
     "ReaderQuote": {
       "additionalProperties": false,
       "properties": {
+        "omitted_after": {
+          "default": false,
+          "title": "Omitted After",
+          "type": "boolean"
+        },
         "text": {
           "title": "Text",
           "type": "string"
@@ -62,6 +67,28 @@
     "ReaderWork": {
       "additionalProperties": false,
       "properties": {
+        "display_excerpts": {
+          "items": {
+            "$ref": "#/$defs/ReaderQuote"
+          },
+          "title": "Display Excerpts",
+          "type": "array"
+        },
+        "original_words_shown": {
+          "default": 0,
+          "title": "Original Words Shown",
+          "type": "integer"
+        },
+        "display_status": {
+          "default": "PROVISIONAL",
+          "title": "Display Status",
+          "type": "string"
+        },
+        "display_reason": {
+          "default": "Not checked",
+          "title": "Display Reason",
+          "type": "string"
+        },
         "evidence_status": {
           "default": "FULL_TEXT",
           "title": "Evidence Status",
@@ -261,7 +288,7 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "default": "4.3",
+      "default": "4.4",
       "title": "Schema Version",
       "type": "string"
     },

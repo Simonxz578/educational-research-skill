@@ -119,7 +119,7 @@ def render(path, config, sources, synthesis, view, qa):
     section(1)
     story.append(
         p(
-            f"{len(view.papers)} included of {sel['selection_target_N']} target; {sel['full_text_verified_K']} full-text verified; {sel['abstract_only_A']} abstract only; {sel['quotation_count']} checked micro-excerpts.",
+            f"{len(view.papers)} included of {sel['selection_target_N']} target; {sel['full_text_verified_K']} full-text verified; {sel['abstract_only_A']} abstract only; {sum(len(p.display_excerpts) for p in view.papers)} original extracts.",
             small,
         )
     )
@@ -145,58 +145,27 @@ def render(path, config, sources, synthesis, view, qa):
                 ),
                 p(work.title, small),
             ]
-            if work.evidence_status == "ABSTRACT_ONLY":
-                for quote in work.original_microquotes:
-                    elems.append(
-                        p(
-                            "“" + quote.text + "” (" + quote.locator + ")",
-                            label="Author's original words.",
-                        )
+            elems.append(p("ORIGINAL AUTHOR TEXT", identification))
+            for quote in work.display_excerpts:
+                elems.append(
+                    Paragraph(
+                        "<i>“"
+                        + safe(quote.text)
+                        + (" [...]" if quote.omitted_after else "")
+                        + "”</i> ("
+                        + safe(quote.locator)
+                        + ")",
+                        body,
                     )
-                elems.append(p(work.source_author_position.text, label="Published abstract."))
-                elems.append(p(work.our_inference.text, label="Our use / limitation."))
-                url = "https://doi.org/" + work.doi if work.doi else work.url
-                if url.startswith(("http://", "https://")):
-                    elems.append(
-                        Paragraph('<link href="' + safe(url) + '">' + safe(url) + "</link>", small)
-                    )
-                elems.extend([Spacer(1, 3), rule(), Spacer(1, 8)])
-                story.append(KeepTogether(elems))
-                continue
-            first = [work.source_author_position, work.source_reasoning_and_results[0]]
-            second = [work.source_reasoning_and_results[1], work.source_limitations]
-            # Exactly four checked paraphrases appear, once each, as two connected analytical units.
-            for n, statements in enumerate([first, second]):
-                chunks = []
-                for statement in statements:
-                    chunks.append(
-                        safe(statement.text) + " <i>(" + safe("; ".join(statement.locators)) + ")</i>"
-                    )
-                first_quote = True
-                for quote in work.original_microquotes:
-                    belongs = any(quote.evidence_id in st.evidence_ids for st in statements)
-                    if belongs:
-                        chunks.append(
-                            ("<b>Author’s original words:</b> " if first_quote else "")
-                            + "<i>“"
-                            + safe(quote.text)
-                            + "”</i> ("
-                            + safe(quote.locator)
-                            + ")."
-                        )
-                        first_quote = False
-                label = (
-                    "Source-informed explanation." if n == 0 else "Evidence and boundary (paraphrase)."
                 )
-                elems.append(Paragraph("<b>" + label + "</b> " + " ".join(chunks), body))
-            elems.append(p(work.our_inference.text, label="Our use of this source."))
-            if work.primary_evidence_issues:
+            if work.display_status != "PASS":
                 elems.append(
                     p(
-                        "PROVISIONAL - original-text inspection or source interpretation remains incomplete.",
+                        f"Original words shown: {work.original_words_shown}/100 - insufficient due to {work.display_reason}.",
                         small,
                     )
                 )
+            elems.append(p(work.our_inference.text, label="OUR CRITICAL USE."))
             url = "https://doi.org/" + work.doi if work.doi else work.url
             if url.startswith(("http://", "https://")):
                 elems.append(Paragraph('<link href="' + safe(url) + '">' + safe(url) + "</link>", small))
@@ -355,7 +324,7 @@ def render(path, config, sources, synthesis, view, qa):
         block = [p(source_id, small), Paragraph(apa_markup(entry), reference)]
         entries.append((block, sum(e.wrap(width, 730)[1] for e in block)))
     disclosure = p(
-        f"Included {len(sources)} of {sel['selection_target_N']} target; full-text verified {sel['full_text_verified_K']}; abstract only {sel['abstract_only_A']}; deep-reviewed {sel['qualified_deep_read_K']} of {sel['deep_review_requirement_N']} required; micro-excerpts {sel['quotation_count']}; Scholar {view.coverage['scholar']}.",
+        f"Included {len(sources)} of {sel['selection_target_N']} target; full-text verified {sel['full_text_verified_K']}; abstract only {sel['abstract_only_A']}; deep-reviewed {sel['qualified_deep_read_K']} of {sel['deep_review_requirement_N']} required; original extracts {sum(len(p.display_excerpts) for p in view.papers)}; Scholar {view.coverage['scholar']}.",
         small,
     )
     total = sum(height for _, height in entries) + 75

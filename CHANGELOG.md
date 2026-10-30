@@ -1,3 +1,10 @@
+# v0.4.4 - visible original author evidence
+
+- Native reader leads with verified original passages, version-specific locators and concise critical use; removes long per-paper AI summaries.
+- Independent finished-PDF word-position checks enforce each work’s visible 100-word target. Repetition and private-only spans give no extra credit.
+- Separately reviewed reproduction allowances support open/explicitly permitted excerpts; insufficient rights or short abstracts produce exact visible shortfalls and provisional display gates.
+- Canonical skill, source/reader schemas, tests and synthetic previews updated. Abstracts remain excluded from strict full-text credit.
+
 # Changes
 
 ## 0.4.3 — 2026-10-30

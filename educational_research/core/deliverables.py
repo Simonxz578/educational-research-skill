@@ -313,21 +313,35 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
                 ):
                     errors.append("Reader bibliography omits a selected work")
                 compact_text = re.sub(r"\s+", " ", text)
+                from .visible import count_display
+
+                visible_results = {}
                 for paper in view.papers:
-                    for statement in [
-                        paper.source_author_position,
-                        *paper.source_reasoning_and_results,
-                        paper.source_limitations,
-                    ]:
-                        if (
-                            paper.evidence_status == "ABSTRACT_ONLY"
-                            and statement is paper.source_limitations
-                        ):
-                            continue
-                        if re.sub(r"\s+", " ", statement.text) not in compact_text:
-                            errors.append(
-                                f"{paper.source_id}: primary-evidence wording missing from actual PDF"
-                            )
+                    marker = "[" + paper.source_id + "]"
+                    start = compact_text.index(marker)
+                    ends = [
+                        compact_text.find("[" + other.source_id + "]", start + len(marker))
+                        for other in view.papers
+                    ]
+                    ends = [end for end in ends if end > start]
+                    block = (
+                        compact_text[start : min(ends)]
+                        if ends
+                        else compact_text[start:].split("III. ARGUMENT", 1)[0]
+                    )
+                    inspected = count_display(
+                        restore_public_source(by_source[paper.source_id]), paper.display_excerpts, block
+                    )
+                    visible_results[paper.source_id] = inspected
+                    errors += [paper.source_id + ": " + i for i in inspected["issues"]]
+                    if (paper.original_words_shown, paper.display_status) != (
+                        inspected["shown"],
+                        inspected["status"],
+                    ):
+                        errors.append(
+                            paper.source_id
+                            + ": displayed original-word counters differ from finished PDF"
+                        )
             links = [link.get("uri", "") for p in pdf for link in p.get_links() if link.get("uri")]
             for row in rows:
                 if row["doi"] and "https://doi.org/" + row["doi"] not in links:
@@ -369,6 +383,10 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
         errors.append(f"Invalid deliverable structure: {type(exc).__name__}: {exc}")
     return {
         "errors": sorted(set(errors)),
+        "visible_original_words": locals().get("visible_results", {}),
+        "display_shortfalls": [
+            sid for sid, r in locals().get("visible_results", {}).items() if r["status"] != "PASS"
+        ],
         "checked_groups": list(MATRIX_GROUPS),
         "native_cli": bool(locals().get("receipt", {}).get("entrypoint") == "educational_research.cli"),
     }

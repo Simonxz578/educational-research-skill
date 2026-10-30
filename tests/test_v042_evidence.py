@@ -233,8 +233,10 @@ def test_native_pdf_contains_each_counted_explanation_and_only_five_sections(tmp
     assert view["papers"][0]["explanation_words"] == 100
     with fitz.open(output / "Research_Roadmap.pdf") as pdf:
         text = re.sub(r"\s+", " ", " ".join(p.get_text() for p in pdf))
-        for entry in evidence_anchors(sources[0].reading):
-            assert re.sub(r"\s+", " ", entry.paraphrase) in text
+        for quote in view["papers"][0]["display_excerpts"]:
+            assert re.sub(r"\s+", " ", quote["text"]) in text
+        assert "ORIGINAL AUTHOR TEXT" in text
+        assert "Source-informed explanation." not in text
         assert all(section in text for section in SECTIONS)
         for hidden in ["G1:", "G2:", "SHA-256", "search logs", "primary_evidence_words"]:
             assert hidden not in text

@@ -1,3 +1,7 @@
+# Current v0.4.4 contract
+
+Follow [visible original author text](visible-original-v044.md). It supersedes private-only display and microquote-reader requirements below. Full-text acquisition, identity checks and strict academic requirements continue.
+
 # Verbatim inspection, abstract fallback and scope (v0.4.3)
 
 The private full-text gate counts >=100 non-overlapping English word positions matched to the actual attached original version across four meaningful roles. It does not require 100 unique vocabulary items and does not count paraphrases. Canonical NFKC/punctuation/whitespace reconciliation does not permit invented words. Repeated, ambiguous or overlapping spans, source mixing, mismatched identity/version/digests, title/metadata/references and absent text fail verification. Native span ledgers preserve source/version/URL, artifact and extraction hashes, locators, canonical start/end offsets, attributed claim, reader/date/scope and separate usage decisions. Actual meaningful interpretation remains an expert judgement.

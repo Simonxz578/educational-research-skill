@@ -252,15 +252,15 @@ def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None
         ),
         "G5": gate(
             "PASS"
-            if delivery and not delivery.get("errors") and delivery.get("native_cli", True)
+            if delivery and not delivery.get("errors") and not delivery.get("display_shortfalls") and delivery.get("native_cli", True)
             else "PARTIAL"
             if delivery is None
             else "FAIL",
             "Native CLI, complete matrix, consistency, PDF and receipt checks"
-            if delivery and not delivery.get("errors") and delivery.get("native_cli", True)
+            if delivery and not delivery.get("errors") and not delivery.get("display_shortfalls") and delivery.get("native_cli", True)
             else "Native CLI execution required; Python API rendering remains provisional"
             if delivery and not delivery.get("native_cli", True)
-            else "; ".join(delivery.get("errors", []))
+            else "; ".join(delivery.get("errors", []) + ["Visible original-word shortfall: " + sid for sid in delivery.get("display_shortfalls", [])])
             if delivery
             else "Native deliverable validation pending",
         ),

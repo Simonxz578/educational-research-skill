@@ -1162,13 +1162,14 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "default": "4.3",
+      "default": "4.4",
       "enum": [
         "1.0",
         "2.0",
         "3.0",
         "4.2",
-        "4.3"
+        "4.3",
+        "4.4"
       ],
       "title": "Schema Version",
       "type": "string"

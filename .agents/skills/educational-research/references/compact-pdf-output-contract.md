@@ -1,3 +1,7 @@
+# Current v0.4.4 contract
+
+Follow [visible original author text](visible-original-v044.md). It supersedes private-only display and microquote-reader requirements below. Full-text acquisition, identity checks and strict academic requirements continue.
+
 # Reader output contract
 
 Keep the native Research_Roadmap.pdf plus one short delivery note; technical records stay in private evidence/. Exactly five sections: research logic; authors' evidence; integration/closest-study challenge; framework/roadmap; APA references. Preserve approved A4 monochrome Times/Liberation Serif geometry, thin rules, adaptive readable pagination and open source blocks. No colour cards, audit tables or reduced type.
