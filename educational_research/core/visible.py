@@ -74,6 +74,17 @@ def excerpts(source):
                     )
                 )
         total = sum(len(english_words(q.text)) for q in complete)
+        if complete and total < 100:
+            # Keep the limitation's surrounding explanation rather than cutting it mid-clause.
+            text = candidates[-1][0]
+            ends = list(re.finditer(r'[.!?]["”’)]*(?=\s|$)', text))
+            if len(ends) >= 2:
+                expanded = text[: ends[1].end()]
+                revised = total - len(english_words(complete[-1].text)) + len(english_words(expanded))
+                if 100 <= revised <= min(150, allowance(source, abstract)):
+                    complete[-1].text = expanded
+                    complete[-1].omitted_after = len(expanded) < len(text)
+                    total = revised
         if len(complete) == len(candidates) and 100 <= total <= min(150, allowance(source, abstract)):
             return complete
     result = []

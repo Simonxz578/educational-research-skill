@@ -25,7 +25,7 @@ Every page undergoes native A4/black-text/font/bounds checks. Representative fir
 
 ## Genuine retained OA article
 
-The previously read and retained publisher OA article, Ritchie et al. (2013), DOI `10.1371/journal.pone.0078976`, is revalidated against its original artifact. Its independently reviewed publisher CC BY permission supports compact attributed original passages for critical comparison. The native PDF visibly prints 100 verified original English words across four roles, distinct from the 435 privately inspected words and the earlier explanation. The source's display gate passes. The one-work run is still academically incomplete against the default ten-work requirement; strict CLI returns 3. This is retained-reading revalidation, not a new claim of a complete corpus.
+The previously read and retained publisher OA article, Ritchie et al. (2013), DOI `10.1371/journal.pone.0078976`, is revalidated against its original artifact. Its independently reviewed publisher CC BY permission supports compact attributed original passages for critical comparison. The native PDF visibly prints 128 verified original English words across four roles (complete sentences retain the limitation’s context), distinct from the 435 privately inspected words and the earlier explanation. The source's display gate passes. The one-work run is still academically incomplete against the default ten-work requirement; strict CLI returns 3. This is retained-reading revalidation, not a new claim of a complete corpus.
 
 ## Genuine Phoenix EPLI closest-study regression
 
