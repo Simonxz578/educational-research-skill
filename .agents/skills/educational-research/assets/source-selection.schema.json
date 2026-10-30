@@ -1,0 +1,98 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "requested_user_N": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Requested User N"
+    },
+    "requested_semantics": {
+      "title": "Requested Semantics",
+      "type": "string"
+    },
+    "selection_target_N": {
+      "title": "Selection Target N",
+      "type": "integer"
+    },
+    "deep_review_requirement_N": {
+      "title": "Deep Review Requirement N",
+      "type": "integer"
+    },
+    "originating_user_intent": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Originating User Intent"
+    },
+    "quantity_origin": {
+      "title": "Quantity Origin",
+      "type": "string"
+    },
+    "explanation": {
+      "title": "Explanation",
+      "type": "string"
+    },
+    "verified_relevant_selected_K": {
+      "title": "Verified Relevant Selected K",
+      "type": "integer"
+    },
+    "qualified_deep_read_K": {
+      "title": "Qualified Deep Read K",
+      "type": "integer"
+    },
+    "selected_shortfall": {
+      "title": "Selected Shortfall",
+      "type": "integer"
+    },
+    "shortfall": {
+      "title": "Shortfall",
+      "type": "integer"
+    },
+    "quotation_count": {
+      "title": "Quotation Count",
+      "type": "integer"
+    },
+    "selected_source_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Selected Source Ids",
+      "type": "array"
+    },
+    "candidate_source_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Candidate Source Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "requested_user_N",
+    "requested_semantics",
+    "selection_target_N",
+    "deep_review_requirement_N",
+    "originating_user_intent",
+    "quantity_origin",
+    "explanation",
+    "verified_relevant_selected_K",
+    "qualified_deep_read_K",
+    "selected_shortfall",
+    "shortfall",
+    "quotation_count",
+    "selected_source_ids"
+  ],
+  "title": "SourceSelection",
+  "type": "object"
+}

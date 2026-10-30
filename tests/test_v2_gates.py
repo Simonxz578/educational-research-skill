@@ -21,7 +21,7 @@ from .v2_factory import bundle
 
 def quality(records, synthesis, observations=(), logs=(), **config):
     return evaluate_gates(
-        Config(topic="library learning", **config),
+        Config(presentation="evidence-pack", topic="library learning", **config),
         records,
         synthesis,
         logs,
@@ -191,6 +191,10 @@ def test_strict_native_cli_saves_provisional_diagnostics_and_full_matrix(tmp_pat
     sources.write_text(json.dumps([source(i).model_dump() for i in range(1, 11)]))
     result = main(
         [
+            "--presentation",
+            "evidence-pack",
+            "--presentation",
+            "evidence-pack",
             "--topic",
             "library learning",
             "--offline",
@@ -281,7 +285,17 @@ def test_native_receipt_detects_posthoc_gate_tampering(tmp_path):
     file.write_text(json.dumps([source().model_dump()]))
     folder = tmp_path / "pack"
     main(
-        ["--topic", "library learning", "--offline", "--sources", str(file), "--output-dir", str(folder)]
+        [
+            "--presentation",
+            "evidence-pack",
+            "--topic",
+            "library learning",
+            "--offline",
+            "--sources",
+            str(file),
+            "--output-dir",
+            str(folder),
+        ]
     )
     gates = json.loads((folder / "Research_Quality_Gates.json").read_text())
     gates["overall_status"] = "PASS"
@@ -295,7 +309,7 @@ def test_native_receipt_detects_posthoc_gate_tampering(tmp_path):
 def test_complete_synthetic_cli_validates_all_five_structural_gates(tmp_path):
     from educational_research.core.protocol import provisional
 
-    protocol = provisional(Config(topic="library learning"))
+    protocol = provisional(Config(presentation="evidence-pack", topic="library learning"))
     records, syn, obs, _ = bundle(tmp_path / "corpus")
     inputs = {
         "sources": [s.model_dump() for s in records],
@@ -308,7 +322,7 @@ def test_complete_synthetic_cli_validates_all_five_structural_gates(tmp_path):
         file = tmp_path / (key + ".json")
         file.write_text(json.dumps(value))
         args += ["--" + key, str(file)]
-    assert main(args) == 0
+    assert main(args + ["--presentation", "evidence-pack"]) == 0
     qa = json.loads((tmp_path / "pack/Research_Quality_Gates.json").read_text())
     assert all(g["status"] == "PASS" for g in qa["gates"].values())
     assert qa["overall_status"] == "PARTIAL" and qa["synthetic"]
@@ -392,7 +406,7 @@ def test_visual_review_is_versioned_and_does_not_upgrade_research(tmp_path):
         "--output-dir",
         str(folder),
     ]
-    main(args)
+    main(args + ["--presentation", "evidence-pack"])
     image = next((folder / "previews").glob("*.png"))
     record(
         folder,
@@ -404,6 +418,6 @@ def test_visual_review_is_versioned_and_does_not_upgrade_research(tmp_path):
     assert validate(folder) == []
     qa = json.loads((folder / "Research_Quality_Gates.json").read_text())
     assert qa["overall_status"] == "PARTIAL"
-    main(args)
+    main(args + ["--presentation", "evidence-pack"])
     assert not (folder / "Visual_Review.json").exists()
     assert list(folder.glob("Visual_Review.previous.*.json"))

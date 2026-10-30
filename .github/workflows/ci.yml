@@ -23,3 +23,5 @@ jobs:
 
       - run: python scripts/generate_quality_example.py --output outputs/quality-ci
       - run: python scripts/validate_research_pack.py outputs/quality-ci
+      - run: python scripts/generate_quality_example.py --count 20 --output outputs/quality-20-ci
+      - run: python scripts/validate_research_pack.py outputs/quality-20-ci

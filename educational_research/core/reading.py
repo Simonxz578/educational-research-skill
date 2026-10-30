@@ -22,8 +22,22 @@ class DocumentProvenance(Record):
 
 class ReadingEvidence(Record):
     evidence_id: str
-    content_type: Literal["claim", "method", "result", "limitation", "counterpoint"]
+    content_type: Literal[
+        "claim",
+        "method",
+        "result",
+        "limitation",
+        "counterpoint",
+        "definition",
+        "mechanism",
+        "reasoning",
+        "boundary",
+    ]
     paraphrase: str
+    exact_span: str = ""
+    context: str = ""
+    author_warrant: str = ""
+    researcher_inference: str = ""
     locator: str
     status: Literal["checked_against_text", "not_checked"] = "not_checked"
     finding_kind: Literal[
@@ -32,6 +46,7 @@ class ReadingEvidence(Record):
 
 
 class FullTextReading(Record):
+    quote_policy: Literal["short_excerpts_permitted", "no_reproduction", "not_checked"] = "not_checked"
     source_id: str
     access_status: Literal[
         "FULL_TEXT_READ_BY_AGENT",
@@ -90,7 +105,7 @@ def evidence_registry(sources):
     }
 
 
-def reading_issues(source, check_files=True):
+def reading_issues(source, check_files=True, reader_ready=False):
     r = source.reading
     issues = []
     if not r:
@@ -114,11 +129,11 @@ def reading_issues(source, check_files=True):
         issues.append("Fragment/selected sections do not establish deep full-text reading")
     if r.coverage == "relevant_chapter" and r.scholarly_kind != "theoretical":
         issues.append("Chapter scope must be justified for theoretical works")
-    required = {"claim", "limitation"} | (
-        {"method", "result"} if r.scholarly_kind in {"empirical", "review"} else set()
-    )
     kinds = {e.content_type for e in r.evidence if e.status == "checked_against_text"}
-    if not required <= kinds or len(r.evidence) < 2:
+    required_roles = [{"claim", "definition"}, {"limitation", "boundary", "counterpoint"}]
+    if r.scholarly_kind in {"empirical", "review"}:
+        required_roles += [{"method", "mechanism"}, {"result", "reasoning"}]
+    if not all(kinds & role for role in required_roles) or len(r.evidence) < 2:
         issues.append("Missing substantive claim/method/result/limitation coverage")
     registry = evidence_registry([source])
     for e in r.evidence:
@@ -165,6 +180,63 @@ def reading_issues(source, check_files=True):
         issues.append("Reading thesis and source-author argument disagree")
     if source.quote_budget > 20 and not source.permissive_licence_url:
         issues.append("Substantive v2 quotation budget exceeds 20 without rights provenance")
+    if (
+        reader_ready
+        and source.assessments.get("relevance")
+        and source.assessments["relevance"].value < 50
+    ):
+        issues.append("Low assessed relevance contradicts a highly relevant selected-work claim")
+    if reader_ready:
+        anchor_types = {e.content_type for e in r.evidence if e.status == "checked_against_text"}
+        roles = [
+            {"claim", "definition"},
+            {"method", "mechanism"},
+            {"result", "reasoning"},
+            {"limitation", "boundary", "counterpoint"},
+        ]
+        if len(r.evidence) < 4 or not all(anchor_types & role for role in roles):
+            issues.append("Roadmap requires four distinct substantive evidence roles")
+        spans = []
+        for entry in r.evidence:
+            seg = next(
+                (seg for seg in source.segments if f"{source.id}:{seg.id}" == entry.evidence_id), None
+            )
+            if not (
+                entry.exact_span
+                and entry.context
+                and entry.author_warrant
+                and entry.researcher_inference
+            ):
+                issues.append(
+                    f"{entry.evidence_id}: missing private exact span/context/warrant/distinct inference"
+                )
+            elif seg and seg.text and entry.exact_span not in seg.text:
+                issues.append(f"{entry.evidence_id}: anchor is not an exact source span")
+            if (
+                entry.exact_span.strip()
+                and " ".join(entry.paraphrase.split()).casefold()
+                == " ".join(entry.exact_span.split()).casefold()
+            ):
+                issues.append(
+                    f"{entry.evidence_id}: verbatim anchor cannot be passed off as a paraphrase"
+                )
+            spans.append(" ".join(entry.exact_span.split()).casefold())
+        if (
+            len(set(spans)) < 4
+            or len({" ".join(e.paraphrase.split()).casefold() for e in r.evidence}) < 4
+        ):
+            issues.append("Repeated sentences cannot masquerade as four independent evidence anchors")
+        if r.quote_policy == "not_checked":
+            issues.append("Reader quotation permissions have not been checked")
+        elif r.quote_policy == "no_reproduction" and source.quotes:
+            issues.append("Quote reproduction contradicts the source permissions")
+        elif r.quote_policy == "short_excerpts_permitted" and not 1 <= len(source.quotes) <= 2:
+            issues.append(
+                "Roadmap requires one or two verified original micro-excerpts per quotable work"
+            )
+        checked_ids = {e.evidence_id for e in r.evidence}
+        if any(f"{source.id}:{q.segment_id}" not in checked_ids for q in source.quotes):
+            issues.append("Reader excerpt is not attached to a checked substantive anchor")
     if check_files:
         path = Path(r.document.local_path)
         if not path.is_file() or sha256_file(path) != r.document.sha256:
@@ -175,6 +247,14 @@ def reading_issues(source, check_files=True):
                 segments = {f"{source.id}:{s.id}": s for s in source.segments}
                 for entry in r.evidence:
                     seg = segments.get(entry.evidence_id)
+                    if (
+                        reader_ready
+                        and entry.exact_span
+                        and re.sub(r"\s+", " ", entry.exact_span).strip() not in actual
+                    ):
+                        issues.append(
+                            f"{entry.evidence_id}: exact anchor absent from attached full text"
+                        )
                     # Public ledgers intentionally omit protected text; only the original
                     # native input can support this exact-span content check.
                     if seg and seg.text and re.sub(r"\s+", " ", seg.text).strip() not in actual:
@@ -190,12 +270,12 @@ def reading_issues(source, check_files=True):
     return sorted(set(issues))
 
 
-def reading_audit(sources):
+def reading_audit(sources, reader_ready=False):
     return [
         {
             "source_id": s.id,
-            "qualified": not reading_issues(s),
-            "issues": reading_issues(s),
+            "qualified": not reading_issues(s, reader_ready=reader_ready),
+            "issues": reading_issues(s, reader_ready=reader_ready),
             "reading": s.reading.model_dump() if s.reading else None,
             "interpretive_validity": "REQUIRES_AGENT_OR_EXPERT_REVIEW",
         }

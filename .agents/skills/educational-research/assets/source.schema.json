@@ -129,6 +129,16 @@
     "FullTextReading": {
       "additionalProperties": false,
       "properties": {
+        "quote_policy": {
+          "default": "not_checked",
+          "enum": [
+            "short_excerpts_permitted",
+            "no_reproduction",
+            "not_checked"
+          ],
+          "title": "Quote Policy",
+          "type": "string"
+        },
         "source_id": {
           "title": "Source Id",
           "type": "string"
@@ -429,13 +439,37 @@
             "method",
             "result",
             "limitation",
-            "counterpoint"
+            "counterpoint",
+            "definition",
+            "mechanism",
+            "reasoning",
+            "boundary"
           ],
           "title": "Content Type",
           "type": "string"
         },
         "paraphrase": {
           "title": "Paraphrase",
+          "type": "string"
+        },
+        "exact_span": {
+          "default": "",
+          "title": "Exact Span",
+          "type": "string"
+        },
+        "context": {
+          "default": "",
+          "title": "Context",
+          "type": "string"
+        },
+        "author_warrant": {
+          "default": "",
+          "title": "Author Warrant",
+          "type": "string"
+        },
+        "researcher_inference": {
+          "default": "",
+          "title": "Researcher Inference",
           "type": "string"
         },
         "locator": {
@@ -541,10 +575,11 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "default": "2.0",
+      "default": "3.0",
       "enum": [
         "1.0",
-        "2.0"
+        "2.0",
+        "3.0"
       ],
       "title": "Schema Version",
       "type": "string"

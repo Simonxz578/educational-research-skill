@@ -2,8 +2,10 @@
 
 import csv
 import json
+import re
 from pathlib import Path
 from .reading import sha256_file
+from .layout import audit_dir, reader_pdf, presentation
 
 MATRIX_GROUPS = {
     "identity": ["id", "title", "authors", "year", "doi", "url", "identity"],
@@ -68,6 +70,23 @@ REQUIRED = [
 ]
 
 
+def required_files(folder, kind=None):
+    kind = kind or presentation(folder)
+    if kind == "roadmap":
+        paths = [n for n in REQUIRED if n != "Educational_Research_Essentials.pdf"] + [
+            "../Research_Roadmap.pdf",
+            "Reader_View.json",
+            "Source_Selection.json",
+            "Candidates.json",
+            "Argument_Alignment.json",
+        ]
+        receipt = Path(folder) / "Execution_Receipt.json"
+        if receipt.exists() and json.loads(receipt.read_text()).get("include_audit_pdf"):
+            paths.append("Educational_Research_Essentials.pdf")
+        return paths
+    return REQUIRED
+
+
 def write_csv(path, rows, fields=None):
     if fields is None:
         fields = list(rows[0]) if rows else ["source_id", "status"]
@@ -85,9 +104,10 @@ def write_csv(path, rows, fields=None):
 
 
 def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
-    folder = Path(folder)
+    folder = audit_dir(folder)
+    kind = presentation(folder)
     errors = []
-    for name in REQUIRED:
+    for name in required_files(folder):
         if not (folder / name).is_file():
             errors.append(f"Missing native deliverable: {name}")
     try:
@@ -119,22 +139,116 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
             }[name]
             if json.loads((folder / name).read_text()) != json.loads((folder / canonical).read_text()):
                 errors.append(f"Legacy/native alias mismatch: {name}")
+        if kind == "roadmap":
+            from .reader import ReaderView
+
+            view = ReaderView.model_validate_json((folder / "Reader_View.json").read_text())
+            selection = json.loads((folder / "Source_Selection.json").read_text())
+            if (
+                set(view.selected_source_ids) != ids
+                or {p.source_id for p in view.papers} != ids
+                or len(view.papers) != len(ids)
+            ):
+                errors.append("Reader/matrix selected-source count or IDs mismatch")
+            if selection["verified_relevant_selected_K"] != len(ids) or selection[
+                "qualified_deep_read_K"
+            ] != len(ids):
+                errors.append(
+                    "Selected/deep-reading counters disagree with the qualifying reader corpus"
+                )
+            if selection["deep_review_requirement_N"] < max(10, selection["selection_target_N"]):
+                errors.append("Requested source target was silently lowered for deep-review acceptance")
+            if selection["shortfall"] != max(
+                0, selection["deep_review_requirement_N"] - len(ids)
+            ) or selection["selected_shortfall"] != max(0, selection["selection_target_N"] - len(ids)):
+                errors.append("Source shortfall counters disagree with requested and qualified counts")
+            if (
+                view.source_selection != selection
+                or selection["selected_source_ids"] != view.selected_source_ids
+            ):
+                errors.append("Quantity contract differs between reader and evidence layers")
+            if (
+                selection["requested_semantics"] == "exact"
+                and len(ids) > selection["selection_target_N"]
+            ):
+                errors.append("Exact source count was exceeded")
+            if selection["quotation_count"] != sum(len(p.original_microquotes) for p in view.papers):
+                errors.append("Reader quotation count disagrees with native selection counters")
+            by_source = {r["id"]: r for r in rows}
+            for paper in view.papers:
+                row = by_source[paper.source_id]
+                anchors = {e["evidence_id"]: e for e in row["reading"]["evidence"]}
+                locations = {f"{row['id']}:{s['id']}": s["locator"] for s in row["segments"]}
+                for statement in [
+                    paper.source_author_position,
+                    *paper.source_reasoning_and_results,
+                    paper.source_limitations,
+                    paper.our_inference,
+                ]:
+                    for eid, loc in zip(statement.evidence_ids, statement.locators):
+                        anchor = anchors.get(eid)
+                        expected = (
+                            anchor.get("researcher_inference")
+                            if statement is paper.our_inference and anchor
+                            else anchor.get("paraphrase")
+                            if anchor
+                            else None
+                        )
+                        if not anchor or statement.text != expected or loc != locations.get(eid):
+                            errors.append(
+                                f"{paper.source_id}: reader wording/locator differs from the source-grounded extraction"
+                            )
+                allowed = {(q["text"], f"{row['id']}:{q['segment_id']}") for q in row["quotes"]}
+                if any(
+                    (q.text, q.evidence_id) not in allowed or q.locator != locations.get(q.evidence_id)
+                    for q in paper.original_microquotes
+                ):
+                    errors.append(
+                        f"{paper.source_id}: reader quotation differs from verified source record"
+                    )
+                if paper.quotation_units > paper.quotation_budget:
+                    errors.append(f"{paper.source_id}: per-work reader quotation budget exceeded")
+                for statement in [
+                    paper.source_author_position,
+                    *paper.source_reasoning_and_results,
+                    paper.source_limitations,
+                    paper.our_inference,
+                ]:
+                    if not statement.evidence_ids or not statement.locators:
+                        errors.append(f"{paper.source_id}: reader claim lacks evidence/locator")
         import fitz
 
-        with fitz.open(folder / "Educational_Research_Essentials.pdf") as pdf:
+        with fitz.open(reader_pdf(folder)) as pdf:
             text = "\n".join(p.get_text() for p in pdf)
             for row in rows:
                 if row["id"] not in text:
                     errors.append(f"Matrix source absent from PDF: {row['id']}")
+            if kind == "roadmap":
+                for source_id in ids:
+                    pattern = r"(?m)^\d{2,4}[^\[]+\[" + re.escape(source_id) + r"\]"
+                    if len(re.findall(pattern, text)) != 1:
+                        errors.append(f"Reader source block missing or repeated: {source_id}")
+                reference_text = text.split("SELECTED APA 7 REFERENCES", 1)[-1]
+                if any(
+                    not re.search(r"(?m)^" + re.escape(source_id) + r"$", reference_text)
+                    for source_id in ids
+                ):
+                    errors.append("Reader bibliography omits a selected work")
             links = [link.get("uri", "") for p in pdf for link in p.get_links() if link.get("uri")]
             for row in rows:
                 if row["doi"] and "https://doi.org/" + row["doi"] not in links:
                     errors.append(f"Missing DOI hyperlink: {row['id']}")
+        if kind == "roadmap" and (folder / "Educational_Research_Essentials.pdf").exists():
+            from ..render.inspect import inspect
+
+            errors += inspect(
+                folder / "Educational_Research_Essentials.pdf", presentation="evidence-pack"
+            )["errors"]
         if pdf_audit:
             errors += pdf_audit["errors"]
         if (folder / "Visual_Review.json").exists():
             visual = json.loads((folder / "Visual_Review.json").read_text())
-            if visual["pdf_sha256"] != sha256_file(folder / "Educational_Research_Essentials.pdf"):
+            if visual["pdf_sha256"] != sha256_file(reader_pdf(folder)):
                 errors.append("Visual review belongs to a different PDF version")
             for image in visual["images"]:
                 image_path = Path(image["path"])
@@ -142,10 +256,13 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
                     errors.append("Reviewed preview image missing or modified")
         if verify_receipt:
             receipt = json.loads((folder / "Execution_Receipt.json").read_text())
-            if (
-                receipt.get("entrypoint")
-                not in {"educational_research.cli", "educational_research.pipeline.run"}
-                or receipt.get("renderer") != "educational_research.render.essentials_pdf"
+            if receipt.get("entrypoint") not in {
+                "educational_research.cli",
+                "educational_research.pipeline.run",
+            } or receipt.get("renderer") != (
+                "educational_research.render.roadmap"
+                if kind == "roadmap"
+                else "educational_research.render.essentials_pdf"
             ):
                 errors.append(
                     "Native CLI/renderer receipt missing; handwritten shortcuts are not accepted"
@@ -168,7 +285,7 @@ def seal_receipt(folder, receipt):
     # Receipt cannot hash itself. Every other delivered file is sealed after final gates/QA.
     receipt["artifact_hashes"] = {
         name: sha256_file(folder / name)
-        for name in REQUIRED
+        for name in required_files(folder)
         + (["Visual_Review.json"] if (folder / "Visual_Review.json").exists() else [])
         if name != "Execution_Receipt.json" and (folder / name).is_file()
     }

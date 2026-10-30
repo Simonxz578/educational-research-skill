@@ -30,12 +30,14 @@ class SearchProtocol(Record):
     keyword_clusters: dict[str, list[str]]
     descriptors: list[str]
     citation_chaining: str
+    quantity_intent: dict = Field(default_factory=dict)
     amendments: list[dict] = Field(default_factory=list)
 
 
 def provisional(config):
     return SearchProtocol(
         problem=config.topic,
+        quantity_intent=config.quantity_contract,
         candidate_rqs=[config.rq]
         if config.rq
         else [

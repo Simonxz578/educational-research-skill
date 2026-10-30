@@ -13,3 +13,14 @@ G4: closest-study matrix, strongest novelty-destroying rival, content evidence, 
 G5: actual native CLI and renderer receipt; complete 15-group matrix, bibliography/IDs, reading/argument/novelty/framework/alignment outputs, all page QA, links and artifact digests. `scripts/validate_research_pack.py` checks aliases, hashes and independently recomputes gates; `--strict` rejects provisional acceptance. Handwritten reduced-CSV/custom-PDF substitutes fail. Structural validation may accept an honest provisional pack without claiming research completion.
 
 Editorial audit: 0 absent/fabricated; 1 superficial; 2 partial; 3 strong with qualifications; 4 rigorous and traceable with credible counterarguments. Critical source accuracy, novelty, theory-fit and method-fit <=2 block readiness. Scores need rationale/evidence/judgement calls; automatic scores cannot claim human assessment. Readiness means ready FOR expert review, never guaranteed acceptance.
+
+
+# Reader-first gate extensions (v3)
+
+G1 retains real auditable ERIC/Scholar requirements and honest plans/caches/imports. Candidate breadth expands after duplicates/shortfall within a stated budget; it is never a completeness guarantee.
+
+G2 derives its required count from the effective user selection target: max(10,N,any higher explicitly required reading threshold). N=20 with ten full texts plus ten abstracts fails with a ten-work shortfall. Source count, qualified reading count and reproduced-excerpt count are different. Four distinct substantive anchor roles, private exact spans, context, author warrant, own inference, rights and precise locators govern roadmap promotion. Low assessed relevance cannot pad the corpus.
+
+G3 requires independent reviewed-source comparisons, visible source-author vs own inference, warrants/counterpoints and paragraph-level links into the roadmap; G4 still challenges the proposed gap against closest work. Unsupported frameworks/claims remain in the private audit rather than becoming confident reader content.
+
+G5 validates BOTH layers: complete 15-group evidence data and native Research_Roadmap.pdf, exactly one block and a full reference for every selected work, exact/at-least count semantics, consistent K/N/reading/quotation/shortfall values, source-linked wording/locators, per-work budgets, framework, source IDs, links, previews and receipts. The compatibility evidence-pack remains explicit. Automated structural eligibility and recorded visual inspection are not expert endorsement or journal acceptance.

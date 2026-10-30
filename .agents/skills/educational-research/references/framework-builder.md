@@ -10,3 +10,10 @@ Use Framework in the native synthesis schema; the CLI validates/renders, the age
 6. Explain existing theory's failure, modest conceptual contribution, scope and evidence that would revise the model. The lens must affect sampling, measurement, analysis or interpretation. Unused lenses fail theory-fit.
 
 Native outputs: Theoretical_Conceptual_Framework.json; Framework_Diagram.json, Framework.mmd and editable SVG; Theory_RQ_Evidence_Method_Alignment.csv; Framework_Audit.json. Native PDF includes vector diagram, legend, definitions, alternative lenses, mechanism/boundary tables and alignment. Keep node labels and model complexity readable; do not shrink type or turn an exploratory capability interpretation into a causally identified regression model.
+
+
+# Reader framework and congruence (v3)
+
+Compare alternatives privately. The reader shows the selected primary lens/justified parsimonious combination, strongest reason for choice, precise construct boundaries, one readable vector diagram and what theory cannot establish. Source-grounded vs proposed/sensitising relations are visually distinct. Directional arrows appear only for the declared directed mechanism/causal/feedback relationship type; an observational association does not acquire a causal arrow. A causal designation still needs a defensible identification argument.
+
+Tie each construct to paragraph claims, RQ, source evidence, proposed measures/codes, analysis and disconfirming pattern. Record uses across title, problem, purpose, RQ, source claim, gap, theory, measure, coding, analysis, interpretation, contribution and policy; near-synonym bridges need evidence. Unsupported/drifting frameworks are withheld from authoritative reader display and flagged in the private audit. Do not equate aspirations with clarity, formal availability with capability, or non-use with exclusion; these illustrate a general construct-boundary problem, not a hard-coded research template.

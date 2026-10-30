@@ -66,7 +66,20 @@ class Relationship(Record):
 class ConstructUse(Record):
     location: str
     stage: Literal[
-        "title", "purpose", "rq", "theory", "measure", "coding", "analysis", "claim", "policy"
+        "title",
+        "purpose",
+        "rq",
+        "theory",
+        "measure",
+        "coding",
+        "analysis",
+        "claim",
+        "policy",
+        "problem",
+        "source_claim",
+        "gap",
+        "interpretation",
+        "contribution",
     ]
     construct_id: str
     label: str

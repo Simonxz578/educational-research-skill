@@ -1,12 +1,12 @@
 # Educational Research Skill
 
-An education-first Codex skill and Python toolkit for traceable literature research. Deliver one compact evidence PDF with editable records: scoped questions, bounded research gaps, opposing arguments, a ranked source/evidence/author-argument matrix and APA 7 references. A potential paper's word count sets the discovery target, never an essay quota.
+Build a source-rich **research argument roadmap** and literature-led conceptual framework. The default is one plain A4 monochrome Times PDF, `Research_Roadmap.pdf`, plus a concise note. Complete evidence, provenance and quality audits stay in `evidence/`.
 
-The toolkit performs real ERIC retrieval, conservative Crossref matching, optional OpenAlex/Semantic Scholar citation enrichment, safe Scholar query planning/import, validated extraction, ranking and PDF rendering. The agent performs critical reading and prepares source-linked interpretations. Without reviewed source content, outputs remain qualified metadata/abstract candidates; it never invents quotations or gaps.
+The agent performs lawful primary-text reading and critical interpretation. Python retrieves, validates, selects, formats and renders. A topic-only CLI call cannot magically complete a literature review: missing discovery or full text produces an honest provisional roadmap, not invented reading, quotes or novelty.
 
 ## Install
 
-Python 3.11+ and installed Times New Roman or Liberation Serif are required. On Debian/Ubuntu install `fonts-liberation`; on macOS Times New Roman is normally available. Set `RESEARCH_FONT_DIR` if fonts live elsewhere. No fonts are bundled.
+Python 3.11+ and installed Times New Roman or Liberation Serif are required. On Debian/Ubuntu install `fonts-liberation`. No font files are distributed.
 
 ```bash
 git clone https://github.com/Simonxz578/educational-research-skill.git
@@ -16,84 +16,63 @@ python3 -m venv .venv
 python -m pip install -e '.[dev]'
 ```
 
-Open the repository in Codex. The discoverable skill is [`.agents/skills/educational-research/SKILL.md`](.agents/skills/educational-research/SKILL.md), following [official skill conventions](https://learn.chatgpt.com/docs/build-skills). For use from another project, install the Python package and copy that skill folder into your discoverable skills directory; copying the skill alone does not install the Python runtime.
+Open the repository in Codex to use [the canonical skill](.agents/skills/educational-research/SKILL.md). Installing/copying the skill elsewhere also requires installing the companion package.
 
-## Run
+## Source quantity is an end-to-end contract
 
-```bash
-# Live research: 10-reference verification target; actual shortfall disclosed
-python -m educational_research.cli --topic "library learning" --target-words 1000 --mode full --output-dir outputs/live
+- Topic alone: at least 10 qualifying independent works; ten is a floor, not a hidden maximum.
+- `--target-references 20`: exactly 20 selected works by default; strict G2 requires 20 deep readings.
+- `--source-semantics at_least`: select at least N, including additional qualifying supplied works.
+- Without explicit N, use `ceil(target_words/100)` with a floor of 10. Explicit N wins over word count.
+- Substantive deep-review requirement is at least `max(10,N)`. Ten full texts plus ten abstracts cannot satisfy a twenty-work request. Missing sources are disclosed as K/N and a precise shortfall.
 
-# Larger prospective dissertation: target 100 references, not 10,000 words of AI prose
-python -m educational_research.cli --topic "library learning" --target-words 10000 --mode full --output-dir outputs/dissertation
+The skill interprets English/Chinese quantity requests and passes `--user-quantity-intent` to preserve the user's actual words. The CLI does not claim to parse natural-language chat.
 
-# Deterministic TEST ONLY example: no actual scholarly references
-python -m educational_research.cli --topic "library learning" --offline --sources tests/fixtures/verified_fixture.json --output-dir outputs/example
-
-# Critical reading done by the agent: validated extraction and synthesis inputs
-python -m educational_research.cli --topic "your topic" --offline --sources private/sources.json --synthesis private/synthesis.json --output-dir outputs/reviewed
-
-# Surgical audit map for an existing draft
-python -m educational_research.cli --input private/draft.md --mode audit --offline --sources private/sources.json --output-dir outputs/audit
-
-python scripts/validate_research_pack.py outputs/example
-python scripts/inspect_pdf.py outputs/example/Educational_Research_Essentials.pdf --previews outputs/example/previews
-```
-
-`--target-references` overrides `ceil(target_words/100)`. Additional scope flags include `--rq`, `--descriptor` (repeatable), `--education-level`, `--context`, `--geography`, `--methodology`, `--framework`, `--author-thesis`, date bounds, inclusion/exclusion rules and language. `--providers eric,google-scholar` selects default discovery routes without enrichment. `--metrics jif,quartile,article-citations` expresses requested fields; unavailable metrics remain unverified, never guessed.
-
-ERIC's documented API uses subject descriptors and explicit context filters. Query logs include actual results and failed expansions. Scholar has no bulk scraper: query plans are `GOOGLE_SCHOLAR_NOT_CHECKED`; use permitted interactive/manual searches or `--scholar-csv`. [CSV format](examples/scholar_observations.csv) requires observation provenance and marks imports as user-attested. For substantive reasoning, follow the canonical skill and prepare private JSON against its source/argument schemas. [A synthetic source example](tests/fixtures/verified_fixture.json) demonstrates the shape; all example citations are fictional and TEST ONLY.
-
-Modes `discover`, `search`, `synthesise`, `gap`, `outline`, `audit`, `revise`, `full` share the concise pack contract. Analysis depth depends on the source/synthesis inputs and the agent's reading; changing a mode flag cannot manufacture analysis. `draft` or `--include-draft` explicitly enables a separate source-linked Markdown scaffold. The skill directs the agent to write substantive prose only when expressly requested. The CLI does not manufacture a completed manuscript.
-
-## Outputs
-
-- `Educational_Research_Essentials.pdf`: A–F focus, gaps, debate chains, full compact matrix, APA bibliography, verification notes.
-- Matrix CSV/JSON, verified CSL, unresolved references, evidence ledger, argument graph, gap comparisons and metrics.
-- Prospective protocol, exact search/HTTP logs, provenance, exclusions, Scholar plan, revision map, `audit.json`, `QA_Report.md` and preview images.
-
-The default renderer rejects overlong analytical cells, repeats source headers across page breaks and uses readable 9.5 pt multi-line records. Protected source text is not reproduced in ledgers. Outputs/caches/private inputs are ignored by git. Automatic layout checks do not replace visual inspection or critical scientific review.
-
-Scores use relevance 45 / evidence quality 20 / journal influence 15 / article impact 10 / argumentative value 10. Missing categories are null, with the available denominator and rescaling disclosed. Method and argument scores require reviewed assessments; journal/article metrics require named provenance. Journal JIF is never an article impact factor. Null/contrary/foundation work is deliberately retained. Source claims, evidence and researcher interpretation occupy distinct fields.
-
-## 中文快速开始
-
-本技能用于教育研究、文献检索、研究空白、理论框架、作者论证与文稿证据审计。默认产出一份精炼 PDF 和可编辑的证据记录，不按目标论文的字数代写文章。1000 字对应 10 篇参考文献的检索目标；10000 字对应 100 篇，数量不足或未核验会如实说明。
-
-在 Codex 中打开仓库后，可说：“使用 educational-research，研究图书馆学习，目标论文 1000 字，检索 10 篇文献，提供研究空白与证据/论证矩阵。”英文研究文本默认英式英语；可要求中文。先运行检索，再由智能体阅读合法全文或摘要并建立可追溯记录。无法访问 Scholar 时会提供手动查询计划，不冒称已检索；无全文时不捏造原文引语。真实文稿与运行输出不要提交到公开仓库。
-
-## Validation and limits
+## Two-stage workflow
 
 ```bash
-python -m pytest -q                  # offline tests; live smoke explicitly skipped
-python -m ruff check .
-RUN_LIVE_TESTS=1 python -m pytest -q -m live
-python scripts/generate_examples.py --count 100 --output outputs/synthetic-100
-```
+# Stage 1: prospective scope and real discovery; provisional until primary texts are reviewed
+python -m educational_research.cli --topic 'International students and university career-development support' --mode discover --output-dir outputs/discovery
 
-Live tests can skip on actual service/network unavailability; a skip is not a pass. Public examples use synthetic unrelated library-learning material and never constitute scholarly evidence. [Architecture](docs/ARCHITECTURE.md) explains the agent/Python boundary; [provenance and limitations](docs/PROVENANCE_AND_LIMITATIONS.md) covers publisher checks, copyright, metrics, citation-audit limits and font support. [Validation report](docs/VALIDATION.md) records actual release checks. Original code is MIT; third-party styles, quotations and fonts retain their licences.
+# The agent obtains and critically reads lawful full texts, then prepares audited private inputs.
+# Stage 2: exactly 20 sources, with original prospective protocol and actual discovery observations
+python -m educational_research.cli --topic 'International students and career aspirations' --target-references 20 --source-semantics exact --user-quantity-intent 'Review 20 papers' --mode full --offline --sources private/sources.json --synthesis private/synthesis.json --protocol private/protocol.json --discovery-records private/observations.json --strict-quality-gates --output-dir outputs/reviewed
 
-## Quality engine v2 (0.2.0)
-
-A rendered PDF is no longer a substantive research completion claim. Every native pack has five quality gates and a visible `PROVISIONAL - NOT FULLY VERIFIED` label while evidence is incomplete. The framework builder compares literature-led lenses, defines bounded constructs, distinguishes proposed/source-verified mechanisms and maps RQ → evidence → measures/coding → analysis. Conditional feasibility checks reject counterfeit mixed methods.
-
-```bash
-# Topic alone: actual discovery, provisional candidate pack
-python -m educational_research.cli --topic "library learning" --mode discover --output-dir outputs/discovery
-
-# Complete the agent's close reading/synthesis, then resume with original protocol/observations
-python -m educational_research.cli --topic "your scoped topic" --offline --sources private/sources.json --synthesis private/synthesis.json --protocol private/protocol.json --discovery-records private/observations.json --mode full --strict-quality-gates --output-dir outputs/reviewed
-
-# TEST ONLY full-text structural example; never a real research acceptance claim
-python scripts/generate_quality_example.py --output outputs/quality-v2
-python scripts/validate_research_pack.py outputs/quality-v2
-
-# Use this to demand real substantive acceptance (synthetic/provisional packs fail)
 python scripts/validate_research_pack.py outputs/reviewed --strict
 ```
 
-`--mode framework` uses the same native synthesis schema and pack. `--empirical-proposal` requires a matched study-design record; mixed methods needs independent QUAN/QUAL purposes plus integration and feasible recruitment/access conditions. `--min-reviewed-fulltexts` defaults to 10; reducing it records reduced coverage and cannot earn strict acceptance. `--quality-level exploratory|substantive`, `--require-verifiable-scholar`, `--protocol` and `--discovery-records` expose honest workflow state. A legacy CSV/query-plan alone never satisfies auditable Scholar discovery; package genuine exports with `scripts/import_scholar_observation.py --help` and keep the actual observation timestamp/artifact.
+These are API usage examples, not claims that a genuine twenty-paper corpus exists. Source inputs need actual versioned/hashed lawful full text, reading provenance and at least four distinct checked anchors: author thesis/definition, method/mechanism, finding/reasoning, limitation/counterpoint. Each anchor includes an exact private span, contextual paraphrase, author warrant, own inference and precise locator. Abstracts remain follow-up candidates. The reader uses 1–2 authentic micro-excerpts where permitted, normally <=20 reproduced words per work across the entire PDF, plus close paraphrases. Full source text is not bundled or committed.
 
-G1 discovery; G2 ten independent relevant deep full-text readings; G3 comparative arguments; G4 closest-study novelty challenge; G5 native complete deliverables/QA. Strict CLI saves diagnostics and exits 3 when substantive acceptance is incomplete. Library `audit.passed` remains only a deprecated layout-compatibility flag: use `research_passed` and `Research_Quality_Gates.json`. No automatic score is journal acceptance or a human endorsement. Existing v1 inputs/commands still work but their old access flags are never silently upgraded. See [v2 architecture and migration](docs/QUALITY_ENGINE_V2.md), [implementation map](docs/V2_IMPLEMENTATION_MAP.md) and [release checks](docs/V2_VALIDATION.md).
+ERIC is the native discovery front door. Scholar uses lawful interactive/manual observations or actual exports; a query plan is not a completed search. [Import genuine observations](scripts/import_scholar_observation.py) with actual timestamps/artifacts; preserve the original protocol on resume. Adaptive candidate breadth is logged and bounded by `--search-candidate-budget`. Crossref/OpenAlex enrich identity/metrics; they do not substitute for Scholar or full-text reading. JIF, quartiles and article metrics remain null/unverified without provenance.
 
-中文：v2 新增五项硬门槛、逐篇全文审读记录、最接近研究的新颖性反证、理论/概念框架及构念漂移检查、方法可行性和可复核编辑评分。资料不全时仍保存完整的临时资料包并标明未核验；严格模式返回非零状态。至少十篇高度相关全文、真实检索记录及有来源的比较论证不能被漂亮 PDF 或少量摘要替代。图示有可编辑 JSON/Mermaid/SVG，区分来源证实关系与假设关系，不自动宣称因果识别。
+## Reader and audit layers
+
+`Research_Roadmap.pdf` presents research logic, every selected author's checked original evidence, comparative chains, a narrow closest-study gap, the selected framework and a congruent writing/research plan, followed by all selected APA 7 references. Source blocks are open text with thin rules, not decorative cards. Pagination adapts to source count; it is not fixed to three pages. The private `evidence/` directory retains the full 15-group matrix, candidates, reading/quotation ledger, arguments, novelty challenge, framework and alignment, CSL, protocol/search receipts, G1–G5, QA and previews.
+
+Five gates remain enforced: auditable discovery; required independent close readings; comparative arguments; closest-work novelty; and complete native outputs/QA. Strict mode saves diagnostics and exits 3 when acceptance is incomplete. Structural validation of synthetic examples never certifies genuine research or journal acceptance. The framework distinguishes source-grounded versus proposed relations and checks construct drift across title, problem, RQ, theory, measures/codes, analysis and contribution. Mixed methods needs defensible QUAN/QUAL purposes, integration and feasible access/fallback.
+
+`--presentation evidence-pack` retains the v0.2 detailed PDF and root-level aliases. `--include-audit-pdf` explicitly adds it inside `evidence/` while retaining the reader PDF. Other modes (`search`, `synthesise`, `gap`, `outline`, `framework`, `audit`, `revise`, `full`) share the native architecture; audit/revise requires `--input`. Drafting remains explicit opt-in and never invents data.
+
+## Synthetic previews and validation
+
+Public examples are generated **TEST ONLY**, unrelated to user manuscripts, and cannot support scholarly claims:
+
+- [Ten-source roadmap](examples/roadmap-v3-10.pdf)
+- [Twenty-source roadmap](examples/roadmap-v3-20.pdf)
+
+```bash
+python scripts/generate_quality_example.py --count 10 --output outputs/roadmap-10
+python scripts/generate_quality_example.py --count 20 --output outputs/roadmap-20
+python scripts/validate_research_pack.py outputs/roadmap-20
+python -m pytest -q
+python -m ruff check .
+RUN_LIVE_TESTS=1 python -m pytest -q -m live -rs
+```
+
+See [v3 design, quotas and migration](docs/READER_ROADMAP_V3.md), [observed validation results](docs/V3_VALIDATION.md) and [changelog](CHANGELOG.md). Original code is MIT; source content, CSL styles and fonts retain their applicable rights.
+
+## 中文快速开始
+
+默认交付精炼的研究路线图 PDF，完整审计保存在 `evidence/`。只给主题时至少十篇；明确“20篇”就以二十篇为目标并要求二十篇真正全文审读。“恰好N篇”用 exact，“至少N篇”用 at_least，保留用户原话。不能拿十篇全文加十篇摘要冒充二十篇已读文献。
+
+先合法检索、取得全文、逐篇核对原文与论点，再构建作者间的比较论证、研究空白、理论框架和写作路径。原作者立场、实际证据和自己的推论分开标注。资料不足时显示 K/N 和缺口；不捏造引语、数据、全文访问、Scholar 检索或新颖性。默认不代写长篇文章，不公开私人文稿、学生材料或版权全文。

@@ -21,6 +21,8 @@ if __name__ == "__main__":
     fixture.write_text(json.dumps([source(i).model_dump() for i in range(1, args.count + 1)], indent=2))
     synthesis = Path(__file__).resolve().parents[1] / "examples/synthesis.synthetic.json"
     arguments = [
+        "--presentation",
+        "evidence-pack",
         "--topic",
         "library learning",
         "--target-words",

@@ -4,18 +4,19 @@ import argparse
 import json
 from pathlib import Path
 from educational_research.core.discovery import utc_now
+from educational_research.core.layout import audit_dir, reader_pdf
 from educational_research.core.reading import sha256_file
 from educational_research.core.deliverables import seal_receipt
 
 
 def record(folder, images, reviewer, verdict, notes):
-    folder = Path(folder)
+    folder = audit_dir(folder)
     manifest = {
         "reviewer": reviewer,
         "reviewed_at": utc_now(),
         "verdict": verdict,
         "notes": notes,
-        "pdf_sha256": sha256_file(folder / "Educational_Research_Essentials.pdf"),
+        "pdf_sha256": sha256_file(reader_pdf(folder)),
         "images": [{"path": str(Path(i).resolve()), "sha256": sha256_file(i)} for i in images],
         "trust_boundary": "Recorded reviewer attestation, not an automated visual judgement",
     }

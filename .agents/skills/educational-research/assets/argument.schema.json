@@ -343,7 +343,12 @@
             "coding",
             "analysis",
             "claim",
-            "policy"
+            "policy",
+            "problem",
+            "source_claim",
+            "gap",
+            "interpretation",
+            "contribution"
           ],
           "title": "Stage",
           "type": "string"

@@ -1,0 +1,259 @@
+{
+  "$defs": {
+    "ReaderQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_id": {
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "locator": {
+          "title": "Locator",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_id",
+        "locator",
+        "url"
+      ],
+      "title": "ReaderQuote",
+      "type": "object"
+    },
+    "ReaderStatement": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "locators": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Locators",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_ids",
+        "locators"
+      ],
+      "title": "ReaderStatement",
+      "type": "object"
+    },
+    "ReaderWork": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "in_text": {
+          "title": "In Text",
+          "type": "string"
+        },
+        "doi": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Doi"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "debate_id": {
+          "title": "Debate Id",
+          "type": "string"
+        },
+        "argument_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Argument Ids",
+          "type": "array"
+        },
+        "source_author_position": {
+          "$ref": "#/$defs/ReaderStatement"
+        },
+        "source_reasoning_and_results": {
+          "items": {
+            "$ref": "#/$defs/ReaderStatement"
+          },
+          "title": "Source Reasoning And Results",
+          "type": "array"
+        },
+        "source_limitations": {
+          "$ref": "#/$defs/ReaderStatement"
+        },
+        "our_inference": {
+          "$ref": "#/$defs/ReaderStatement"
+        },
+        "original_microquotes": {
+          "items": {
+            "$ref": "#/$defs/ReaderQuote"
+          },
+          "title": "Original Microquotes",
+          "type": "array"
+        },
+        "quotation_units": {
+          "title": "Quotation Units",
+          "type": "integer"
+        },
+        "quotation_budget": {
+          "title": "Quotation Budget",
+          "type": "integer"
+        },
+        "permission": {
+          "title": "Permission",
+          "type": "string"
+        },
+        "evidence_kind": {
+          "title": "Evidence Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "title",
+        "in_text",
+        "doi",
+        "url",
+        "debate_id",
+        "argument_ids",
+        "source_author_position",
+        "source_reasoning_and_results",
+        "source_limitations",
+        "our_inference",
+        "original_microquotes",
+        "quotation_units",
+        "quotation_budget",
+        "permission",
+        "evidence_kind"
+      ],
+      "title": "ReaderWork",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "3.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "problem": {
+      "title": "Problem",
+      "type": "string"
+    },
+    "principal_question": {
+      "title": "Principal Question",
+      "type": "string"
+    },
+    "thesis": {
+      "title": "Thesis",
+      "type": "string"
+    },
+    "selected_source_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Selected Source Ids",
+      "type": "array"
+    },
+    "papers": {
+      "items": {
+        "$ref": "#/$defs/ReaderWork"
+      },
+      "title": "Papers",
+      "type": "array"
+    },
+    "chains": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Chains",
+      "type": "array"
+    },
+    "novelty": {
+      "additionalProperties": true,
+      "title": "Novelty",
+      "type": "object"
+    },
+    "framework": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Framework"
+    },
+    "source_selection": {
+      "additionalProperties": true,
+      "title": "Source Selection",
+      "type": "object"
+    },
+    "coverage": {
+      "additionalProperties": true,
+      "title": "Coverage",
+      "type": "object"
+    },
+    "withheld_claims": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Withheld Claims",
+      "type": "array"
+    }
+  },
+  "required": [
+    "title",
+    "problem",
+    "principal_question",
+    "thesis",
+    "selected_source_ids",
+    "papers",
+    "novelty",
+    "framework",
+    "source_selection",
+    "coverage"
+  ],
+  "title": "ReaderView",
+  "type": "object"
+}

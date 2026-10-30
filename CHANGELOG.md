@@ -1,5 +1,15 @@
 # Changes
 
+## 0.3.0 — 2026-10-30
+
+- Make the native Research_Roadmap.pdf the default, with complete editable audits in evidence/ and explicit evidence-pack compatibility.
+- Enforce explicit/exact/at-least source quantity across protocol, selection, dynamic G2, reader, references, receipt and QA; separate selected works, deep readings and micro-excerpts.
+- Require four independent primary-text anchors, exact private spans/context/warrants/inferences and verified quote permissions for reader promotion; keep abstracts and access gaps as candidates.
+- Add a derived reader view, open source blocks, comparative synthesis, selected framework, congruent writing roadmap, balanced references and complete reader/evidence validation.
+- Match the inspected monochrome Times geometry and type hierarchy; preserve native 15-group matrices, provenance and G1–G5 without printing an audit dump.
+- Add adaptive candidate breadth, new schemas/quantity regressions, 10/20-source TEST ONLY public previews and updated bilingual skill/migration guidance.
+
+
 ## 0.2.0 — 2026-10-29
 
 - Add five evidence-based research quality gates, schema invariants, explicit provisional labels and strict CLI exit 3 after diagnostics.

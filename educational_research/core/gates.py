@@ -66,7 +66,7 @@ def independent_key(s):
 
 def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None, graph_errors=()):
     evidence = evidence_registry(sources)
-    readings = reading_audit(sources)
+    readings = reading_audit(sources, reader_ready=config.presentation == "roadmap")
     qualified = {r["source_id"] for r in readings if r["qualified"]}
     source_map = {s.id: s for s in sources}
     distinct = {independent_key(source_map[s]) for s in qualified}
@@ -186,7 +186,7 @@ def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None
             not edge.evidence_ids or not set(edge.evidence_ids) <= evidence.keys()
         ):
             argument_issues.append("Graph relationship lacks resolvable evidence")
-    required_count = max(10, config.min_reviewed_fulltexts)
+    required_count = config.deep_review_requirement
     reduced = config.min_reviewed_fulltexts < 10
     substantive = config.substantive
 
@@ -211,7 +211,13 @@ def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None
             "Deep-reading structural eligibility, not comprehension certification"
             if len(distinct) >= required_count and not reduced
             else "Insufficient independent, highly relevant full-text reading; reduced coverage cannot earn strict acceptance",
-            {"qualified": len(distinct), "required": required_count, "reduced_coverage": reduced},
+            {
+                "qualified": len(distinct),
+                "required": required_count,
+                "reduced_coverage": reduced,
+                "selection_target_N": config.quota,
+                "shortfall": max(0, required_count - len(distinct)),
+            },
             [e.evidence_id for s in sources if s.id in qualified for e in s.reading.evidence],
         ),
         "G3": gate(

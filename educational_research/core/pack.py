@@ -26,9 +26,14 @@ def finalise(
     graph_errors,
     draft_text,
     execution_context,
+    protocol,
+    selection,
 ):
     from ..render.essentials_pdf import render
     from ..render.inspect import inspect
+    from ..render.roadmap import render as render_roadmap
+    from .reader import build_reader, alignment_map
+    from .layout import reader_pdf
 
     output = Path(output)
     matrices = json.loads((output / "Literature_Argument_Matrix.json").read_text())
@@ -72,10 +77,23 @@ def finalise(
     write_csv(output / "Theory_RQ_Evidence_Method_Alignment.csv", qa["framework_audit"]["alignment"])
     dump(output / "Framework_Audit.json", qa["framework_audit"])
     dump(output / "Study_Design_Audit.json", qa["design_audit"])
+    view = (
+        build_reader(config, protocol, sources, synthesis, selection, qa)
+        if config.presentation == "roadmap"
+        else None
+    )
+    if view:
+        dump(output / "Reader_View.json", view.model_dump())
+        dump(output / "Argument_Alignment.json", alignment_map(config, protocol, synthesis))
     receipt = {
-        "schema_version": "2.0",
+        "schema_version": "3.0",
+        "presentation": config.presentation,
+        "source_selection": selection.model_dump(),
+        "include_audit_pdf": config.include_audit_pdf,
         "entrypoint": execution_context.get("entrypoint", "educational_research.pipeline.run"),
-        "renderer": "educational_research.render.essentials_pdf",
+        "renderer": "educational_research.render.roadmap"
+        if config.presentation == "roadmap"
+        else "educational_research.render.essentials_pdf",
         "argv": execution_context.get("argv", []),
         "started_at": execution_context.get("started_at", utc_now()),
         "completed_at": utc_now(),
@@ -90,7 +108,7 @@ def finalise(
         "artifact_hashes": {},
     }
     dump(output / "Execution_Receipt.json", receipt)
-    pdf = output / "Educational_Research_Essentials.pdf"
+    pdf = reader_pdf(output, config.presentation)
     # Resolve G5 with a conservative fixed point: label complete only after all artifacts and PDF pass.
     for iteration in range(3):
         audit["research_quality"] = qa
@@ -114,6 +132,7 @@ def finalise(
             + "\n".join(
                 f"- {key}: {gate['status']} — {gate['reason']}" for key, gate in qa["gates"].items()
             )
+            + f"\n\nSource coverage: selected {len(sources)}/{selection.selection_target_N}; deeply reviewed {selection.qualified_deep_read_K}/{selection.deep_review_requirement_N}; micro-excerpts {selection.quotation_count}; shortfall {selection.shortfall}."
             + "\n\nFramework: "
             + qa["framework_audit"]["status"]
             + "; methods: "
@@ -126,16 +145,35 @@ def finalise(
             + "\n\nScientific interpretation and document authenticity remain reviewable judgements. Synthetic packs never earn production acceptance.\n",
             encoding="utf-8",
         )
-        render(
+        if config.presentation == "roadmap":
+            render_roadmap(pdf, config, sources, synthesis, view, qa)
+            if config.include_audit_pdf:
+                render(
+                    output / "Educational_Research_Essentials.pdf",
+                    config,
+                    sources,
+                    synthesis,
+                    json.loads((output / "gap_evidence.json").read_text()),
+                    logs,
+                    audit,
+                )
+        else:
+            render(
+                pdf,
+                config,
+                sources,
+                synthesis,
+                json.loads((output / "gap_evidence.json").read_text()),
+                logs,
+                audit,
+            )
+        audit["pdf"] = inspect(
             pdf,
-            config,
-            sources,
-            synthesis,
-            json.loads((output / "gap_evidence.json").read_text()),
-            logs,
-            audit,
+            output / "previews",
+            [s.id for s in sources],
+            synthesis.framework,
+            presentation=config.presentation,
         )
-        audit["pdf"] = inspect(pdf, output / "previews", [s.id for s in sources], synthesis.framework)
         receipt["commands_executed"].append(
             {
                 "command": "Python call: educational_research.render.inspect",

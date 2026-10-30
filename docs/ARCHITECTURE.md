@@ -1,5 +1,7 @@
 # Architecture
 
+Current v3 reader/selection/output architecture: [READER_ROADMAP_V3.md](READER_ROADMAP_V3.md).
+
 The v2 quality-gate/framework extension and migration are described in [QUALITY_ENGINE_V2.md](QUALITY_ENGINE_V2.md). The native retrieval/rendering flow below remains the foundation.
 
 The agent does scientific reasoning; deterministic Python retrieves, validates, scores, formats and renders. No hidden LLM service, API key or invented semantic synthesis.

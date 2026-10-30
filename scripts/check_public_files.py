@@ -17,6 +17,26 @@ def scan():
         path = Path(name)
         if not path.is_file():
             continue
+        if name in {"examples/roadmap-v3-10.pdf", "examples/roadmap-v3-20.pdf"}:
+            import fitz
+
+            with fitz.open(path) as pdf:
+                text = " ".join(page.get_text() for page in pdf)
+                if not all(
+                    marker in text
+                    for marker in [
+                        "TEST ONLY - SYNTHETIC SOURCES",
+                        "NOT SCHOLARLY EVIDENCE",
+                        "Fictional001",
+                        "example.test",
+                    ]
+                ):
+                    errors.append(
+                        f"Public PDF is not a clearly identified generated synthetic example: {name}"
+                    )
+                if path.stat().st_size > 2_000_000:
+                    errors.append(f"Synthetic PDF exceeds public example size limit: {name}")
+            continue
         if path.suffix.lower() in {".pdf", ".docx", ".mp4", ".zip", ".pem", ".key"}:
             errors.append(f"Protected/binary upload not allowed: {name}")
             continue

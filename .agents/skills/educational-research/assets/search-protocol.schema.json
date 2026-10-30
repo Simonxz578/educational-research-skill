@@ -123,6 +123,11 @@
       "title": "Citation Chaining",
       "type": "string"
     },
+    "quantity_intent": {
+      "additionalProperties": true,
+      "title": "Quantity Intent",
+      "type": "object"
+    },
     "amendments": {
       "items": {
         "additionalProperties": true,

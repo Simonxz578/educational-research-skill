@@ -16,3 +16,7 @@ private/
 *.zip
 .DS_Store
 .venv312/
+
+# Public, generated CC0 synthetic reader examples only; never user/reference PDFs.
+!examples/roadmap-v3-10.pdf
+!examples/roadmap-v3-20.pdf

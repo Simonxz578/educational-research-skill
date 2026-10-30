@@ -76,7 +76,7 @@ class Assessment(Record):
 
 
 class Source(Record):
-    schema_version: Literal["1.0", "2.0"] = "2.0"
+    schema_version: Literal["1.0", "2.0", "3.0"] = "3.0"
     reading: FullTextReading | None = None
     work_id: str | None = None
     id: str

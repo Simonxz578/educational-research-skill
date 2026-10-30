@@ -9,7 +9,8 @@ from .search import eric, crossref, openalex, semantic_scholar, google_scholar_w
 from .utils.cache import Client, FetchError
 from .ingest.extract import load
 from .core.screen import deduplicate, screen
-from .core.score import rank, select_diverse, score
+from .core.score import rank, score
+from .core.selection import select_sources
 from .core.quality import warnings, validate_compact, audit_draft
 from .core.graph import Synthesis, construct, validate_graph
 from .core.gaps import evaluate
@@ -58,7 +59,9 @@ def run(
     discovery_records=None,
     execution_context=None,
 ):
-    output = Path(output_dir)
+    root_output = Path(output_dir)
+    root_output.mkdir(parents=True, exist_ok=True)
+    output = root_output / "evidence" if config.presentation == "roadmap" else root_output
     output.mkdir(parents=True, exist_ok=True)
     previous_review = output / "Visual_Review.json"
     if previous_review.exists():
@@ -76,6 +79,15 @@ def run(
         if protocol_path
         else provisional(config)
     )
+    if protocol.quantity_intent and protocol.quantity_intent != config.quantity_contract:
+        protocol.amendments.append(
+            {
+                "previous_quantity_intent": protocol.quantity_intent,
+                "quantity_change": config.quantity_contract,
+                "reason": "Current explicit quantity request governs this run; original intent is retained in protocol history",
+            }
+        )
+    protocol.quantity_intent = config.quantity_contract
     dump(output / "search_protocol.json", protocol.model_dump())
     logs.append(
         {"provider": "protocol", "status": "PROSPECTIVE_PROTOCOL", "prepared_at": protocol.prepared_at}
@@ -152,18 +164,67 @@ def run(
                     config.geography,
                 ),
             ]
-            for q in queries:
+            queries += [
+                eric.query(
+                    f"({config.topic}) AND (review OR critical OR null)",
+                    config.descriptors,
+                    config.peer_reviewed,
+                    config.year_from,
+                    config.year_to,
+                    config.education_level,
+                    config.geography,
+                ),
+                eric.query(
+                    config.topic,
+                    config.descriptors,
+                    False,
+                    config.year_from,
+                    config.year_to,
+                    config.education_level,
+                    config.geography,
+                ),
+            ]
+            retrieved = 0
+            observed_ids = set()
+            for index, q in enumerate(queries):
+                if retrieved >= config.candidate_budget or (
+                    index >= 3 and len(observed_ids) >= config.candidate_target
+                ):
+                    break
+                remaining = config.candidate_budget - retrieved
+                batch = min(
+                    remaining,
+                    max(5, config.candidate_target // 3)
+                    if index < 3
+                    else max(10, config.candidate_target - len(observed_ids)),
+                )
+                logs.append(
+                    {
+                        "provider": "ERIC",
+                        "status": "SEARCH_BREADTH_DECISION",
+                        "query": q,
+                        "distinct_candidates_before": len(observed_ids),
+                        "candidate_target": config.candidate_target,
+                        "budget_remaining": remaining,
+                        "requested_rows": batch,
+                        "reason": "Initial general/theory/recent coverage"
+                        if index < 3
+                        else "Broaden after deduplication/candidate shortfall",
+                    }
+                )
                 try:
-                    records, entries = eric.search(
-                        client, q, max(5, config.candidate_target // len(queries))
-                    )
+                    records, entries = eric.search(client, q, batch)
                     sources.extend(records)
+                    retrieved += len(records)
+                    observed_ids.update(s.eric_id for s in records if s.eric_id)
                     logs.extend(entries)
                     observations.extend(
                         DiscoveryObservation.model_validate(e["observation"])
                         for e in entries
                         if e.get("observation")
                     )
+                    if not records:
+                        logs.append({"provider": "ERIC", "status": "SEARCH_EXPANSION_EMPTY", "query": q})
                 except FetchError as exc:
                     logs.append(
                         {
@@ -175,6 +236,17 @@ def run(
                             "observed": 0,
                         }
                     )
+            logs.append(
+                {
+                    "provider": "ERIC",
+                    "status": "SEARCH_BREADTH_COMPLETE",
+                    "retrieved_candidates": retrieved,
+                    "distinct_eric_ids": len(observed_ids),
+                    "candidate_target": config.candidate_target,
+                    "budget": config.candidate_budget,
+                    "coverage_shortfall": max(0, config.candidate_target - len(observed_ids)),
+                }
+            )
         if "crossref" in providers:
             for s in sources:
                 try:
@@ -240,7 +312,9 @@ def run(
     unique, duplicates = deduplicate(sources)
     eligible, rejected = screen(unique, config.topic)
     ranked = rank(eligible, config.topic)
-    included = select_diverse(ranked, config.quota)
+    included, candidates, selection = select_sources(ranked, config)
+    dump(output / "Candidates.json", candidates)
+    dump(output / "Source_Selection.json", selection.model_dump())
     deferred = [
         {"id": s.id, "reason": "Deferred after quota/diversity selection"}
         for s in ranked
@@ -279,6 +353,8 @@ def run(
         "verified_quotes": sum(len(s.quotes) for s in included),
         "unresolved_references": [s.id for s in included if s.identity not in {"VERIFIED", "SYNTHETIC"}],
         "reference_target": config.quota,
+        "source_selection": selection.model_dump(),
+        "presentation": config.presentation,
         "reference_shortfall": max(
             0, config.quota - sum(s.identity in {"VERIFIED", "SYNTHETIC"} for s in included)
         ),
@@ -376,7 +452,18 @@ def run(
         graph_errors,
         draft_text,
         execution_context or {},
+        protocol,
+        selection,
     )
+    if config.presentation == "roadmap":
+        (root_output / "README.md").write_text(
+            "# Research roadmap\n\n"
+            + f"Selected {len(included)} of {config.quota} target; deep-reviewed {selection.qualified_deep_read_K} of {config.deep_review_requirement} required; "
+            + f"{selection.quotation_count} verified micro-excerpts.\n\n"
+            + audit["research_quality"]["label"]
+            + "\n\nOpen Research_Roadmap.pdf. Complete editable evidence, candidates, provenance and QA are in evidence/.\n",
+            encoding="utf-8",
+        )
     if own_client:
         client.close()
     logging.info(

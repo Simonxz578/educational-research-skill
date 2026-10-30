@@ -17,6 +17,13 @@ def parser():
     p.add_argument("--topic", default="Manuscript evidence audit")
     p.add_argument("--target-words", type=int, default=1000)
     p.add_argument("--target-references", type=int)
+    p.add_argument("--source-semantics", choices=["exact", "at_least"])
+    p.add_argument(
+        "--user-quantity-intent", help="Exact originating user count request, interpreted by the agent"
+    )
+    p.add_argument("--presentation", choices=["roadmap", "evidence-pack"], default="roadmap")
+    p.add_argument("--include-audit-pdf", action="store_true")
+    p.add_argument("--search-candidate-budget", type=int)
     p.add_argument(
         "--mode",
         choices=[

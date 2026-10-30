@@ -2,7 +2,7 @@
 
 import html
 import math
-from reportlab.graphics.shapes import Drawing, Rect, Line, String
+from reportlab.graphics.shapes import Drawing, Rect, Line, String, Polygon
 from reportlab.lib import colors
 
 
@@ -44,6 +44,28 @@ def drawing(framework, width):
         if link["status"] != "source_verified":
             line.strokeDashArray = [4, 3]
         d.add(line)
+        if link["relation_type"] in {"proposed_mechanism", "causal", "feedback"} and (
+            x1 != x2 or y1 != y2
+        ):
+            dx, dy = x2 - x1, y2 - y1
+            ratio = max(abs(dx) / (b[2] / 2), abs(dy) / (b[3] / 2))
+            tipx, tipy = x2 - dx / ratio, y2 - dy / ratio
+            length = math.hypot(dx, dy)
+            ux, uy = dx / length, dy / length
+            d.add(
+                Polygon(
+                    [
+                        tipx,
+                        tipy,
+                        tipx - 5 * ux + 2 * uy,
+                        tipy - 5 * uy - 2 * ux,
+                        tipx - 5 * ux - 2 * uy,
+                        tipy - 5 * uy + 2 * ux,
+                    ],
+                    fillColor=colors.black,
+                    strokeColor=colors.black,
+                )
+            )
         d.add(
             String((x1 + x2) / 2, (y1 + y2) / 2 + 6, link["id"], fontName="ResearchSerif", fontSize=9.5)
         )
