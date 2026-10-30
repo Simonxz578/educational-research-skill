@@ -17,7 +17,7 @@ def scan():
         path = Path(name)
         if not path.is_file():
             continue
-        if name in {"examples/roadmap-v3-10.pdf", "examples/roadmap-v3-20.pdf"}:
+        if name in {"examples/roadmap-v3-10.pdf", "examples/roadmap-v3-20.pdf", "examples/roadmap-v042-10.pdf", "examples/roadmap-v042-20.pdf"}:
             import fitz
 
             with fitz.open(path) as pdf:

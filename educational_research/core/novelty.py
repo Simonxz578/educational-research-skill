@@ -26,6 +26,7 @@ class ClosestStudy(Record):
 
 
 class NoveltyChallenge(Record):
+    revised_question: str = ""
     tentative_contribution: str
     gap_kind: Literal["author_claimed", "researcher_inferred", "empirically_checked"]
     comparisons: list[ClosestStudy] = Field(default_factory=list)
@@ -115,7 +116,10 @@ def challenge(novelty, sources, discovery_complete=False):
         "comparisons": [c.model_dump() for c in n.comparisons],
         "strongest_rival_id": n.strongest_rival_id,
         "sceptical_case": n.sceptical_case,
-        "surviving_contribution": n.surviving_contribution,
+        "surviving_contribution": n.surviving_contribution
+        if verdict in {"GAP_SUPPORTED", "GAP_NARROW_BUT_DEFENSIBLE"}
+        else "",
+        "revised_question": n.revised_question,
         "boundary": "Bounded to searched sources and contexts; " + n.search_boundary,
         "gap_kind": n.gap_kind,
         "interpretive_status": "REQUIRES_EXPERT_REVIEW",

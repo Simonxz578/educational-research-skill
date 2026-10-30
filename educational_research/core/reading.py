@@ -11,6 +11,8 @@ from ..models_base import Record
 
 
 class DocumentProvenance(Record):
+    processing_permission: Literal["allowed", "local_only", "not_checked", "forbidden"] = "not_checked"
+    permission_evidence: str = ""
     source_url: str
     local_path: str
     sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
@@ -38,6 +40,7 @@ class ReadingEvidence(Record):
     context: str = ""
     author_warrant: str = ""
     researcher_inference: str = ""
+    qualification: str = ""
     locator: str
     status: Literal["checked_against_text", "not_checked"] = "not_checked"
     finding_kind: Literal[
@@ -89,6 +92,10 @@ def sha256_file(path):
 @lru_cache(maxsize=128)
 def document_text(path, digest):
     path = Path(path)
+    if path.suffix.lower() in {".html", ".htm", ".xml"}:
+        from ..fulltext.documents import extract
+
+        return extract(path.read_bytes())[0]
     if path.suffix.lower() == ".pdf":
         import fitz
 
@@ -105,7 +112,7 @@ def evidence_registry(sources):
     }
 
 
-def reading_issues(source, check_files=True, reader_ready=False):
+def reading_issues(source, check_files=True, reader_ready=False, require_depth=True):
     r = source.reading
     issues = []
     if not r:
@@ -187,6 +194,21 @@ def reading_issues(source, check_files=True, reader_ready=False):
     ):
         issues.append("Low assessed relevance contradicts a highly relevant selected-work claim")
     if reader_ready:
+        if not source.synthetic and source.acquisition is None:
+            issues.append(
+                "Non-synthetic roadmap work requires validated acquisition or an explicitly permitted local document validation"
+            )
+        if require_depth:
+            from .evidence_depth import primary_depth_audit
+
+            issues += primary_depth_audit(r, source.quotes)["issues"]
+        from ..fulltext.acquire import acquisition_issues
+
+        issues += acquisition_issues(source.acquisition, r)
+        if r.document.processing_permission != "allowed" or not r.document.permission_evidence:
+            issues.append(
+                "Automated/hosted processing permission and its evidence must be recorded; access alone is insufficient"
+            )
         anchor_types = {e.content_type for e in r.evidence if e.status == "checked_against_text"}
         roles = [
             {"claim", "definition"},
@@ -206,6 +228,7 @@ def reading_issues(source, check_files=True, reader_ready=False):
                 and entry.context
                 and entry.author_warrant
                 and entry.researcher_inference
+                and entry.qualification
             ):
                 issues.append(
                     f"{entry.evidence_id}: missing private exact span/context/warrant/distinct inference"
@@ -237,6 +260,12 @@ def reading_issues(source, check_files=True, reader_ready=False):
         checked_ids = {e.evidence_id for e in r.evidence}
         if any(f"{source.id}:{q.segment_id}" not in checked_ids for q in source.quotes):
             issues.append("Reader excerpt is not attached to a checked substantive anchor")
+        from .evidence_depth import quotation_usage
+
+        if quotation_usage(source) > source.quote_budget:
+            issues.append(
+                "Cumulative reader reproduction, including repeated fragments in paraphrases, exceeds the per-work budget"
+            )
     if check_files:
         path = Path(r.document.local_path)
         if not path.is_file() or sha256_file(path) != r.document.sha256:
@@ -270,14 +299,38 @@ def reading_issues(source, check_files=True, reader_ready=False):
     return sorted(set(issues))
 
 
-def reading_audit(sources, reader_ready=False):
-    return [
+def reading_audit(sources, reader_ready=False, synthesis=None):
+    from .evidence_depth import (
+        primary_depth_audit,
+        cross_source_boilerplate,
+        quotation_usage,
+        reader_extra_texts,
+    )
+
+    duplicates = cross_source_boilerplate(sources) if reader_ready else {}
+    rows = [
         {
             "source_id": s.id,
-            "qualified": not reading_issues(s, reader_ready=reader_ready),
-            "issues": reading_issues(s, reader_ready=reader_ready),
+            "qualified": not reading_issues(s, reader_ready=reader_ready) and s.id not in duplicates,
+            "issues": reading_issues(s, reader_ready=reader_ready)
+            + (
+                ["Duplicated source boilerplate: " + ", ".join(duplicates[s.id])]
+                if s.id in duplicates
+                else []
+            ),
+            "primary_evidence_depth": primary_depth_audit(s.reading, s.quotes) if reader_ready else None,
             "reading": s.reading.model_dump() if s.reading else None,
             "interpretive_validity": "REQUIRES_AGENT_OR_EXPERT_REVIEW",
         }
         for s in sources
     ]
+    if reader_ready and synthesis is not None:
+        for source, row in zip(sources, rows):
+            used = quotation_usage(source, reader_extra_texts(source, synthesis))
+            row["reader_quotation_units"] = used
+            if used > source.quote_budget:
+                row["qualified"] = False
+                row["issues"].append(
+                    "Cumulative reader quotation budget exceeded across source, argument and framework prose"
+                )
+    return rows

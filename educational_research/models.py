@@ -6,6 +6,7 @@ from pydantic import Field, field_validator, model_validator
 from .config import today
 from .models_base import Record
 from .core.reading import FullTextReading
+from .core.access import FullTextAcquisition, FullTextLocation
 
 
 def quotation_units(text):
@@ -76,8 +77,10 @@ class Assessment(Record):
 
 
 class Source(Record):
-    schema_version: Literal["1.0", "2.0", "3.0"] = "3.0"
+    schema_version: Literal["1.0", "2.0", "3.0", "4.2"] = "4.2"
     reading: FullTextReading | None = None
+    acquisition: FullTextAcquisition | None = None
+    full_text_locations: list[FullTextLocation] = Field(default_factory=list)
     work_id: str | None = None
     id: str
     title: str

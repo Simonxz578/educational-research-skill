@@ -20,3 +20,9 @@ private/
 # Public, generated CC0 synthetic reader examples only; never user/reference PDFs.
 !examples/roadmap-v3-10.pdf
 !examples/roadmap-v3-20.pdf
+
+# Generated v0.4.2 synthetic previews only; full-text storage remains private.
+!examples/roadmap-v042-10.pdf
+!examples/roadmap-v042-20.pdf
+full_text/
+*.download

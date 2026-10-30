@@ -79,6 +79,8 @@ def required_files(folder, kind=None):
             "Source_Selection.json",
             "Candidates.json",
             "Argument_Alignment.json",
+            "Full_Text_Access.json",
+            "Full_Text_Access_Handoff.md",
         ]
         receipt = Path(folder) / "Execution_Receipt.json"
         if receipt.exists() and json.loads(receipt.read_text()).get("include_audit_pdf"):
@@ -140,26 +142,34 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
             if json.loads((folder / name).read_text()) != json.loads((folder / canonical).read_text()):
                 errors.append(f"Legacy/native alias mismatch: {name}")
         if kind == "roadmap":
-            from .reader import ReaderView
+            from .reader import ReaderView, SECTIONS
+            from .reading import FullTextReading
+            from .evidence_depth import primary_depth_audit
+            from ..models import Quote
 
             view = ReaderView.model_validate_json((folder / "Reader_View.json").read_text())
             selection = json.loads((folder / "Source_Selection.json").read_text())
+            if view.sections != SECTIONS:
+                errors.append("Reader must expose the five approved sections in order")
             if (
                 set(view.selected_source_ids) != ids
                 or {p.source_id for p in view.papers} != ids
                 or len(view.papers) != len(ids)
             ):
                 errors.append("Reader/matrix selected-source count or IDs mismatch")
-            if selection["verified_relevant_selected_K"] != len(ids) or selection[
-                "qualified_deep_read_K"
-            ] != len(ids):
+            readings = json.loads((folder / "Full_Text_Reading_Audit.json").read_text())
+            deep_count = sum(r["qualified"] for r in readings)
+            if (
+                selection["verified_relevant_selected_K"] != len(ids)
+                or selection["qualified_deep_read_K"] != deep_count
+            ):
                 errors.append(
                     "Selected/deep-reading counters disagree with the qualifying reader corpus"
                 )
             if selection["deep_review_requirement_N"] < max(10, selection["selection_target_N"]):
                 errors.append("Requested source target was silently lowered for deep-review acceptance")
             if selection["shortfall"] != max(
-                0, selection["deep_review_requirement_N"] - len(ids)
+                0, selection["deep_review_requirement_N"] - deep_count
             ) or selection["selected_shortfall"] != max(0, selection["selection_target_N"] - len(ids)):
                 errors.append("Source shortfall counters disagree with requested and qualified counts")
             if (
@@ -177,6 +187,18 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
             by_source = {r["id"]: r for r in rows}
             for paper in view.papers:
                 row = by_source[paper.source_id]
+                depth = primary_depth_audit(
+                    FullTextReading.model_validate(row["reading"]),
+                    [Quote.model_validate(q) for q in row["quotes"]],
+                )
+                if (
+                    paper.primary_evidence_words,
+                    paper.primary_evidence_shortfall,
+                    paper.primary_evidence_issues,
+                ) != (depth["primary_evidence_words"], depth["shortfall"], depth["issues"]):
+                    errors.append(
+                        f"{paper.source_id}: primary-evidence depth counters differ from the rendered source paraphrases"
+                    )
                 anchors = {e["evidence_id"]: e for e in row["reading"]["evidence"]}
                 locations = {f"{row['id']}:{s['id']}": s["locator"] for s in row["segments"]}
                 for statement in [
@@ -228,12 +250,23 @@ def validate_delivery(folder, pdf_audit=None, verify_receipt=True):
                     pattern = r"(?m)^\d{2,4}[^\[]+\[" + re.escape(source_id) + r"\]"
                     if len(re.findall(pattern, text)) != 1:
                         errors.append(f"Reader source block missing or repeated: {source_id}")
-                reference_text = text.split("SELECTED APA 7 REFERENCES", 1)[-1]
+                reference_text = text.split("APA 7 REFERENCES", 1)[-1]
                 if any(
                     not re.search(r"(?m)^" + re.escape(source_id) + r"$", reference_text)
                     for source_id in ids
                 ):
                     errors.append("Reader bibliography omits a selected work")
+                compact_text = re.sub(r"\s+", " ", text)
+                for paper in view.papers:
+                    for statement in [
+                        paper.source_author_position,
+                        *paper.source_reasoning_and_results,
+                        paper.source_limitations,
+                    ]:
+                        if re.sub(r"\s+", " ", statement.text) not in compact_text:
+                            errors.append(
+                                f"{paper.source_id}: primary-evidence wording missing from actual PDF"
+                            )
             links = [link.get("uri", "") for p in pdf for link in p.get_links() if link.get("uri")]
             for row in rows:
                 if row["doi"] and "https://doi.org/" + row["doi"] not in links:

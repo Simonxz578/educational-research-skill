@@ -7,6 +7,7 @@ from ..core.discovery import utc_now
 from ..core.reading import sha256_file
 import re
 from ..models import Author, Source, Segment
+from ..core.access import FullTextLocation
 from ..config import today
 
 API = "https://api.ies.ed.gov/eric/"
@@ -69,6 +70,11 @@ def normalise(doc):
         education_level="; ".join(as_list(doc.get("educationlevel"))) or "not reported",
         country="; ".join(as_list(doc.get("identifiersgeo"))) or "not reported",
         providers=["ERIC"],
+        full_text_locations=[
+            FullTextLocation(url=u, route="eric" if "files.eric.ed.gov" in u else "publisher")
+            for u in as_list(doc.get("url"))
+            if str(u).startswith("https://")
+        ],
         segments=[Segment(id="abstract", text=abstract, url=url, locator="ERIC abstract")]
         if abstract
         else [],

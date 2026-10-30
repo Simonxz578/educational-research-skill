@@ -86,7 +86,7 @@ def finalise(
         dump(output / "Reader_View.json", view.model_dump())
         dump(output / "Argument_Alignment.json", alignment_map(config, protocol, synthesis))
     receipt = {
-        "schema_version": "3.0",
+        "schema_version": "4.2",
         "presentation": config.presentation,
         "source_selection": selection.model_dump(),
         "include_audit_pdf": config.include_audit_pdf,
@@ -133,6 +133,18 @@ def finalise(
                 f"- {key}: {gate['status']} — {gate['reason']}" for key, gate in qa["gates"].items()
             )
             + f"\n\nSource coverage: selected {len(sources)}/{selection.selection_target_N}; deeply reviewed {selection.qualified_deep_read_K}/{selection.deep_review_requirement_N}; micro-excerpts {selection.quotation_count}; shortfall {selection.shortfall}."
+            + (
+                "\n\nPrimary evidence per source (English words, excluding quotes/inference/metadata): "
+                + json.dumps(
+                    {
+                        row["source_id"]: row["primary_evidence_depth"]
+                        for row in qa["reading_audit"]
+                        if row.get("primary_evidence_depth")
+                    }
+                )
+                if config.presentation == "roadmap"
+                else ""
+            )
             + "\n\nFramework: "
             + qa["framework_audit"]["status"]
             + "; methods: "

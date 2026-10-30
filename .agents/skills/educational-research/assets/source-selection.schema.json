@@ -1,6 +1,13 @@
 {
   "additionalProperties": false,
   "properties": {
+    "primary_evidence_shortfalls": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Primary Evidence Shortfalls",
+      "type": "object"
+    },
     "requested_user_N": {
       "anyOf": [
         {

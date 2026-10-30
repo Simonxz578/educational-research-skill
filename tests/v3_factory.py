@@ -9,44 +9,166 @@ def bundle(folder, count=10):
     revised = []
     for n, s in enumerate(records, 1):
         row = s.model_dump()
-        row["schema_version"] = "3.0"
+        row["schema_version"] = "4.2"
         row["reading"]["quote_policy"] = "short_excerpts_permitted"
         texts = {e["id"]: e["text"] for e in row["segments"]}
+        contexts = [
+            "urban reading club",
+            "rural mathematics workshop",
+            "bilingual science class",
+            "adult evening seminar",
+            "library enquiry group",
+            "primary geography lesson",
+            "secondary history course",
+            "distance writing module",
+            "vocational design studio",
+            "inclusive music workshop",
+            "community language programme",
+            "university laboratory class",
+            "early numeracy group",
+            "peer tutoring seminar",
+            "outdoor ecology session",
+            "museum learning visit",
+            "digital literacy course",
+            "apprenticeship workshop",
+            "teacher education tutorial",
+            "after school chess club",
+        ]
+        activities = [
+            "text rehearsal",
+            "number exercises",
+            "diagram revision",
+            "seminar preparation",
+            "catalogue enquiries",
+            "map practice",
+            "chronology revision",
+            "draft review",
+            "prototype sketches",
+            "rhythm practice",
+            "vocabulary revision",
+            "laboratory preparation",
+            "counting games",
+            "tutorial preparation",
+            "fieldwork planning",
+            "exhibit exploration",
+            "software exercises",
+            "tool rehearsal",
+            "lesson planning",
+            "position analysis",
+        ]
+        outcomes = [
+            "delayed word recall",
+            "arithmetic accuracy",
+            "concept explanation",
+            "argument reconstruction",
+            "search accuracy",
+            "location recall",
+            "event sequencing",
+            "writing coherence",
+            "design accuracy",
+            "rhythm recognition",
+            "word recognition",
+            "procedure accuracy",
+            "quantity comparison",
+            "explanation accuracy",
+            "species recognition",
+            "historical recall",
+            "task completion",
+            "tool selection",
+            "teaching decisions",
+            "move prediction",
+        ]
+        contexts += [
+            "doctoral research retreat",
+            "clinical skills seminar",
+            "financial literacy class",
+            "agricultural training group",
+            "public speaking course",
+            "engineering drawing class",
+            "civic education workshop",
+            "robotics summer school",
+            "sports coaching module",
+            "culinary arts demonstration",
+        ]
+        activities += [
+            "literature searching",
+            "diagnostic rehearsal",
+            "budget rehearsal",
+            "crop planning",
+            "speech rehearsal",
+            "drawing exercises",
+            "policy discussion",
+            "circuit construction",
+            "movement rehearsal",
+            "recipe planning",
+        ]
+        outcomes += [
+            "citation accuracy",
+            "diagnostic accuracy",
+            "budget accuracy",
+            "crop identification",
+            "speech coherence",
+            "spatial accuracy",
+            "policy reasoning",
+            "circuit accuracy",
+            "movement accuracy",
+            "ingredient selection",
+        ]
+        context, activity, outcome = (
+            contexts[(n - 1) % 30],
+            activities[(n - 1) % 30],
+            outcomes[(n - 1) % 30],
+        )
         statements = {
             "claim": (
-                "The illustrative authors distinguish accounts of study routines from independently documented outcomes; their argument concerns the kind of evidence needed for each construct.",
-                "A routine account is evidence about experience, not direct evidence of attainment.",
+                f"For the {context}, the fictional authors distinguish learners' accounts of {activity} from independent {outcome}. Their measurement boundary separates reported study routines from observed learning outcomes.",
+                "Reports concern experience rather than independent attainment.",
             ),
             "method": (
-                "Their synthetic design separates an account-based survey from a hypothetical task observation, allowing comparison between what learners describe and what a task records.",
-                "Different instruments represent different constructs and should not be treated as interchangeable measures.",
+                f"The synthetic {context} design pairs a survey about {activity} with separate hypothetical task observations after {n + 2} days. Separate reported routines and task records illustrate evidence types without real data or recruitment.",
+                "The two instruments represent different constructs.",
             ),
             "result": (
-                "The worked example shows a measurement boundary: reported regularity alone does not establish an observed learning change. It reports no actual population estimate or tested effect.",
-                "An apparent correspondence would still need independent checks and an appropriate inference boundary.",
+                f"In the {context} example, an apparent relation between {activity} and {outcome} remains illustrative rather than an observed effect. The authors reason that a reported routine cannot establish an observed outcome, so this invented comparison warrants no statistical or causal conclusion.",
+                "An account of regular practice cannot establish independent change.",
             ),
             "limitation": (
-                "The example contains no real participants or findings. Selection, recall and contextual opportunity remain rival explanations that an actual study would need to examine.",
-                "The stated limitations prohibit generalising the illustration as an educational intervention result.",
+                f"The {context} illustration contains no real participants, tested intervention or population finding. Recall, selection and contextual opportunity could alter the relation between {activity} and {outcome}; measurement differences prevent generalisability.",
+                "The stated limitations prohibit real population generalisation.",
             ),
             "counterpoint": (
-                "A contextual opportunity account could explain differences attributed to routines; the example keeps this rival explanation visible rather than treating distinct accounts as consensus.",
-                "A negative case would refine the proposed explanation instead of being discarded.",
+                f"Contextual opportunity in the {context} could explain differences attributed to {activity}; this rival explanation constrains interpretation of {outcome} without inventing contrary empirical results.",
+                "A rival explanation requires investigation.",
             ),
         }
         for e in row["reading"]["evidence"]:
             kind = e["content_type"]
-            segment = texts[kind]
-            # Verbatim spans are private anchors, never automatically reproduced in the reader.
-            e["exact_span"] = segment.split(". ", 1)[1].split(". ")[0].rstrip(".") + "."
-            e["paraphrase"] = statements[kind][0]
-            e["context"] = (
-                "TEST ONLY: read in the context of the complete synthetic section, not as an empirical result."
+            segment = (
+                texts[kind]
+                + f" The worked context is {context}, with {activity} and {outcome} considered over {n + 2} days."
             )
+            texts[kind] = segment
+            next(seg for seg in row["segments"] if seg["id"] == kind)["text"] = segment
+            e["exact_span"] = segment
+            e["paraphrase"] = statements[kind][0]
+            e["context"] = "TEST ONLY: complete synthetic section; no real study or data."
             e["author_warrant"] = statements[kind][1]
             e["researcher_inference"] = (
-                "Use separate measures for reported routines and observed outcomes, and test contextual rivals before making an effectiveness claim."
+                f"Use separate measures for {activity} and {outcome}, then test contextual rivals before making an effectiveness claim."
             )
+            e["qualification"] = (
+                f"The {context} worked example is synthetic and supports no empirical generalisation."
+            )
+        from pathlib import Path
+        from educational_research.core.reading import sha256_file
+
+        document = Path(row["reading"]["document"]["local_path"])
+        document.write_text("\n\n".join(seg["text"] for seg in row["segments"]))
+        row["reading"]["document"].update(
+            sha256=sha256_file(document),
+            processing_permission="allowed",
+            permission_evidence="Generated TEST ONLY CC0 fixture; all processing permitted",
+        )
         row["quotes"] = [
             {"text": "reported routine cannot establish an observed outcome", "segment_id": "result"},
             {"text": "no generalisability", "segment_id": "limitation"},

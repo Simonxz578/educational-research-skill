@@ -34,6 +34,11 @@ class Integration(Record):
 
 
 class StudyDesign(Record):
+    non_users_access: Literal[
+        "not_confirmed", "requested", "confirmed", "unavailable", "not_applicable"
+    ] = "not_confirmed"
+    outcome_timing: str = ""
+    participant_eligibility: str = ""
     kind: Literal["mixed_methods", "qualitative", "quantitative", "conceptual"]
     purpose: str
     quan: Strand | None = None
@@ -52,7 +57,7 @@ class StudyDesign(Record):
     fallback: str = ""
 
 
-def audit_design(design, required=False, construct_ids=()):
+def audit_design(design, required=False, construct_ids=(), require_v042=False):
     if design is None:
         return {
             "status": "FAIL" if required else "NOT_APPLICABLE",
@@ -121,6 +126,20 @@ def audit_design(design, required=False, construct_ids=()):
         if design.quan and design.qual and design.quan.rq.strip() == design.qual.rq.strip():
             issues.append("Independent QUAN/QUAL purposes are not specified")
     if design.kind != "conceptual":
+        if require_v042:
+            for field in ["outcome_timing", "participant_eligibility"]:
+                if not getattr(design, field):
+                    issues.append(
+                        f"FEASIBILITY: missing {field}; intentions and observed behaviour must remain distinct"
+                    )
+            if design.kind in {"quantitative", "mixed_methods"} and design.access_status != "confirmed":
+                issues.append(
+                    "QUAN access/numbers are not established; keep the sequence conditional and activate the feasible fallback"
+                )
+            if design.requires_non_users and design.non_users_access != "confirmed":
+                issues.append(
+                    "Required non-user access is not confirmed; an eligible comparison cannot be assumed"
+                )
         for field in [
             "ethics_consent",
             "storage",
@@ -133,6 +152,10 @@ def audit_design(design, required=False, construct_ids=()):
                 issues.append(f"FEASIBILITY: missing {field}")
         if design.requires_non_users and not design.non_user_comparison:
             issues.append("Recruitment omits required non-user comparison")
+        if design.requires_non_users and design.non_users_access == "unavailable":
+            issues.append(
+                "Required non-users cannot be recruited; revise the question/design and activate the stated fallback"
+            )
         if design.access_status == "confirmed" and not design.access_evidence:
             issues.append("Institutional/data access claimed without evidence")
         if not design.construct_ids or not set(design.construct_ids) <= set(construct_ids):

@@ -10,7 +10,7 @@ def inspect(path, preview_dir=None, expected_sources=None, expected_framework=No
     errors, texts, fonts, minimum = [], [], set(), 100
     with fitz.open(path) as doc:
         roadmap = presentation == "roadmap" or (
-            presentation is None and "THE RESEARCH LOGIC" in doc[0].get_text()
+            presentation is None and "RESEARCH LOGIC" in doc[0].get_text()
         )
         dense_pages = []
         framework_pages = []
@@ -30,7 +30,11 @@ def inspect(path, preview_dir=None, expected_sources=None, expected_framework=No
             ]
             if "Solid links:" in text or "Solid: source-grounded links." in text:
                 framework_pages.append(i)
-            if "Original excerpts" in text or "Author's argument." in text:
+            if (
+                "Original excerpts" in text
+                or "Original position and reasoning." in text
+                or "Author's argument." in text
+            ):
                 dense_pages.append(i)
             for span in spans:
                 fonts.add(span["font"])
@@ -53,9 +57,7 @@ def inspect(path, preview_dir=None, expected_sources=None, expected_framework=No
             ):
                 errors.append(f"Missing/uncentred page number {i + 1}")
         all_text = "\n".join(texts)
-        roadmap = presentation == "roadmap" or (
-            presentation is None and "THE RESEARCH LOGIC" in all_text
-        )
+        roadmap = presentation == "roadmap" or (presentation is None and "RESEARCH LOGIC" in all_text)
         if roadmap:
             from .roadmap import SECTIONS as expected_sections
         else:

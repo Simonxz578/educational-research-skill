@@ -10,6 +10,7 @@ from educational_research.core.gates import evaluate_gates
 from educational_research.core.discovery import load_observations
 from educational_research.models import Source, Segment, Author, Quote, Assessment
 from educational_research.core.reading import FullTextReading
+from educational_research.core.access import FullTextAcquisition
 from educational_research.core.graph import Synthesis
 from educational_research.config import Config
 from educational_research.core.layout import audit_dir, reader_pdf, presentation
@@ -50,6 +51,7 @@ def validate(folder, strict=False):
             data["reading"] = (
                 FullTextReading.model_validate(row["reading"]) if row.get("reading") else None
             )
+            data["acquisition"] = FullTextAcquisition.model_validate(row["acquisition"]) if row.get("acquisition") else None
             sources.append(Source.model_construct(**data))
         receipt = json.loads((folder / "Execution_Receipt.json").read_text())
         argv = receipt.get("argv", [])

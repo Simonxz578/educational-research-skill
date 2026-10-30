@@ -2,12 +2,14 @@
 
 from pydantic import Field
 from ..models_base import Record
-from .reading import reading_issues
+from .reading import reading_issues, reading_audit
+from .evidence_depth import primary_depth_audit
 from .gates import independent_key
 from .score import select_diverse
 
 
 class SourceSelection(Record):
+    primary_evidence_shortfalls: dict[str, int] = Field(default_factory=dict)
     requested_user_N: int | None
     requested_semantics: str
     selection_target_N: int
@@ -30,7 +32,11 @@ def select_sources(ranked, config):
     seen = set()
     for source in ranked:
         key = independent_key(source)
-        issues = reading_issues(source, reader_ready=True) if config.presentation == "roadmap" else []
+        issues = (
+            reading_issues(source, reader_ready=True, require_depth=False)
+            if config.presentation == "roadmap"
+            else []
+        )
         if key in seen:
             issues.append("Another selected record represents the same independent work")
         if issues:
@@ -47,14 +53,20 @@ def select_sources(ranked, config):
         for s in eligible
         if s.id not in chosen
     ]
-    qualified = {
-        independent_key(s)
-        for s in selected
-        if not reading_issues(s, reader_ready=config.presentation == "roadmap")
+    qualified_ids = {
+        r["source_id"]
+        for r in reading_audit(selected, reader_ready=config.presentation == "roadmap")
+        if r["qualified"]
     }
+    qualified = {independent_key(s) for s in selected if s.id in qualified_ids}
     verified = sum(s.identity in {"VERIFIED", "SYNTHETIC"} for s in selected)
     selection = SourceSelection(
         **config.quantity_contract,
+        primary_evidence_shortfalls={
+            s.id: primary_depth_audit(s.reading, s.quotes)["shortfall"]
+            for s in selected
+            if config.presentation == "roadmap" and primary_depth_audit(s.reading, s.quotes)["shortfall"]
+        },
         verified_relevant_selected_K=verified,
         qualified_deep_read_K=len(qualified),
         selected_shortfall=max(0, config.quota - verified),

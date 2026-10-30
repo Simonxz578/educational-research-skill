@@ -1,0 +1,330 @@
+{
+  "$defs": {
+    "AccessAttempt": {
+      "additionalProperties": false,
+      "properties": {
+        "route": {
+          "title": "Route",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "checked_at": {
+          "title": "Checked At",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OA_FULL_TEXT_VERIFIED",
+            "REPOSITORY_FULL_TEXT_VERIFIED",
+            "USER_SUPPLIED_LAWFUL_TEXT",
+            "ABSTRACT_ONLY",
+            "PAYWALL_OR_LOGIN_BLOCKED",
+            "FULL_TEXT_RETRIEVED_NOT_VALIDATED",
+            "FULL_TEXT_UNAVAILABLE",
+            "RIGHTS_OR_VERSION_UNCLEAR"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "http_status": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Http Status"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "retry_after_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retry After Seconds"
+        }
+      },
+      "required": [
+        "route",
+        "url",
+        "checked_at",
+        "status",
+        "reason"
+      ],
+      "title": "AccessAttempt",
+      "type": "object"
+    },
+    "FullTextLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "route": {
+          "enum": [
+            "publisher",
+            "eric",
+            "repository",
+            "core",
+            "manual",
+            "user"
+          ],
+          "title": "Route",
+          "type": "string"
+        },
+        "version": {
+          "default": "unknown",
+          "enum": [
+            "publishedVersion",
+            "acceptedVersion",
+            "submittedVersion",
+            "unknown"
+          ],
+          "title": "Version",
+          "type": "string"
+        },
+        "licence_url": {
+          "default": "",
+          "title": "Licence Url",
+          "type": "string"
+        },
+        "licence_evidence_url": {
+          "default": "",
+          "title": "Licence Evidence Url",
+          "type": "string"
+        },
+        "legal_basis": {
+          "default": "",
+          "title": "Legal Basis",
+          "type": "string"
+        },
+        "processing_permission": {
+          "default": "unclear",
+          "enum": [
+            "allowed",
+            "local_only",
+            "unclear",
+            "forbidden"
+          ],
+          "title": "Processing Permission",
+          "type": "string"
+        },
+        "permission_evidence": {
+          "default": "",
+          "title": "Permission Evidence",
+          "type": "string"
+        },
+        "local_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Local Path"
+        },
+        "terms_checked": {
+          "default": false,
+          "title": "Terms Checked",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "url",
+        "route"
+      ],
+      "title": "FullTextLocation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "4.2",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "status": {
+      "default": "FULL_TEXT_UNAVAILABLE",
+      "enum": [
+        "OA_FULL_TEXT_VERIFIED",
+        "REPOSITORY_FULL_TEXT_VERIFIED",
+        "USER_SUPPLIED_LAWFUL_TEXT",
+        "ABSTRACT_ONLY",
+        "PAYWALL_OR_LOGIN_BLOCKED",
+        "FULL_TEXT_RETRIEVED_NOT_VALIDATED",
+        "FULL_TEXT_UNAVAILABLE",
+        "RIGHTS_OR_VERSION_UNCLEAR"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "checked_at": {
+      "title": "Checked At",
+      "type": "string"
+    },
+    "location": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FullTextLocation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "artifact_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Artifact Path"
+    },
+    "sha256": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sha256"
+    },
+    "extracted_text_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Extracted Text Path"
+    },
+    "extracted_text_sha256": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Extracted Text Sha256"
+    },
+    "media_type": {
+      "default": "",
+      "title": "Media Type",
+      "type": "string"
+    },
+    "page_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page Count"
+    },
+    "structure": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Structure",
+      "type": "array"
+    },
+    "paragraphs": {
+      "items": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "title": "Paragraphs",
+      "type": "array"
+    },
+    "attempts": {
+      "items": {
+        "$ref": "#/$defs/AccessAttempt"
+      },
+      "title": "Attempts",
+      "type": "array"
+    },
+    "metadata_identity": {
+      "default": "UNVERIFIED",
+      "title": "Metadata Identity",
+      "type": "string"
+    },
+    "retrieval_complete": {
+      "default": false,
+      "title": "Retrieval Complete",
+      "type": "boolean"
+    },
+    "content_validated": {
+      "default": false,
+      "title": "Content Validated",
+      "type": "boolean"
+    },
+    "legal_usage_verified": {
+      "default": false,
+      "title": "Legal Usage Verified",
+      "type": "boolean"
+    },
+    "close_reading_completed": {
+      "default": false,
+      "title": "Close Reading Completed",
+      "type": "boolean"
+    },
+    "version_difference": {
+      "default": "",
+      "title": "Version Difference",
+      "type": "string"
+    },
+    "notice": {
+      "default": "Machine checks do not establish comprehension, interpretive accuracy or public-reproduction rights.",
+      "title": "Notice",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id",
+    "checked_at"
+  ],
+  "title": "FullTextAcquisition",
+  "type": "object"
+}

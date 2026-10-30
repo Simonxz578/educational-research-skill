@@ -1,5 +1,15 @@
 # Changes
 
+## 0.4.2 — 2026-10-30
+
+- Retain the approved monochrome Times geometry while simplifying the reader to five sections and three-part source blocks.
+- Add bounded lawful OA acquisition, actual PDF/HTML/JATS validation, separate retrieval/rights/version/reading states, hashed private artifacts and actionable blocked-access handoffs.
+- Use Crossref identity, publisher/ERIC/repository routes, OpenAlex and current DOI-only Unpaywall pointers, plus explicitly configured CORE access; stop denied, unsafe, uncertain or stale paths.
+- Enforce each source's own 100-word anchored explanation, four distinct substantive roles, permissions and cumulative quotation usage; preserve short verified explanations as provisional without padding.
+- Reject abstract/title spoofing, repeated evidence prose, disconnected frameworks and infeasible required non-user recruitment; prevent strict legacy presentation from bypassing new evidence requirements.
+- Add adversarial acquisition/evidence regressions, revised canonical skill/schemas, synthetic 10/20-source previews, installed-wheel checks and an honestly provisional one-work live OA close-reading exemplar.
+
+
 ## 0.3.0 — 2026-10-30
 
 - Make the native Research_Roadmap.pdf the default, with complete editable audits in evidence/ and explicit evidence-pack compatibility.

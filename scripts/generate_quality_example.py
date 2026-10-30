@@ -13,7 +13,7 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--count", type=int, default=10)
     p.add_argument("--presentation", choices=["roadmap", "evidence-pack"], default="roadmap")
-    p.add_argument("--output", default="outputs/quality-v3-synthetic")
+    p.add_argument("--output", default="outputs/quality-v042-synthetic")
     a = p.parse_args()
     root = Path(a.output)
     root.mkdir(parents=True, exist_ok=True)

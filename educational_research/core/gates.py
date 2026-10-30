@@ -66,7 +66,11 @@ def independent_key(s):
 
 def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None, graph_errors=()):
     evidence = evidence_registry(sources)
-    readings = reading_audit(sources, reader_ready=config.presentation == "roadmap")
+    readings = reading_audit(
+        sources,
+        reader_ready=config.presentation == "roadmap" or config.strict_quality_gates,
+        synthesis=synthesis,
+    )
     qualified = {r["source_id"] for r in readings if r["qualified"]}
     source_map = {s.id: s for s in sources}
     distinct = {independent_key(source_map[s]) for s in qualified}
@@ -83,6 +87,7 @@ def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None
         synthesis.study_design,
         config.empirical_proposal,
         [c.id for c in synthesis.framework.constructs] if synthesis.framework else [],
+        require_v042=config.presentation == "roadmap" or config.strict_quality_gates,
     )
     novelty = challenge(synthesis.novelty, sources, discovery["status"] == "PASS")
     # Unknown evidence cannot turn into a confident novelty verdict.
@@ -102,8 +107,12 @@ def evaluate_gates(config, sources, synthesis, logs, observations, delivery=None
         validate_graph(synthesis, sources)
     except ValueError as exc:
         argument_issues.append(str(exc))
-    if not 3 <= len(synthesis.claims) <= 7:
-        argument_issues.append("A substantive argument spine requires 3–7 warranted major claims")
+    if not 3 <= len(synthesis.claims) <= (5 if config.presentation == "roadmap" else 7):
+        argument_issues.append(
+            "A substantive reader argument spine requires 3–5 warranted major claims"
+            if config.presentation == "roadmap"
+            else "A substantive argument spine requires 3–7 warranted major claims"
+        )
     for c in synthesis.claims:
         if re.search(r"\b(proves?|causes?|causal impact)\b", c.text + " " + c.own_inference, re.I):
             kinds = [

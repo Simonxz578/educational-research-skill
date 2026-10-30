@@ -63,6 +63,8 @@ def run(
     root_output.mkdir(parents=True, exist_ok=True)
     output = root_output / "evidence" if config.presentation == "roadmap" else root_output
     output.mkdir(parents=True, exist_ok=True)
+    if config.presentation == "roadmap":
+        output.chmod(0o700)
     previous_review = output / "Visual_Review.json"
     if previous_review.exists():
         from .core.reading import sha256_file
@@ -312,6 +314,32 @@ def run(
     unique, duplicates = deduplicate(sources)
     eligible, rejected = screen(unique, config.topic)
     ranked = rank(eligible, config.topic)
+    from .fulltext.acquire import Acquirer, write_access_outputs
+
+    acquisition_limit = config.full_text_limit or config.candidate_budget
+    if config.full_text_mode != "off" and not config.offline:
+        acquirer = Acquirer(output / "full_text", metadata_client=client)
+        try:
+            attempted = 0
+            for source in ranked:
+                if source.synthetic:
+                    continue
+                if attempted >= acquisition_limit:
+                    break
+                acquirer.acquire(source, max_routes=config.full_text_max_routes)
+                attempted += 1
+        finally:
+            acquirer.close()
+    elif config.full_text_mode != "off":
+        local_reader = Acquirer(output / "full_text")
+        try:
+            for source in ranked[:acquisition_limit]:
+                local_locations = [loc for loc in source.full_text_locations if loc.route == "user"]
+                if local_locations and not source.acquisition:
+                    local_reader.acquire(source, local_locations, max_routes=config.full_text_max_routes)
+        finally:
+            local_reader.close()
+    write_access_outputs(output, ranked, [s.id for s in ranked[acquisition_limit:]])
     included, candidates, selection = select_sources(ranked, config)
     dump(output / "Candidates.json", candidates)
     dump(output / "Source_Selection.json", selection.model_dump())
@@ -325,6 +353,20 @@ def run(
         synthesis = Synthesis.model_validate_json(Path(synthesis_path).read_text(encoding="utf-8"))
     else:
         synthesis = construct(included)
+    from .core.reading import reading_audit
+    from .core.gates import independent_key
+
+    inspected = reading_audit(
+        included,
+        reader_ready=config.presentation == "roadmap" or config.strict_quality_gates,
+        synthesis=synthesis,
+    )
+    qualified_ids = {row["source_id"] for row in inspected if row["qualified"]}
+    selection.qualified_deep_read_K = len(
+        {independent_key(source) for source in included if source.id in qualified_ids}
+    )
+    selection.shortfall = max(0, config.deep_review_requirement - selection.qualified_deep_read_K)
+    dump(output / "Source_Selection.json", selection.model_dump())
     graph_errors = []
     try:
         validate_graph(synthesis, included)
@@ -459,9 +501,9 @@ def run(
         (root_output / "README.md").write_text(
             "# Research roadmap\n\n"
             + f"Selected {len(included)} of {config.quota} target; deep-reviewed {selection.qualified_deep_read_K} of {config.deep_review_requirement} required; "
-            + f"{selection.quotation_count} verified micro-excerpts.\n\n"
+            + f"{selection.quotation_count} verified micro-excerpts. "
             + audit["research_quality"]["label"]
-            + "\n\nOpen Research_Roadmap.pdf. Complete editable evidence, candidates, provenance and QA are in evidence/.\n",
+            + ". Open Research_Roadmap.pdf. Complete editable evidence, candidates, provenance and QA are in evidence/.\n",
             encoding="utf-8",
         )
     if own_client:

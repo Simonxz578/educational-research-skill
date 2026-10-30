@@ -196,6 +196,23 @@ def audit_framework(framework, sources, claims, topic="", rq="", design=None):
             issues.append(f"{relation.id}: source-verified link without resolvable evidence")
         if relation.relation_type == "causal" and not relation.causal_identification:
             issues.append(f"{relation.id}: causal link without an identification argument")
+    if constructs:
+        neighbours = {cid: set() for cid in constructs}
+        for relation in f.relationships:
+            if relation.source in neighbours and relation.target in neighbours:
+                neighbours[relation.source].add(relation.target)
+                neighbours[relation.target].add(relation.source)
+        reached, pending = set(), [next(iter(constructs))]
+        while pending:
+            node = pending.pop()
+            if node not in reached:
+                reached.add(node)
+                pending.extend(neighbours[node] - reached)
+        if reached != constructs.keys():
+            issues.append(
+                "Disconnected conceptual diagram nodes: "
+                + ", ".join(sorted(constructs.keys() - reached))
+            )
     for use in f.uses:
         c = constructs.get(use.construct_id)
         if c is None:
@@ -293,7 +310,12 @@ def mermaid(framework):
     rows += [f"  {ids[c.id]}[{json.dumps(c.name, ensure_ascii=False)}]" for c in framework.constructs]
     for link in framework.relationships:
         if link.source in ids and link.target in ids:
-            arrow = "-->" if link.status == "source_verified" else "-.->"
+            directed = link.relation_type in {"causal", "proposed_mechanism", "feedback"}
+            arrow = (
+                ("-->" if directed else "---")
+                if link.status == "source_verified"
+                else ("-.->" if directed else "-.-")
+            )
             rows.append(
                 f"  {ids[link.source]} {arrow}|{json.dumps(link.id + ': ' + link.status)}| {ids[link.target]}"
             )

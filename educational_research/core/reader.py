@@ -2,8 +2,16 @@
 
 from pydantic import Field
 from ..models_base import Record
-from ..models import quotation_units
 from .reading import reading_issues
+from .evidence_depth import primary_depth_audit, quotation_usage, reader_extra_texts
+
+SECTIONS = [
+    "RESEARCH LOGIC",
+    "WHAT THE AUTHORS ACTUALLY ESTABLISH",
+    "ARGUMENT INTEGRATION + CLOSEST-STUDY CHALLENGE",
+    "THEORETICAL / CONCEPTUAL FRAMEWORK + ROADMAP",
+    "APA 7 REFERENCES",
+]
 
 
 class ReaderStatement(Record):
@@ -20,6 +28,9 @@ class ReaderQuote(Record):
 
 
 class ReaderWork(Record):
+    primary_evidence_words: int
+    primary_evidence_shortfall: int
+    primary_evidence_issues: list[str]
     source_id: str
     title: str
     in_text: str
@@ -39,7 +50,8 @@ class ReaderWork(Record):
 
 
 class ReaderView(Record):
-    schema_version: str = "3.0"
+    schema_version: str = "4.2"
+    sections: list[str] = Field(default_factory=lambda: list(SECTIONS), min_length=5, max_length=5)
     title: str
     problem: str
     principal_question: str
@@ -60,9 +72,14 @@ def build_reader(config, protocol, sources, synthesis, selection, qa):
     papers = []
     known = {s.id for s in sources}
     for source in sources:
-        issues = reading_issues(source, reader_ready=True)
+        issues = reading_issues(source, reader_ready=True, require_depth=False)
         if issues:
             raise ValueError(f"{source.id}: reader promotion blocked: " + "; ".join(issues))
+        used = quotation_usage(source, reader_extra_texts(source, synthesis))
+        if used > source.quote_budget:
+            raise ValueError(
+                f"{source.id}: cumulative reader quotation budget exceeded; revise the repeated source fragments before rendering"
+            )
         anchors = source.reading.evidence
 
         def anchor(kinds):
@@ -90,6 +107,13 @@ def build_reader(config, protocol, sources, synthesis, selection, qa):
             )
         papers.append(
             ReaderWork(
+                primary_evidence_words=primary_depth_audit(source.reading, source.quotes)[
+                    "primary_evidence_words"
+                ],
+                primary_evidence_shortfall=primary_depth_audit(source.reading, source.quotes)[
+                    "shortfall"
+                ],
+                primary_evidence_issues=primary_depth_audit(source.reading, source.quotes)["issues"],
                 source_id=source.id,
                 title=source.title,
                 in_text=in_text(source),
@@ -102,7 +126,7 @@ def build_reader(config, protocol, sources, synthesis, selection, qa):
                 source_limitations=statement(limit),
                 our_inference=statement(claim, claim.researcher_inference),
                 original_microquotes=quotes,
-                quotation_units=sum(quotation_units(q.text) for q in quotes),
+                quotation_units=used,
                 quotation_budget=min(source.quote_budget, 20)
                 if not source.permissive_licence_url
                 else source.quote_budget,

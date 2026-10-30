@@ -1,3 +1,5 @@
+Current v0.4.2 acquisition, reader and migration architecture: [full-text access](FULL_TEXT_ACCESS_V042.md). Historical v2/v3 architecture follows.
+
 # Architecture
 
 Current v3 reader/selection/output architecture: [READER_ROADMAP_V3.md](READER_ROADMAP_V3.md).

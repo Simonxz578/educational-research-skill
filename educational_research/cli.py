@@ -25,6 +25,18 @@ def parser():
     p.add_argument("--include-audit-pdf", action="store_true")
     p.add_argument("--search-candidate-budget", type=int)
     p.add_argument(
+        "--full-text-mode",
+        choices=["auto", "off", "revalidate"],
+        default="auto",
+        help="Lawful public retrieval, explicit off, or fresh route revalidation; retrieval never marks a work read",
+    )
+    p.add_argument(
+        "--full-text-limit",
+        type=int,
+        help="Bounded number of works attempted; default uses the candidate budget",
+    )
+    p.add_argument("--full-text-max-routes", type=int, default=8)
+    p.add_argument(
         "--mode",
         choices=[
             "discover",

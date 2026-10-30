@@ -728,6 +728,11 @@
     "NoveltyChallenge": {
       "additionalProperties": false,
       "properties": {
+        "revised_question": {
+          "default": "",
+          "title": "Revised Question",
+          "type": "string"
+        },
         "tentative_contribution": {
           "title": "Tentative Contribution",
           "type": "string"
@@ -991,6 +996,28 @@
     "StudyDesign": {
       "additionalProperties": false,
       "properties": {
+        "non_users_access": {
+          "default": "not_confirmed",
+          "enum": [
+            "not_confirmed",
+            "requested",
+            "confirmed",
+            "unavailable",
+            "not_applicable"
+          ],
+          "title": "Non Users Access",
+          "type": "string"
+        },
+        "outcome_timing": {
+          "default": "",
+          "title": "Outcome Timing",
+          "type": "string"
+        },
+        "participant_eligibility": {
+          "default": "",
+          "title": "Participant Eligibility",
+          "type": "string"
+        },
         "kind": {
           "enum": [
             "mixed_methods",

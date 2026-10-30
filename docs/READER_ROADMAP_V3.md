@@ -1,3 +1,5 @@
+Historical v0.3 contract. The current five-section reader and 100-word/acquisition requirements are described in [v0.4.2](FULL_TEXT_ACCESS_V042.md).
+
 # Reader roadmap v3: design, source quotas and migration
 
 ## Two products, one default reader PDF

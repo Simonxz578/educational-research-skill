@@ -1,0 +1,86 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "url": {
+      "title": "Url",
+      "type": "string"
+    },
+    "route": {
+      "enum": [
+        "publisher",
+        "eric",
+        "repository",
+        "core",
+        "manual",
+        "user"
+      ],
+      "title": "Route",
+      "type": "string"
+    },
+    "version": {
+      "default": "unknown",
+      "enum": [
+        "publishedVersion",
+        "acceptedVersion",
+        "submittedVersion",
+        "unknown"
+      ],
+      "title": "Version",
+      "type": "string"
+    },
+    "licence_url": {
+      "default": "",
+      "title": "Licence Url",
+      "type": "string"
+    },
+    "licence_evidence_url": {
+      "default": "",
+      "title": "Licence Evidence Url",
+      "type": "string"
+    },
+    "legal_basis": {
+      "default": "",
+      "title": "Legal Basis",
+      "type": "string"
+    },
+    "processing_permission": {
+      "default": "unclear",
+      "enum": [
+        "allowed",
+        "local_only",
+        "unclear",
+        "forbidden"
+      ],
+      "title": "Processing Permission",
+      "type": "string"
+    },
+    "permission_evidence": {
+      "default": "",
+      "title": "Permission Evidence",
+      "type": "string"
+    },
+    "local_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Local Path"
+    },
+    "terms_checked": {
+      "default": false,
+      "title": "Terms Checked",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "url",
+    "route"
+  ],
+  "title": "FullTextLocation",
+  "type": "object"
+}

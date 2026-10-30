@@ -16,6 +16,9 @@ def today():
 
 
 class Config(BaseModel):
+    full_text_mode: Literal["auto", "off", "revalidate"] = "auto"
+    full_text_limit: int | None = Field(default=None, ge=1)
+    full_text_max_routes: int = Field(default=8, ge=1, le=20)
     presentation: Literal["roadmap", "evidence-pack"] = "roadmap"
     include_audit_pdf: bool = False
     source_semantics: Literal["exact", "at_least"] | None = None

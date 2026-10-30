@@ -83,7 +83,7 @@ def test_t02_t06_t16_t17_t18_native_reader_and_complete_evidence(tmp_path, count
         text = " ".join(p.get_text() for p in pdf)
         assert all(f"[{s.source_id}]" in text for s in view.papers)
         assert "Research Quality Gates" not in text and "relevance_score" not in text
-        assert "SELECTED APA 7 REFERENCES" in text and "TEST ONLY" in text
+        assert "APA 7 REFERENCES" in text and "TEST ONLY" in text
         assert len(pdf) <= (10 if count == 10 else 16)
         assert audit["pdf"]["errors"] == []
         assert "Test" not in " ".join(audit["pdf"]["fonts"])

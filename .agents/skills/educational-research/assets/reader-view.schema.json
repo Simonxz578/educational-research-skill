@@ -62,6 +62,21 @@
     "ReaderWork": {
       "additionalProperties": false,
       "properties": {
+        "primary_evidence_words": {
+          "title": "Primary Evidence Words",
+          "type": "integer"
+        },
+        "primary_evidence_shortfall": {
+          "title": "Primary Evidence Shortfall",
+          "type": "integer"
+        },
+        "primary_evidence_issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Primary Evidence Issues",
+          "type": "array"
+        },
         "source_id": {
           "title": "Source Id",
           "type": "string"
@@ -141,6 +156,9 @@
         }
       },
       "required": [
+        "primary_evidence_words",
+        "primary_evidence_shortfall",
+        "primary_evidence_issues",
         "source_id",
         "title",
         "in_text",
@@ -165,9 +183,18 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "default": "3.0",
+      "default": "4.2",
       "title": "Schema Version",
       "type": "string"
+    },
+    "sections": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "title": "Sections",
+      "type": "array"
     },
     "title": {
       "title": "Title",
